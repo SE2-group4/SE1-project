@@ -299,6 +299,70 @@ rectangle EZGas{
 \<concepts are used consistently all over the document, ex in use cases, requirements etc>
 <!-- TODO: ends here -->
 
+<!-- TODO: in the glossary Administrator is an User subclass, it is different then how it looks like on the use case diagram -->
+```plantuml
+@startuml
+
+class EZGas
+
+class User{
+	+ name
+	+ surname
+	+ account
+}
+
+class Administrator{
+	+ privileges
+}
+
+class GasStation{
+	+ name
+	+ address
+}
+
+class FuelType{
+	+ name
+	+ acronym
+	+ cost_per_litre
+}
+
+class Transaction {
+	+ date
+	+ time
+}
+
+class Search_Cheapest_Station
+class Search_Closest_Station
+class Modify_Prices
+
+
+EZGas -- "*" User
+EZGas -- "*" GasStation
+
+GasStation -- "*" FuelType
+
+User -- "*" Transaction
+
+Search_Cheapest_Station -- FuelType
+Search_Closest_Station -- FuelType
+Modify_Prices -- FuelType
+
+Transaction <|-- Search_Cheapest_Station
+Transaction <|-- Search_Closest_Station
+Transaction <|-- Modify_Prices
+User <|-- Administrator
+
+note "A Transaction is a search or any kind\nof operation that a user performs\ninside the application while being\nlogged in" as N1
+N1 .. Transaction
+
+note "A User is a person that uses the application\nafter having completed the activation of an\naccount. User can be just a normal car owner\nor a gas station owner putting his station\non the map" as N2
+N2 .. User
+
+note "EZGas is an application, designed\nto be easy to use, that allows the\nsearch and insertion of a particular\ngas station with some requirement" as N3
+N3 .. EZGas
+
+@enduml
+```
 
 # System Design
 \<describe here system design>
