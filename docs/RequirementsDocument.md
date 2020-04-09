@@ -310,9 +310,7 @@ rectangle EZGas{
 @startuml
 class EZGas
 
-class User{
-  + current position
-}
+class User
 
 class "Authenticated User"{
   + userID
@@ -332,17 +330,14 @@ class GasStation{
   + gasStationID
   + brand
   + name
-  + address
-  + ??Latitude
-  + ??Longitude
-  + date of insertion
+  + date_of_insertion
 }
 
 class "Gas station insert request"{
   + requestID
-  + date of request
+  + date_of_request
+  + outcome: {approved, rejected}
 }
-
 
 class FuelType{
   + name
@@ -350,8 +345,8 @@ class FuelType{
 }
 
 class Price{
-  + Lt/$
-  + date of insertion
+  + €_per_Lt
+  + date_of_insertion
 }
 
 class Vote{
@@ -361,23 +356,30 @@ class Vote{
 
 class Report{
   + reportID
-  + issue type
+  + issue_type
   + description
   + date
 }
 
+class Position{
+	+ latitude
+	+ longitude
+	+ address*
+}
 
+User -- Position
 User <|-- "Authenticated User"
-EZGas -- "*" "Authenticated User"
+EZGas -- "*" User
 EZGas -- "*" GasStation
 EZGas -- "*" Administrator
 Price "*" -- FuelType
-GasStation -- "*" Price
-GasStation "*" -- "*" FuelType
+GasStation -- "*" Price : has list of >
+GasStation -- Position
 "Authenticated User" -- "*" Vote
 "Authenticated User" -- "*" Price : insert >
 "Authenticated User" -- "*" "Gas station insert request" : request >
-"Gas station insert request" -- GasStation
+"Gas station insert request" -- "0..1" GasStation : refers to >
+"Gas station insert request" -- Position
 "Gas station insert request" "*" -- Administrator : < approve/reject 
 Vote "*" -- Price
 "Authenticated User"-- "*" Report : Send >
@@ -387,10 +389,10 @@ Report "*" -- Administrator : < Handle
 note "A User is a person that uses\nthe application to search\na gas station" as N1
 N1 .. User
 
-note "Only Authenticated User can add price, station, vote price" as N2
+note "Only Authenticated User can add price,\nstation, vote price" as N2
 N2 .. "Authenticated User"
 
-note "Issue type are: {report a user, report price, other}" as N3
+note "Issue type are: \n{report a user, report price, other}" as N3
 N3 .. Report
 @enduml
 ```
