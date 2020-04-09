@@ -1,18 +1,18 @@
-# Requirements Document 
+# Requirements Document
 
-Authors:
+Authors: Group 12
 
 Date: 08/04/2020
 
 Version: 1
 
 # Contents
-
+- [Abstract](#abstract)
 - [Stakeholders](#stakeholders)
 - [Context Diagram and interfaces](#context-diagram-and-interfaces)
 	+ [Context Diagram](#context-diagram)
-	+ [Interfaces](#interfaces) 
-	
+	+ [Interfaces](#interfaces)
+
 - [Stories and personas](#stories-and-personas)
 - [Functional and non functional requirements](#functional-and-non-functional-requirements)
 	+ [Functional Requirements](#functional-requirements)
@@ -25,31 +25,41 @@ Version: 1
 - [System design](#system-design)
 - [Deployment diagram](#deployment-diagram)
 
+# Abstract
+
+*Gas station* positions are very important for *drivers*, expecially for who travels a lot for his/her job. Finding a gas station can be an expensive time activity and depends on each single person preferences.
+
+Some people would like to know which gas station has the best prices of fuel in the area to save some money, others which one is closer to save some time.
+
+The *"EZGas" browser application* has been created for those people, to allow them to perform these searches and share with the community inside the app the prices of gas stations. Each person that finds a new gas station or notices that a gas station is missing some prices can go to the application EZGas and inserts the new data discovered.
+
+A voting system allows users to inform which prices are correct or not by just upvoting or downvoting a price. The votes will be up for 24 hours and will be used to check oscillation in prices in order to have always a correct price on the app.
+
+Only people that have created an account on the app can perform insertion of prices, but that doesn't mean that if you don't create a profile you won't be able to perform your favourite searches.
+EZGas thought of you. That's why searches are opened to everyone.
 
 # Stakeholders
 
-| Stakeholder name  | Description | 
+| Stakeholder name  | Description |
 | ----------------- |:-----------:|
-| Administrator		|Manages profiles on the app, and enables people to modify prices in case of errors | 
-| Map API			|Third party server used to implement the map on the application so that people can locate gas stations easily | 
-| User				|Use the application directly. They are interested in finding gas station and share the new ones they find in the platform | 
+| Administrator     | Accepts a user request to insert a gas station |
+| Map API      |Third party server used to implement the map on the application so that people can locate gas stations easily|
+| User              |Uses the application directly. They are interested in finding gas station and share the new ones they find in the platform|
 
 # Context Diagram and interfaces
 
 ## Context Diagram
 
 ```plantuml
-@startuml
-
 left to right direction
 actor "Administrator" as a
 actor "Map API" as c
-actor "Vehicle Owner/Driver" as d
-a -- (EZGas) 
-(EZGas) -- c
-(EZGas) -- d
-
-@enduml
+actor "User" as d
+rectangle System{
+	a -- (EZGas)
+	(EZGas) -- c
+	(EZGas) -- d
+}
 ```
 
 ## Interfaces
@@ -62,13 +72,13 @@ a -- (EZGas)
 
 # Stories and personas
 
-Jack is a father of 2, each morning drives the kids to school and then goes to work. Every week on Saturday goes to the gas station to fill the tank, but he notices that his usual gas station has increased the price. Since the situation at work is not the best he tries to find a cheaper station so he goes on the app EZGas, creates a profile, and search for the best price station in the area of his work place. 
+Jack is a father of 2, each morning drives the kids to school and then goes to work. Every week on Saturday goes to the gas station to fill the tank, but he notices that his usual gas station has increased the price. Since the situation at work is not the best he tries to find a cheaper station, but he doesn't want to create an account to do so, so he goes on the app EZGas and searches for the best price station in the area of his work place.
 
-Alice is a bank officer, a quite wealthy one. She usually does the same route to work every morning, but today her usual gas station has close due to repairs. She wants to find the closest station to fill her tank, regardless of the price. To do so uses the app EZGas. After that she goes to work happy because she saved a lot of time and came into work before her shift.
+Alice is a bank officer, a quite wealthy one. She usually does the same route to work every morning, but today her usual gas station has close due to repairs. She wants to find the closest station to fill her tank, regardless of the price. To do so uses the app EZGas, chooses proximity to her position as parameter of the search, and finds what she was looking for. Because of that she can go to work happy because she saved a lot of time and came into work before her shift.
 
-Maja is a police officer and is very diligent towards precision and correctness in documents. She usually drives to the local gas station to fill her car, but looking at the app that uses she notices that the prices are not correct. Following her usual thoughts in this cases, she reports that the prices are incorrect and after the enabling of the operation from the administrator of the platform she modifies and correct the prices.
+Maja is a police officer and is very diligent towards precision and correctness in documents. She usually drives to the local gas station to fill her car, but looking at the app EZGas that usually uses, she notices that the prices are not correct. Since she has a steady account on the app, she can vote that the price of her fuel is not correct by putting a thumb down. Since she is quite diligent also inserts a comment on the apposite space. She doesn't want people to have the wrong prices!
 
-Robert is the administrator of the platform. Every day at the office he must check whether the users of the platform perform in conformance to the requirements that the developer has set. This means that prices inserted are inside a specific range, must check wheather someone tries to access the platform without an active account and must enable people that report an error in prices.
+Robert is the administrator of the platform. Every day at the office he must check whether the users of the platform perform in conformance to the requirements that the developer has set. He can accept an user request to insert a new gas station.
 
 Jackson is the owner of a gas station. He is struggling in the last period since he opened a new station and doesn't have a lot of clients since people don't know where it is. One of his friends uses frequently the app EZGas and tells it to Jackson to help him with his job. Jackson, after creating an account, inserts his new gas station onto the application map and inserts all his fuel prices. He notices that his price was lower than the ones in the area and in the next few days a lot of clients go to him to fill their tanks.
 
@@ -77,25 +87,24 @@ Jackson is the owner of a gas station. He is struggling in the last period since
 ## Functional Requirements
 
 | ID        | Description  |
-| ---------	|:-------------:|
-| FR1		| Record the prices of fuel into a specific gas station |  
-| FR2		| Look for cheapest gas station in a certain area |
-| FR3		| Ability to report issues |
-| FR4		| Manage Accounts |
-| FR5		| Look for closest gas station in the area |
-| FR6 		| Let user up vote or down vote the fuel price |
-| FR7		| Track user with position | 
-| FR8		| Manage insertion and position of gas stations |
+| ------------- |:-------------:|
+|  FR1	| Record the prices of fuel into a specific gas station|
+|  FR2  | Look for cheapest gas station in a certain area |
+|  FR3  | Look for closest gas station in a certain area|
+|  FR4	| Ability to report issues|
+|  FR5	| Track user with position|
+|  FR6 	| Let user up-vote or down-vote the fuel price|
+|  FR7	| Manage Accounts|
+|  FR8 	| Manage insertion and position of a gas station|
 
 ## Non Functional Requirements
 
 | ID        | Type (efficiency, reliability, ..)           | Description  | Refers to |
 | ------------- |:-------------:| :-----:| -----:|
-| NFR1		| Usability | Application should be used without any training | All FR |
-| NFR2		| Performance | All functions should complete in < 1 sec  | All FR |
-<!-- TODO: fix NFR3, more specific browsers, also for mobile -->
-| NFR3		| Portability | The application runs on Browser from Windows 7 on | All FR |
-| NFR4		| Localisation | Decimal numbers use . (dot) as decimal separator | All FR|
+|  NFR1     | Usability | Application should be used without any training | All FR |
+|  NFR2     | Performance | All functions should complete in < 1 sec  | All FR |
+|  NFR3     | Portability | The application runs on all most used browsers (Chrome v.80 or more, Firefox v.72 or more, Safari v.13 or more, Microsoft Edge v.80 or more) | All FR |
+|  NFR4     | Localisation | Decimal numbers use . (dot) as decimal separator | All FR|
 
 # Use case diagram and use cases
 
@@ -104,6 +113,7 @@ Jackson is the owner of a gas station. He is struggling in the last period since
 
 ```plantuml
 @startuml
+
 left to right direction
 
 Actor User as U
@@ -113,98 +123,78 @@ Actor Web_API as WA
 
 U <|-- AU
 rectangle EZGas{
-  (search gas stations) --> (show map and gas stations)
-  AU --> (FR6 vote a gas station)
   U --> (insert search params)
-  AU --> (insert new gas station)
-  AU --> (enter new price)
-  (enter new price) <-- WA
-  (insert new gas station) --> (FR8 accept new gas station request)
+
+  AU --> (FR6 Vote a gas station)
+  AU --> (FR8 insert new gas station)
+  AU --> (FR1 enter new price)
   AU --> (FR3 notify an issue)
-  (insert search params) --> (search gas stations)
-  A --> (FR4 manage accounts)
-  A --> (FR8 accept new gas station request)
-  A <-- (FR7 send report)
-  WA --> (FR7 send report)
+
+  A --> (FR4 Manage Accounts)
+  A --> (FR8 Accept new gas station request)
+  'A <-- (FR7 send report)
+
+  'WA --> (FR7 send report)*
   (show map and gas stations) --> WA
+  (enter new price) <-- WA
+  (insert new gas station) --> (FR8 Accept new gas station request)
+  (insert search params) --> (search gas stations)
+  (search gas stations) --> (show map and gas stations)
+
+
 }
 
 @enduml
 ```
 
-<!-- TODO: remove this model -->
-### Use case 1, UC1
-| Actors Involved        |  |
-| ------------- |:-------------:| 
-|  Precondition     | \<Boolean expression, must evaluate to true before the UC can start> |  
-|  Post condition     | \<Boolean expression, must evaluate to true after UC is finished> |
-|  Nominal Scenario     | \<Textual description of actions executed by the UC> |
-|  Variants     | \<other executions, ex in case of errors> |
-<!-- TODO: ends here -->
+## Use Cases
 
-<!-- TODO: are use cases title okay? They are different  from the model above -->
 ### Use case 1, UC1 - FR1  Record price of fuel
 
-| Actors Involved        | User |
-| ------------- |:-------------:| 
-|  Precondition     | Active account, Log in operation, Knowledge of prices |  
-|  Post condition     | Prices inserted, Log out |
-|  Nominal Scenario     | User logs into the app with his/her account. Inserts a new station inside the map and all its fuel prices|
-|  Variants     | Gas station is already fresent but missing some prices, so the user can insert them |
-
-### Use case 2, UC2 - FR2 Look for cheapest station
-
-| Actors Involved        | User |
-| ------------- |:-------------:| 
-|  Precondition     | Active account, Log in operation |  
-|  Post condition     |  Best priced gas station found, Log out |
-|  Nominal Scenario     | User logs into the app with his/her account. Looks for the best priced gas station in the area and finds the right one|
-|  Variants     |  |
-
-### Use case 3, UC3 - FR3 Report a error in the prices
-
-| Actors Involved        | User, Administrator |
-| ------------- |:-------------:| 
-|  Precondition     | Active account, Log in operation, Knowledge of prices |  
-|  Post condition     | Prices modified, Log out  |
-|  Nominal Scenario     | User reports that a gas station has the wrong prices. The administrator enables the user account to modify the prices and after this operation the prices will be correct|
-|  Variants     |  |
-
-### Use case 4, UC4 - FR4.1 Log in
-
-| Actors Involved        | User |
-| ------------- |:-------------:| 
-|  Precondition     | Active account|  
-|  Post condition     | Log out |
-|  Nominal Scenario     | The person inserts the credential: username and password and access the platform|
-|  Variants     | The person has problem accessing so it contacts the administrator |
-
-### Use case 5, FR4.2 Log out
-
-| Actors Involved        | User |
-| ------------- |:-------------:| 
-|  Precondition     | Active account, Log in|  
-|  Post condition     | Not access to the platform|
-|  Nominal Scenario     | The person logs out from the app when the operation he/she needed to do is finished|
+| Actors Involved        | Authenticated_user |
+| ------------- |:-------------:|
+|  Precondition     | Active account, Log in operation, Distance of user from gas station < 200 m |
+|  Post condition     | Prices inserted |
+|  Nominal Scenario     | User logs into the app with his/her account. Inserts fuel prices|
 |  Variants     | |
 
-### Use case 6, FR4.3 Create Account
+### Use case 2, UC2 - FR2 Search for gas station with certain properties
 
-| Actors Involved        | User |
-| ------------- |:-------------:| 
-|  Precondition     | Defining what the credentials will be|  
-|  Post condition     | Being able to perform operation on the application|
-|  Nominal Scenario     | The person creates a new account by registering his/hers credentials on the platform and after logs in|
+| Actors Involved        | User, Maps API|
+| ------------- |:-------------:|
+|  Precondition     | User selected a search type (distance, price, type of fuel) |
+|  Post condition     |  Gas station shown on the map |
+|  Nominal Scenario     | Looks for gas stations based on the search type inserted. On the Map will be shown all of the gas stations within a certain range (15 km)|
 |  Variants     | |
 
-### Use case 7, FR6 Find cheapest gas station
+### Use case 3, UC3 - FR4 Report an issue
+
+| Actors Involved        | Authenticated_user, Administrator |
+| ------------- |:-------------:|
+|  Precondition     | Active account, Log in operation |
+|  Post condition     | Notify the issue to the Administrator  |
+|  Nominal Scenario     | User reports an issue. He can choose the issue type and he can leave a comment.|
+|  Variants     |  |
+
+### Use case 4, UC3 - FR6 Vote the price of a gas station
+
+| Actors Involved        | Authenticated_user |
+| ------------- |:-------------:|
+|  Precondition     | Active account, Log in operation, Distance of user from gas station < 200 m, price selected |
+|  Post condition     | Vote active for 24h |
+|  Nominal Scenario     | User upvote or downvote the price (if the price is correct or not) |
+|  Variants     |  |
+
+### Use case 5, FR7 Create Account
 
 | Actors Involved        | User |
-| ------------- |:-------------:| 
-|  Precondition     | Active account, Log in operation |  
-|  Post condition     |  Log out |
-|  Nominal Scenario     | User logs into the app with his/her account. Looks for the cheapest gas station in the area and finds the righ
+| ------------- |:-------------:|
+|  Precondition     | User has not yet an active account. Defines what the credentials (e-mail, username and password) will be|
+|  Post condition     | Being able to perform operation (searching and insertion) on the application|
+|  Nominal Scenario     | The person creates a new account by registering his/hers credentials on the platform and, after, logs in|
+|  Variants     | |
 
+<!-- manca lo use case per il tracking della posizione delle persone -->
 ##### Scenario 1.1
 <!-- TODO: set all scenarios with this title format -->
 
@@ -221,25 +211,25 @@ rectangle EZGas{
 ## Scenario 1
 
 | Scenario ID: SC1        | Corresponds to UC1  |
-| ------------- |:-------------| 
+| ------------- |:-------------|
 | Description | Record prices of fuel|
 | Precondition | The application contains a certain amount of gas station and prices connected to them|
 | Postcondition | A new gas station and its prices are inserted |
 | Step#        |  Step description   |
-|  1     | User logs into the account| 
-|  2	 | User inserts a new gas station iinto the application |  
+|  1     | User logs into the account|
+|  2	 | User inserts a new gas station iinto the application |
 |  3     | User fills out the prices of fuels related to that station|
 |  4     | User logs out |
 
 ## Scenario 2
 
 | Scenario ID: SC2        | Corresponds to UC2  |
-| ------------- |:-------------| 
+| ------------- |:-------------|
 | Description | User has to search for the best prices in the area|
 |Precondition | User must have an active account and must be inside|
 |Postcondition | User has found the cheapestgas station for a specific fuel |
 | Step#        | Step description  |
-|  1     | User looks for a certain area in the map of the application |  
+|  1     | User looks for a certain area in the map of the application |
 |  2     | User can see all the prices of the fuel he/she is looking for |
 |  3     | User is able to select the best price  |
 |  4     | User logs out |
@@ -247,12 +237,12 @@ rectangle EZGas{
 ## Scenario 3
 
 | Scenario ID: SC3        | Corresponds to UC3  |
-| ------------- |:-------------| 
+| ------------- |:-------------|
 | Description | Report of error in prices of fuel|
 | Precondition | User must have knowledge of the prices of the gas station he's at. Must have an active account|
 | Postcondition | User has changed the price of a gas station |
 | Step#        |  Step description   |
-|  1     | User is at a gas station whose prices don't match the ones in the application |  
+|  1     | User is at a gas station whose prices don't match the ones in the application |
 |  2     |  User log into the application with his/her credential |
 |  3     | Reports to the administrator of the app an error in the prices of fuel at a gas station |
 | 4 | Administrator enables the user to change the prices|
@@ -262,22 +252,22 @@ rectangle EZGas{
 ## Scenario 4
 
 | Scenario ID: SC4        | Corresponds to UC7  |
-| ------------- |:-------------| 
+| ------------- |:-------------|
 | Description | User has to search for the closest gas station in the area|
 |Precondition | User must have an active account and must be inside|
 |Postcondition | User has found the closest gas station for a specific fuel |
 | Step#        | Step description  |
-|  1     | User looks for a certain area in the map of the application |  
+|  1     | User looks for a certain area in the map of the application |
 |  2     | User performs a search based on proximity |
 |  3     | User is able to select the closest one since he can see the kilometers from his position  |
 |  4     | User logs out |
 
 | Scenario 1.1 | |
-| ------------- |:-------------:| 
+| ------------- |:-------------:|
 |  Precondition     | \<Boolean expression, must evaluate to true before the scenario can start> |
 |  Post condition     | \<Boolean expression, must evaluate to true after scenario is finished> |
 | Step#        | Description  |
-|  1     |  |  
+|  1     |  |
 |  2     |  |
 |  ...     |  |
 
@@ -294,7 +284,7 @@ rectangle EZGas{
 # Glossary
 
 <!-- TODO: remove these comments -->
-\<use UML class diagram to define important concepts in the domain of the system, and their relationships> 
+\<use UML class diagram to define important concepts in the domain of the system, and their relationships>
 
 \<concepts are used consistently all over the document, ex in use cases, requirements etc>
 <!-- TODO: ends here -->
@@ -369,6 +359,6 @@ N3 .. EZGas
 
 \<must be consistent with Context diagram>
 
-# Deployment Diagram 
+# Deployment Diagram
 
 \<describe here deployment diagram >
