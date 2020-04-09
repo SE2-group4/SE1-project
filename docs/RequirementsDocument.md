@@ -166,7 +166,7 @@ rectangle EZGas{
 |  Post condition     |  Gas station shown on the map |
 |  Nominal Scenario     | Looks for gas stations based on the search type inserted. On the Map will be shown all of the gas stations within a certain range (15 km)|
 |  Variants     | |
-
+<!--
 ### Use case 3, UC3 - FR4 Report an issue
 
 | Actors Involved        | Authenticated_user, Administrator |
@@ -175,6 +175,7 @@ rectangle EZGas{
 |  Post condition     | Notify the issue to the Administrator  |
 |  Nominal Scenario     | User reports an issue. He can choose the issue type and he can leave a comment.|
 |  Variants     |  |
+-->
 
 ### Use case 4, UC3 - FR6 Vote the price of a gas station
 
@@ -182,8 +183,9 @@ rectangle EZGas{
 | ------------- |:-------------:|
 |  Precondition     | Active account, Log in operation, Distance of user from gas station < 200 m, price selected |
 |  Post condition     | Vote active for 24h |
-|  Nominal Scenario     | User upvote or downvote the price (if the price is correct or not) |
-|  Variants     |  |
+|  Nominal Scenario     | User upvote or downvote a fuel price (if the price is correct or not). Each user can vote only once in 24 h the fuel price. |
+|  Variants     | A user can change his/her vote during the 24 hours, but cannot add another vote|
+
 
 ### Use case 5, FR7 Create Account
 
@@ -193,6 +195,15 @@ rectangle EZGas{
 |  Post condition     | Being able to perform operation (searching and insertion) on the application|
 |  Nominal Scenario     | The person creates a new account by registering his/hers credentials on the platform and, after, logs in|
 |  Variants     | |
+
+### Use case 6, FR8 Insert a new gas station
+
+| Actors Involved        | User, Administrator |
+| ------------- |:-------------:|
+|  Precondition     | User has an active account, must be logged in|
+|  Post condition     | Gas station is inserted and visible on the map|
+|  Nominal Scenario     | User reports the existance of a new gas station in a determined position. The administrator must verify if the gas station really exist and if it does accept the request.|
+|  Variants     | If the gas station is not in the position sent by the user the administrator can refuse the request and the gas station is not inserted |
 
 <!-- manca lo use case per il tracking della posizione delle persone -->
 ##### Scenario 1.1
@@ -213,55 +224,61 @@ rectangle EZGas{
 | Scenario ID: SC1        | Corresponds to UC1  |
 | ------------- |:-------------|
 | Description | Record prices of fuel|
-| Precondition | The application contains a certain amount of gas station and prices connected to them|
-| Postcondition | A new gas station and its prices are inserted |
+| Precondition | User must have an active account and is logged in, User must have GPS activated|
+| Postcondition | Prices are inserted |
 | Step#        |  Step description   |
-|  1     | User logs into the account|
-|  2	 | User inserts a new gas station iinto the application |
-|  3     | User fills out the prices of fuels related to that station|
-|  4     | User logs out |
+|  1	 | The application through web API verifies the position of the user which must be in 200 m from the gas station|
+|  2	 |	User inserts the new prices of fuel into a gas station|
 
 ## Scenario 2
 
 | Scenario ID: SC2        | Corresponds to UC2  |
 | ------------- |:-------------|
-| Description | User has to search for the best prices in the area|
-|Precondition | User must have an active account and must be inside|
-|Postcondition | User has found the cheapestgas station for a specific fuel |
+| Description | Search of a gas station with certain properties|
+|Precondition | User must have GPS activated|
+|Postcondition | Gas stations that fit the requirement are shown on the map |
 | Step#        | Step description  |
-|  1     | User looks for a certain area in the map of the application |
-|  2     | User can see all the prices of the fuel he/she is looking for |
-|  3     | User is able to select the best price  |
-|  4     | User logs out |
+|  1     | User must fill out the parameters required: fuel type, distance. He can choose to show the gas station in price order or distance order |
+|  2     | The application gets the user's position from the Map API and performs the search |
+|  3     | The application calculates which are the gas stations fitting the parameters inserted |
 
 ## Scenario 3
 
-| Scenario ID: SC3        | Corresponds to UC3  |
+| Scenario ID: SC3        | Corresponds to UC4  |
 | ------------- |:-------------|
-| Description | Report of error in prices of fuel|
-| Precondition | User must have knowledge of the prices of the gas station he's at. Must have an active account|
-| Postcondition | User has changed the price of a gas station |
+| Description | Vote the price of a fuel|
+| Precondition | User must have an active account, must be logged in, must have GPS activated|
+| Postcondition | A fuel price has an extra vote |
 | Step#        |  Step description   |
-|  1     | User is at a gas station whose prices don't match the ones in the application |
-|  2     |  User log into the application with his/her credential |
-|  3     | Reports to the administrator of the app an error in the prices of fuel at a gas station |
-| 4 | Administrator enables the user to change the prices|
-| 5 | User changes the prices into the correct ones|
-| 6 | User log out|
+|  1     | The application through web API verifies the position of the user which must be in 200 m from the gas station|
+|  2     | User can upvote or downvote a fuel price whether it's correct or not|
+
 
 ## Scenario 4
 
-| Scenario ID: SC4        | Corresponds to UC7  |
+| Scenario ID: SC4        | Corresponds to UC5  |
 | ------------- |:-------------|
-| Description | User has to search for the closest gas station in the area|
-|Precondition | User must have an active account and must be inside|
-|Postcondition | User has found the closest gas station for a specific fuel |
+| Description | Creation of an account|
+|Precondition | There shouldn't be an account already present|
+|Postcondition | User has created an account |
 | Step#        | Step description  |
-|  1     | User looks for a certain area in the map of the application |
-|  2     | User performs a search based on proximity |
-|  3     | User is able to select the closest one since he can see the kilometers from his position  |
-|  4     | User logs out |
+|  1     | User enters the app|
+|  2     | User fills out a form with his/her credential (username, email, password)|
+|  3     | User can log in |
 
+## Scenario 5
+
+| Scenario ID: SC5        | Corresponds to UC6  |
+| ------------- |:-------------|
+| Description | Insertion of a new gas station|
+|Precondition | User must have an active account, must be logged in, must have active GPS|
+|Postcondition | Gas station is inserted on the map |
+| Step#        | Step description  |
+|  1     | User fills the request to insert a new gas station in his/her current position on the map|
+|  2     | Administrator checks whether the gas station is really present in the location |
+|  3     | Administrator accepts the request |
+
+<!--
 | Scenario 1.1 | |
 | ------------- |:-------------:|
 |  Precondition     | \<Boolean expression, must evaluate to true before the scenario can start> |
@@ -270,7 +287,6 @@ rectangle EZGas{
 |  1     |  |
 |  2     |  |
 |  ...     |  |
-
 ##### Scenario 1.2
 
 ### Use case 2, UC2
@@ -278,7 +294,7 @@ rectangle EZGas{
 
 ### Use case
 ..
-
+-->
 
 
 # Glossary
@@ -292,65 +308,90 @@ rectangle EZGas{
 <!-- TODO: in the glossary Administrator is an User subclass, it is different then how it looks like on the use case diagram -->
 ```plantuml
 @startuml
-
 class EZGas
 
 class User{
-	+ name
-	+ surname
-	+ account
+  + current position
+}
+
+class "Authenticated User"{
+  + userID
+  + username
+  + e-mail
+  + password
 }
 
 class Administrator{
-	+ privileges
+  + AdministratorID
+  + username
+  + e-mail
+  + password
 }
 
 class GasStation{
-	+ name
-	+ address
+  + gasStationID
+  + brand
+  + name
+  + address
+  + ??Latitude
+  + ??Longitude
+  + date of insertion
 }
+
+class "Gas station insert request"{
+  + requestID
+  + date of request
+}
+
 
 class FuelType{
-	+ name
-	+ acronym
-	+ cost_per_litre
+  + name
+  + acronym
 }
 
-class Transaction {
-	+ date
-	+ time
+class Price{
+  + Lt/$
+  + date of insertion
 }
 
-class Search_Cheapest_Station
-class Search_Closest_Station
-class Modify_Prices
+class Vote{
+  + type: {positive, negative}
+  + date
+}
+
+class Report{
+  + reportID
+  + issue type
+  + description
+  + date
+}
 
 
-EZGas -- "*" User
+User <|-- "Authenticated User"
+EZGas -- "*" "Authenticated User"
 EZGas -- "*" GasStation
+EZGas -- "*" Administrator
+Price "*" -- FuelType
+GasStation -- "*" Price
+GasStation "*" -- "*" FuelType
+"Authenticated User" -- "*" Vote
+"Authenticated User" -- "*" Price : insert >
+"Authenticated User" -- "*" "Gas station insert request" : request >
+"Gas station insert request" -- GasStation
+"Gas station insert request" "*" -- Administrator : < approve/reject 
+Vote "*" -- Price
+"Authenticated User"-- "*" Report : Send >
+Report "*" -- Administrator : < Handle 
 
-GasStation -- "*" FuelType
 
-User -- "*" Transaction
+note "A User is a person that uses\nthe application to search\na gas station" as N1
+N1 .. User
 
-Search_Cheapest_Station -- FuelType
-Search_Closest_Station -- FuelType
-Modify_Prices -- FuelType
+note "Only Authenticated User can add price, station, vote price" as N2
+N2 .. "Authenticated User"
 
-Transaction <|-- Search_Cheapest_Station
-Transaction <|-- Search_Closest_Station
-Transaction <|-- Modify_Prices
-User <|-- Administrator
-
-note "A Transaction is a search or any kind\nof operation that a user performs\ninside the application while being\nlogged in" as N1
-N1 .. Transaction
-
-note "A User is a person that uses the application\nafter having completed the activation of an\naccount. User can be just a normal car owner\nor a gas station owner putting his station\non the map" as N2
-N2 .. User
-
-note "EZGas is an application, designed\nto be easy to use, that allows the\nsearch and insertion of a particular\ngas station with some requirement" as N3
-N3 .. EZGas
-
+note "Issue type are: {report a user, report price, other}" as N3
+N3 .. Report
 @enduml
 ```
 
