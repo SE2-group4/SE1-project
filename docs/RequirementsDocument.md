@@ -123,23 +123,23 @@ Actor Web_API as WA
 
 U <|-- AU
 rectangle EZGas{
-  U --> (insert search params)
+  U --> (FR2 FR3 Insert search params)
 
   AU --> (FR6 Vote a gas station)
-  AU --> (FR8 insert new gas station)
-  AU --> (FR1 enter new price)
-  AU --> (FR3 notify an issue)
-
+  AU --> (FR8 Insert new gas station)
+  AU --> (FR1 Enter new price)
+  AU --> (FR3 Notify an issue)
+  A <-- (FR3 Notify an issue)
   A --> (FR4 Manage Accounts)
   A --> (FR8 Accept new gas station request)
   'A <-- (FR7 send report)
 
   'WA --> (FR7 send report)*
-  (show map and gas stations) --> WA
-  (enter new price) <-- WA
-  (insert new gas station) --> (FR8 Accept new gas station request)
-  (insert search params) --> (search gas stations)
-  (search gas stations) --> (show map and gas stations)
+  (Show map and gas stations) --> WA
+  (FR1 Enter new price) <-- WA
+  (FR8 Insert new gas station) <-- (FR8 Accept new gas station request)
+  (FR2 FR3 Insert search params) --> (FR2 FR3 Search gas stations)
+  (FR2 FR3 Search gas stations) --> (Show map and gas stations)
 
 
 }
@@ -380,10 +380,10 @@ GasStation -- Position
 "Authenticated User" -- "*" "Gas station insert request" : request >
 "Gas station insert request" -- "0..1" GasStation : refers to >
 "Gas station insert request" -- Position
-"Gas station insert request" "*" -- Administrator : < approve/reject 
+"Gas station insert request" "*" -- Administrator : < approve/reject
 Vote "*" -- Price
 "Authenticated User"-- "*" Report : Send >
-Report "*" -- Administrator : < Handle 
+Report "*" -- Administrator : < Handle
 
 
 note "A User is a person that uses\nthe application to search\na gas station" as N1
