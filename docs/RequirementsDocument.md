@@ -284,7 +284,6 @@ class "Gas station insert request"{
 class "Gas station"{
   + gasStationID
   + brand
-  + name
   + date_of_insertion
 }
 
@@ -364,20 +363,27 @@ node "Web Server" as W {
 }
  
 node "DB Server" as DB {
-    database Accounts
-    database Votes 
-    database "Gas Stations"
+    database Accounts as ACC
+    database Votes AS VO
+    database "Gas Stations" AS GS
 }
 
 node Client as C {
 artifact Browser as B 
 }
 
-node "Maps API" as MA
+node "Maps API" as MA {
+  
+}
 
-W -- C : internet
+C -- W : internet
 W -- AS
-DB -- AS
-AS -- MA
+AS -- DB
+AS - MA
+
+' positioning
+
+ACC -[hidden]> VO
+VO -[hidden]> GS
 
 @enduml
