@@ -95,11 +95,10 @@ Jackson is the owner of a gas station. He is struggling in the last period since
 |  FR1	| Record the prices of fuel into a specific gas station|
 |  FR2  | Look for cheapest gas station in a certain area |
 |  FR3  | Look for closest gas station in a certain area|
-|  FR4	| Ability to report issues|
-|  FR5	| Track user with position|
-|  FR6 	| Let user up-vote or down-vote the fuel price|
-|  FR7	| Manage Accounts|
-|  FR8 	| Manage insertion and position of a gas station|
+|  FR4	| Track user with position|
+|  FR5 	| Let user up-vote or down-vote the fuel price|
+|  FR6	| Manage Accounts|
+|  FR7 	| Manage insertion and position of a gas station|
 
 ## Non Functional Requirements
 
@@ -129,12 +128,10 @@ U <|-- AU
 rectangle EZGas{
   U --> (FR2 FR3 Insert search params)
 
-  AU --> (FR6 Vote a gas station)
-  AU --> (FR8 Insert new gas station)
+  AU --> (FR5 Vote a gas station)
+  AU --> (FR7 Insert new gas station)
   AU --> (FR1 Enter new price)
-  AU --> (FR3 Notify an issue)
-  A <-- (FR3 Notify an issue)
-  A --> (FR4 Manage Accounts)
+  A --> (FR6 Manage Accounts)
   A --> (FR8 Accept new gas station request)
   'A <-- (FR7 send report)
 
@@ -169,16 +166,6 @@ rectangle EZGas{
 |  Post condition     |  Gas station shown on the map |
 |  Nominal Scenario     | Looks for gas stations based on the search type inserted. On the Map will be shown all of the gas stations within a certain range (15 km)|
 |  Variants     | |
-<!--
-### Use case 3, UC3 - FR4 Report an issue
-
-| Actors Involved        | Authenticated_user, Administrator |
-| ------------- |:-------------:|
-|  Precondition     | Active account, Log in operation |
-|  Post condition     | Notify the issue to the Administrator  |
-|  Nominal Scenario     | User reports an issue. He can choose the issue type and he can leave a comment.|
-|  Variants     |  |
--->
 
 ### Use case 4, UC3 - FR6 Vote the price of a gas station
 
@@ -207,20 +194,6 @@ rectangle EZGas{
 |  Post condition     | Gas station is inserted and visible on the map|
 |  Nominal Scenario     | User reports the existance of a new gas station in a determined position. The administrator must verify if the gas station really exist and if it does accept the request.|
 |  Variants     | If the gas station is not in the position sent by the user the administrator can refuse the request and the gas station is not inserted |
-
-<!-- manca lo use case per il tracking della posizione delle persone -->
-##### Scenario 1.1
-<!-- TODO: set all scenarios with this title format -->
-
-<!-- TODO: remove this comments -->
-\<describe here scenarios instances of UC1>
-
-\<a scenario is a sequence of steps that corresponds to a particular execution of one use case>
-
-\<a scenario is a more formal description of a story>
-
-\<only relevant scenarios should be described>
-<!-- TODO: ends here -->
 
 ## Scenario 1
 
@@ -256,7 +229,6 @@ rectangle EZGas{
 |  1     | The application through web API verifies the position of the user which must be in 200 m from the gas station|
 |  2     | User can upvote or downvote a fuel price whether it's correct or not|
 
-
 ## Scenario 4
 
 | Scenario ID: SC4        | Corresponds to UC5  |
@@ -281,34 +253,8 @@ rectangle EZGas{
 |  2     | Administrator checks whether the gas station is really present in the location |
 |  3     | Administrator accepts the request |
 
-<!--
-| Scenario 1.1 | |
-| ------------- |:-------------:|
-|  Precondition     | \<Boolean expression, must evaluate to true before the scenario can start> |
-|  Post condition     | \<Boolean expression, must evaluate to true after scenario is finished> |
-| Step#        | Description  |
-|  1     |  |
-|  2     |  |
-|  ...     |  |
-##### Scenario 1.2
-
-### Use case 2, UC2
-..
-
-### Use case
-..
--->
-
-
 # Glossary
 
-<!-- TODO: remove these comments -->
-\<use UML class diagram to define important concepts in the domain of the system, and their relationships>
-
-\<concepts are used consistently all over the document, ex in use cases, requirements etc>
-<!-- TODO: ends here -->
-
-<!-- TODO: in the glossary Administrator is an User subclass, it is different then how it looks like on the use case diagram -->
 ```plantuml
 @startuml
 class EZGas
@@ -357,13 +303,6 @@ class Vote{
   + date
 }
 
-class Report{
-  + reportID
-  + issue_type: {report a user, report price, other}
-  + description
-  + date
-}
-
 class Position{
 	+ latitude
 	+ longitude
@@ -385,9 +324,6 @@ Price "*" -- "Fuel type"
 "Gas station insert request" -- Position
 "Gas station insert request" "*" -- Administrator : < approve/reject
 Vote "*" -- Price
-"Authenticated User"-- "*" Report : sends >
-Report "*" -- Administrator : < handles
-
 
 note "A User is a person that uses\nthe application to search\na gas station" as N1
 N1 .. User
@@ -403,7 +339,6 @@ User --[hidden]> "Authenticated User"
 Position -[hidden]> User
 EZGas --[hidden]> "Gas station"
 "Authenticated User" --[hidden]> "Gas station insert request"
-Report -[hidden]> "Gas station insert request"
 "Gas station insert request" -[hidden]> Vote
 Vote --[hidden]> Price
 "Gas station" --[hidden]> "Administrator"
@@ -414,11 +349,35 @@ Price --[hidden]> "Fuel type"
 @enduml
 ```
 
-# System Design
-\<describe here system design>
-
-\<must be consistent with Context diagram>
-
 # Deployment Diagram
 
-\<describe here deployment diagram >
+```plantuml
+@startuml
+
+node "Application Server" as AS {
+  artifact "Search and Insertion Engine" as SE
+  artifact "Votes Management" as AM
+}
+
+node "Web Server" as W {
+  artifact "Web Site" 
+}
+ 
+node "DB Server" as DB {
+    database Accounts
+    database Votes 
+    database "Gas Stations"
+}
+
+node Client as C {
+artifact Browser as B 
+}
+
+node "Maps API" as MA
+
+W -- C : internet
+W -- AS
+DB -- AS
+AS -- MA
+
+@enduml
