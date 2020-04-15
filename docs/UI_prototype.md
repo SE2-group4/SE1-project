@@ -8,68 +8,92 @@ Version: 1
 
 \<Report here the GUI that you propose. You are free to organize it as you prefer. A suggested presentation matches the Use cases and scenarios defined in the Requirement document. The GUI can be shown as a sequence of graphical files (jpg, png)  >
 
-#User
+# Contents
+- [User view](#user-view)
+    + [1. Homepage](#1.-homepage)
+        + [1.1 First view](#1.1-first-view)
+        + [1.2 Selecting a gas station](#1.2-selecting-a-gas-station)
+    + [2. Login](#2.-login)
+    + [3. Create a new account](#3.-create-a-new-account)
+- [Authenticated user view](#authenticated-user-view)
+    + [4. Homepage](#4.-homepage)
+        + [4.1 First view](#4.1-first-view)
+        + [4.2 Selecting a gas station](#4.2-selecting-a-gas-station)
+    + [5. Gas station reached](#5.-gas-station-reached)
+    + [6. Record a new price](#6.-record-a-new-price)
+    + [7. Insert a new gas station](#7.-insert-a-new-gas-station)
+- [Administrator view](#administrator-view)
+    + [8. Login](#8.-login)
+    + [9. Accept or reject gas station requests](#9.-accept-or-reject-gas-station-requests)
 
-##Homepage without selected gas station:
+# User view
+
+## 1. Homepage
+
+### 1.1 First view
 
 ![Homepage_without_selected_gas_station.png](../GUI/EZGas_GUI_web/Homepage_without_selected_gas_station.png)
 
 The user can choose if order by price or distance. In this case the user has chosen to order by price, then he/she can see in the left side of the window the list of gas stations ordered by price.
 
-
-##Homepage selected gas station:
+### 1.2 Selecting a gas station
 
 ![Homepage_selected_gas_station.png](../GUI/EZGas_GUI_web/Homepage_selected_gas_station.png)
 
 The user selected one gas station (the red one) and he/she can see the list of the prices of that station on the left side of the window (sorted by positive votes).
 
-#Authenticated User
+## 2. Login
 
-##Homepage Authenticated Use without selected gas station:
+![Login.png](../GUI/EZGas_GUI_web/Login.png)
+
+## 3. Create a new account
+
+![UC5_Create_account.png](../GUI/EZGas_GUI_web/UC5_Create_account.png)
+
+
+# Authenticated user view
+
+## 4. Homepage
+
+### 4.1 First view
 
 ![Homepage_Authenticated_Use_without_selected_gas_station.png](../GUI/EZGas_GUI_web/Homepage_Authenticated_Use_without_selected_gas_station.png)
 
 The user can choose if order by price or distance (in this case by price), but also he/she can insert new gas station by the link in the top bar because is authenticated.
 
 
-##Homepage Authenticated User and selected gas station:
+### 4.2 Selecting a gas station
 
 ![Homepage_Authenticated_User_selected_gas_station.png](../GUI/EZGas_GUI_web/Homepage_Authenticated_User_selected_gas_station.png)
 
-The user selected one gas station like the image above. The only difference is that here user is authenticated, for that reason there is the possibility to insert a new gas station.
+The user selected one gas station like the image above (see [1.2](#1.2-selecting-a-gas-station)). The only difference is that here user is authenticated, for that reason there is the possibility to insert a new gas station.
 
-
-##Homepage Authenticated User (gas station reached) and selected gas station:
+## 5. Gas station reached
 
 ![Homepage_Authenticated_User_(gas_station_reached)_selected_gas_station.png](../GUI/EZGas_GUI_web/Homepage_Authenticated_User_(gas_station_reached)_selected_gas_station.png)
 
-The authenticated user reached the gas station and he/she can insert a new price or he/she can vote one of the existing prices. If the authenticated user votes a price, this price receives one positive vote more and the other prices receive a negative one.
+The authenticated user reached the gas station and he/she can insert a new price or he/she can vote one of the existing prices. If the authenticated user votes a price, this price receives one positive vote more while all the others receive a negative vote.
 
-##Login
-
-![Login.png](../GUI/EZGas_GUI_web/Login.png)
-
-##Create Account
-
-![UC5_Create_account.png](../GUI/EZGas_GUI_web/UC5_Create_account.png)
-
-##Record new price
+## 6. Record a new price
 
 ![UC1_Record_new_price.png](../GUI/EZGas_GUI_web/UC1_Record_new_price.png)
 
-When the authenticated user selects "insert a new price", he/she can insert the price of the gas station reached about the fuel type selected before in the search form.
+When the authenticated user selects "insert a new price", he/she can insert the price of the gas station reached about the fuel type selected before in the search form (see [4.1](#4.1-first-view)).
 
-
-##Gas station request by the User:
+## 7. Insert a new gas station
 
 ![UC6_Gas_station_request_User.png](../GUI/EZGas_GUI_web/UC6_Gas_station_request_User.png)
 
-When the authenticated user selects "insert new gas station", he/she can notify a new gas station by its address and selecting its fuel type/s.
+When the authenticated user selects "insert new gas station", he/she can notify a new gas station by its address and selecting its fuel type/s. The current authenticated user position will be used for the gas station position on the map.
 
-#Administrator
+# Administrator
 
-##Accept or Reject gas station request by the Admin:
+## 8. Login
+
+The login window for the administrator can be the same as the one a user uses (see [2.](#2.-login)).
+
+## 9. Accept or reject gas station requests
 
 ![Accept_or_Reject_station_request_Admin.png](../GUI/EZGas_GUI_web/Accept_or_Reject_station_request_Admin.png)
 
-The administrator can select from the left list one gas station insert request and after that he can accept or reject this request.
+The administrator can select from the left list one gas station insert request and after that he/she can accept or reject this request.
