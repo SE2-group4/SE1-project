@@ -51,6 +51,8 @@ EZGas thought of you. That's why searches are opened to everyone.
 ## Context Diagram
 
 ```plantuml
+@startuml
+
 left to right direction
 actor "Administrator" as a
 actor "Map API" as c
@@ -60,6 +62,8 @@ rectangle System{
 	(EZGas) -- c
 	(EZGas) -- d
 }
+
+@enduml
 ```
 
 ## Interfaces
@@ -136,12 +140,11 @@ rectangle EZGas{
 
   'WA --> (FR7 send report)*
   (Show map and gas stations) --> WA
-  (FR1 Enter new price) <-- WA
   (FR8 Insert new gas station) <-- (FR8 Accept new gas station request)
   (FR2 FR3 Insert search params) --> (FR2 FR3 Search gas stations)
   (FR2 FR3 Search gas stations) --> (Show map and gas stations)
-
-
+  (FR1 Enter new price) <-- WA
+  
 }
 
 @enduml
@@ -326,20 +329,20 @@ class Administrator{
   + password
 }
 
-class GasStation{
-  + gasStationID
-  + brand
-  + name
-  + date_of_insertion
-}
-
 class "Gas station insert request"{
   + requestID
   + date_of_request
   + outcome: {approved, rejected}
 }
 
-class FuelType{
+class "Gas station"{
+  + gasStationID
+  + brand
+  + name
+  + date_of_insertion
+}
+
+class "Fuel type"{
   + name
   + acronym
 }
@@ -356,7 +359,7 @@ class Vote{
 
 class Report{
   + reportID
-  + issue_type
+  + issue_type: {report a user, report price, other}
   + description
   + date
 }
@@ -370,20 +373,20 @@ class Position{
 User -- Position
 User <|-- "Authenticated User"
 EZGas -- "*" User
-EZGas -- "*" GasStation
+EZGas -- "*" "Gas station"
 EZGas -- "*" Administrator
-Price "*" -- FuelType
-GasStation -- "*" Price : has list of >
-GasStation -- Position
+Price "*" -- "Fuel type"
+"Gas station" -- "*" Price : has list of >
+"Gas station" -- Position
 "Authenticated User" -- "*" Vote
-"Authenticated User" -- "*" Price : insert >
-"Authenticated User" -- "*" "Gas station insert request" : request >
-"Gas station insert request" -- "0..1" GasStation : refers to >
+"Authenticated User" -- "*" Price : inserts >
+"Authenticated User" -- "*" "Gas station insert request" : requests >
+"Gas station insert request" -- "0..1" "Gas station" : refers to >
 "Gas station insert request" -- Position
 "Gas station insert request" "*" -- Administrator : < approve/reject
 Vote "*" -- Price
-"Authenticated User"-- "*" Report : Send >
-Report "*" -- Administrator : < Handle
+"Authenticated User"-- "*" Report : sends >
+Report "*" -- Administrator : < handles
 
 
 note "A User is a person that uses\nthe application to search\na gas station" as N1
@@ -392,8 +395,22 @@ N1 .. User
 note "Only Authenticated User can add price,\nstation, vote price" as N2
 N2 .. "Authenticated User"
 
-note "Issue type are: \n{report a user, report price, other}" as N3
-N3 .. Report
+' fake hidden relationships for positioning
+' -[hidden]> : left to right
+' --[hidden]> : top to bottom
+EZGas --[hidden]> User
+User --[hidden]> "Authenticated User"
+Position -[hidden]> User
+EZGas --[hidden]> "Gas station"
+"Authenticated User" --[hidden]> "Gas station insert request"
+Report -[hidden]> "Gas station insert request"
+"Gas station insert request" -[hidden]> Vote
+Vote --[hidden]> Price
+"Gas station" --[hidden]> "Administrator"
+"Gas station" -[hidden]> Price
+"Gas station insert request" --[hidden]> "Gas station"
+Price --[hidden]> "Fuel type"
+
 @enduml
 ```
 
