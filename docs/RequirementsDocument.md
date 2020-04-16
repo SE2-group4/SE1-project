@@ -312,7 +312,7 @@ User <|-- "Authenticated User"
 EZGas -- "*" User
 EZGas -- "*" "Gas station"
 EZGas -- "*" Administrator
-Price "*" -- "Fuel type"
+Price "*" - "Fuel type"
 "Gas station" -- "*" Price : has list of >
 "Gas station" - Position
 "Authenticated User" -- "*" Vote
@@ -342,7 +342,7 @@ Vote --[hidden]> Price
 "Gas station" --[hidden]> "Administrator"
 "Gas station" -[hidden]> Price
 "Gas station insert request" --[hidden]> "Gas station"
-Price --[hidden]> "Fuel type"
+Price -[hidden]> "Fuel type"
 Position -[hidden]> "Gas station insert request"
 
 @enduml
