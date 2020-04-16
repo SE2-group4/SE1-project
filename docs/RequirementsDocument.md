@@ -96,7 +96,7 @@ Jackson is the owner of a gas station. He is struggling in the last period since
 |  FR2  | Look for cheapest gas station in a certain area |
 |  FR3  | Look for closest gas station in a certain area|
 |  FR4	| Track user with position|
-|  FR5 	| Let user up-vote or down-vote the fuel price|
+|  FR5 	| Let user votes the fuel price|
 |  FR6	| Manage Accounts|
 |  FR7 	| Manage insertion and position of a gas station|
 
@@ -126,9 +126,10 @@ Actor Web_API as WA
 
 U <|-- AU
 rectangle EZGas{
-  U --> (FR2 FR3 Insert search params)
+  U -> (FR6 Create a new account)
+  U -> (FR2 FR3 Insert search params)
 
-  AU --> (FR5 Vote a gas station)
+  AU --> (FR5 Vote a fuel price)
   AU --> (FR7 Insert new gas station)
   A --> (FR6 Manage Accounts)
   A --> (FR7 Accept new gas station request)
@@ -136,12 +137,11 @@ rectangle EZGas{
   'A <-- (FR7 send report)
 
   'WA --> (FR7 send report)*
-  (Show map and gas stations) --> WA
+  (FR4 Show map and gas stations) --> WA
   (FR7 Insert new gas station) <-- (FR7 Accept new gas station request)
-  (FR2 FR3 Insert search params) --> (FR2 FR3 Search gas stations)
-  (FR2 FR3 Search gas stations) --> (Show map and gas stations)
-  WA -> (FR1 Enter new price)
-  
+  (FR2 FR3 Insert search params) --> (FR2 FR3 FR4 Search gas stations)
+  (FR2 FR3 FR4 Search gas stations) --> (FR4 Show map and gas stations)
+  WA --> (FR1 Enter new price)
 }
 
 @enduml
@@ -149,7 +149,7 @@ rectangle EZGas{
 
 ## Use Cases
 
-### Use case 1, UC1 - FR1  Record price of fuel
+### Use case 1, UC1 - FR1 Record price of fuel
 
 | Actors Involved        | Authenticated_user |
 | ------------- |:-------------:|
@@ -177,7 +177,7 @@ rectangle EZGas{
 |  Variants     | A user can change his/her vote during the 24 hours, but cannot add another vote|
 
 
-### Use case 4, UC4 - ??? Create Account
+### Use case 4, UC4 - FR6 Create Account
 
 | Actors Involved        | User |
 | ------------- |:-------------:|
