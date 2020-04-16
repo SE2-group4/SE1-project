@@ -130,17 +130,17 @@ rectangle EZGas{
 
   AU --> (FR5 Vote a gas station)
   AU --> (FR7 Insert new gas station)
-  AU --> (FR1 Enter new price)
   A --> (FR6 Manage Accounts)
-  A --> (FR8 Accept new gas station request)
+  A --> (FR7 Accept new gas station request)
+  AU --> (FR1 Enter new price)
   'A <-- (FR7 send report)
 
   'WA --> (FR7 send report)*
   (Show map and gas stations) --> WA
-  (FR8 Insert new gas station) <-- (FR8 Accept new gas station request)
+  (FR7 Insert new gas station) <-- (FR7 Accept new gas station request)
   (FR2 FR3 Insert search params) --> (FR2 FR3 Search gas stations)
   (FR2 FR3 Search gas stations) --> (Show map and gas stations)
-  (FR1 Enter new price) <-- WA
+  WA -> (FR1 Enter new price)
   
 }
 
@@ -153,7 +153,7 @@ rectangle EZGas{
 
 | Actors Involved        | Authenticated_user |
 | ------------- |:-------------:|
-|  Precondition     | Active account, Log in operation, Distance of user from gas station < 200 m |
+|  Precondition     | Active account, log in operation, distance of user from gas station < 200 m |
 |  Post condition     | Prices inserted |
 |  Nominal Scenario     | User logs into the app with his/her account. Inserts fuel prices|
 |  Variants     | |
@@ -167,17 +167,17 @@ rectangle EZGas{
 |  Nominal Scenario     | Looks for gas stations based on the search type inserted. On the Map will be shown all of the gas stations within a certain range (15 km)|
 |  Variants     | |
 
-### Use case 4, UC3 - FR6 Vote the price of a gas station
+### Use case 3, UC3 - FR6 Vote the price of a gas station
 
 | Actors Involved        | Authenticated_user |
 | ------------- |:-------------:|
 |  Precondition     | Active account, Log in operation, Distance of user from gas station < 200 m, price selected |
 |  Post condition     | Vote active for 24h |
-|  Nominal Scenario     | User upvote or downvote a fuel price (if the price is correct or not). Each user can vote only once in 24 h the fuel price. |
+|  Nominal Scenario     | User votes a fuel price (if the price is correct or not). Each user can vote only once in 24 h the fuel price. |
 |  Variants     | A user can change his/her vote during the 24 hours, but cannot add another vote|
 
 
-### Use case 5, FR7 Create Account
+### Use case 4, UC4 - ??? Create Account
 
 | Actors Involved        | User |
 | ------------- |:-------------:|
@@ -186,7 +186,7 @@ rectangle EZGas{
 |  Nominal Scenario     | The person creates a new account by registering his/hers credentials on the platform and, after, logs in|
 |  Variants     | |
 
-### Use case 6, FR8 Insert a new gas station
+### Use case 5, UC5 - FR7 Insert a new gas station
 
 | Actors Involved        | User, Administrator |
 | ------------- |:-------------:|
@@ -220,7 +220,7 @@ rectangle EZGas{
 
 ## Scenario 3
 
-| Scenario ID: SC3        | Corresponds to UC4  |
+| Scenario ID: SC3        | Corresponds to UC3  |
 | ------------- |:-------------|
 | Description | Vote the price of a fuel|
 | Precondition | User must have an active account, must be logged in, must have GPS activated|
@@ -231,10 +231,10 @@ rectangle EZGas{
 
 ## Scenario 4
 
-| Scenario ID: SC4        | Corresponds to UC5  |
+| Scenario ID: SC4        | Corresponds to UC4  |
 | ------------- |:-------------|
 | Description | Creation of an account|
-|Precondition | There shouldn't be an account already present|
+|Precondition | There shouldn't be an account already logged in the application |
 |Postcondition | User has created an account |
 | Step#        | Step description  |
 |  1     | User enters the app|
@@ -243,15 +243,15 @@ rectangle EZGas{
 
 ## Scenario 5
 
-| Scenario ID: SC5        | Corresponds to UC6  |
+| Scenario ID: SC5        | Corresponds to UC5  |
 | ------------- |:-------------|
 | Description | Insertion of a new gas station|
 |Precondition | User must have an active account, must be logged in, must have active GPS|
 |Postcondition | Gas station is inserted on the map |
 | Step#        | Step description  |
-|  1     | User fills the request to insert a new gas station in his/her current position on the map|
-|  2     | Administrator checks whether the gas station is really present in the location |
-|  3     | Administrator accepts the request |
+|  1     | The authenticated user inserts the address of the new gas station |
+|  2     | The administrator checks whether the gas station is really present in the location |
+|  3     | The administrator accepts the request |
 
 # Glossary
 
@@ -298,7 +298,6 @@ class Price{
 }
 
 class Vote{
-  + type: {positive, negative}
   + date
 }
 
@@ -308,14 +307,14 @@ class Position{
 	+ address*
 }
 
-User -- Position
+User - Position
 User <|-- "Authenticated User"
 EZGas -- "*" User
 EZGas -- "*" "Gas station"
 EZGas -- "*" Administrator
 Price "*" -- "Fuel type"
 "Gas station" -- "*" Price : has list of >
-"Gas station" -- Position
+"Gas station" - Position
 "Authenticated User" -- "*" Vote
 "Authenticated User" -- "*" Price : inserts >
 "Authenticated User" -- "*" "Gas station insert request" : requests >
@@ -335,15 +334,16 @@ N2 .. "Authenticated User"
 ' --[hidden]> : top to bottom
 EZGas --[hidden]> User
 User --[hidden]> "Authenticated User"
-Position -[hidden]> User
-EZGas --[hidden]> "Gas station"
+
 "Authenticated User" --[hidden]> "Gas station insert request"
+"Authenticated User" --[hidden]>  "Gas station"
 "Gas station insert request" -[hidden]> Vote
 Vote --[hidden]> Price
 "Gas station" --[hidden]> "Administrator"
 "Gas station" -[hidden]> Price
 "Gas station insert request" --[hidden]> "Gas station"
 Price --[hidden]> "Fuel type"
+Position -[hidden]> "Gas station insert request"
 
 @enduml
 ```
