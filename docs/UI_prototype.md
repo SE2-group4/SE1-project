@@ -10,21 +10,21 @@ Version: 1
 
 # Contents
 - [User view](#user-view)
-    + [1. Homepage](#1.-homepage)
-        + [1.1 First view](#1.1-first-view)
-        + [1.2 Selecting a gas station](#1.2-selecting-a-gas-station)
-    + [2. Login](#2.-login)
-    + [3. Create a new account](#3.-create-a-new-account)
+    + [1. Homepage](#1-homepage)
+        + [1.1 First view](#11-first-view)
+        + [1.2 Selecting a gas station](#12-selecting-a-gas-station)
+    + [2. Login](#2-login)
+    + [3. Create a new account](#3-create-a-new-account)
 - [Authenticated user view](#authenticated-user-view)
-    + [4. Homepage](#4.-homepage)
-        + [4.1 First view](#4.1-first-view)
-        + [4.2 Selecting a gas station](#4.2-selecting-a-gas-station)
-    + [5. Gas station reached](#5.-gas-station-reached)
-    + [6. Record a new price](#6.-record-a-new-price)
-    + [7. Insert a new gas station](#7.-insert-a-new-gas-station)
+    + [4. Homepage](#4-homepage)
+        + [4.1 First view](#41-first-view)
+        + [4.2 Selecting a gas station](#42-selecting-a-gas-station)
+    + [5. Gas station reached](#5-gas-station-reached)
+    + [6. Record a new price](#6-record-a-new-price)
+    + [7. Insert a new gas station](#7-insert-a-new-gas-station)
 - [Administrator view](#administrator-view)
-    + [8. Login](#8.-login)
-    + [9. Accept or reject gas station requests](#9.-accept-or-reject-gas-station-requests)
+    + [8. Login](#8-login)
+    + [9. Accept or reject gas station requests](#9-accept-or-reject-gas-station-requests)
 - [Mobile version differences](#mobile-version-differences)
 # User view
 
@@ -47,7 +47,7 @@ The user selected one gas station (the red one) and he/she can see the list of t
 ## 2. Login
 
 <img src="../GUI/EZGas_GUI_web/Login.png" width="70%">
-<img src="../GUI/EZGas_GUI_mobile/Login.pn" width="25%">
+<img src="../GUI/EZGas_GUI_mobile/Login.png" width="25%">
 
 ## 3. Create a new account
 
@@ -60,21 +60,21 @@ The user selected one gas station (the red one) and he/she can see the list of t
 
 ### 4.1 First view
 
-<img src="../GUI/EZGas_GUI_web/Homepage_Authenticated_Use_without_selected_gas_station.png" width="75%">
+<img src="../GUI/EZGas_GUI_web/Homepage_Authenticated_Use_without_selected_gas_station.png" width="70%">
 <img src="../GUI/EZGas_GUI_mobile/Homepage_Authenticated_User_without_selected_gas_station.png" width="25%">
 
 The user can choose if order by price or distance (in this case by price), but also he/she can insert new gas station by the link in the top bar because is authenticated.
 
 ### 4.2 Selecting a gas station
 
-<img src="(../GUI/EZGas_GUI_web/Homepage_Authenticated_User_selected_gas_station.png" width="70%">
+<img src="../GUI/EZGas_GUI_web/Homepage_Authenticated_User_selected_gas_station.png" width="70%">
 <img src="../GUI/EZGas_GUI_mobile/Homepage_Authenticated_User_selected_gas_station.png" width="25%">
 
 The user selected one gas station like the image above (see [1.2](#1.2-selecting-a-gas-station)). The only difference is that here user is authenticated, for that reason there is the possibility to insert a new gas station.
 
 ## 5. Gas station reached
 
-<img src="../GUI/EZGas_GUI_web/Homepage_Authenticated_User_(gas_station_reached" width="70%">
+<img src="../GUI/EZGas_GUI_web/Homepage_Authenticated_User_(gas_station_reached)_selected_gas_station.png" width="70%">
 <img src="../GUI/EZGas_GUI_mobile/Homepage_Authenticated_User_(gas_station_reached)_selected_gas_station.png" width="25%">
 
 The authenticated user reached the gas station and he/she can insert a new price or he/she can vote one of the existing prices. If the authenticated user votes a price, this price receives one positive vote more while all the others receive a negative vote.
