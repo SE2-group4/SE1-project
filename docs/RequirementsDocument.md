@@ -158,7 +158,7 @@ rectangle EZGas{
 |  Nominal Scenario     | User logs into the app with his/her account. Inserts fuel prices|
 |  Variants     | |
 
-### Use case 2, UC2 - FR2 Search for gas station with certain properties
+### Use case 2, UC2 - FR2 FR3 Search for gas station with certain properties
 
 | Actors Involved        | User, Maps API|
 | ------------- |:-------------:|
@@ -167,7 +167,7 @@ rectangle EZGas{
 |  Nominal Scenario     | Looks for gas stations based on the search type inserted. On the Map will be shown all of the gas stations within a certain range (15 km)|
 |  Variants     | |
 
-### Use case 3, UC3 - FR6 Vote the price of a gas station
+### Use case 3, UC3 - FR5 Vote the price of a gas station
 
 | Actors Involved        | Authenticated_user |
 | ------------- |:-------------:|
