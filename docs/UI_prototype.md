@@ -2,11 +2,9 @@
 
 Authors: Group 12
 
-Date: 14/04/2020
+Date: 17/04/2020
 
 Version: 1
-
-\<Report here the GUI that you propose. You are free to organize it as you prefer. A suggested presentation matches the Use cases and scenarios defined in the Requirement document. The GUI can be shown as a sequence of graphical files (jpg, png)  >
 
 # Contents
 - [User view](#user-view)
@@ -25,7 +23,7 @@ Version: 1
 - [Administrator view](#administrator-view)
     + [8. Login](#8-login)
     + [9. Accept or reject gas station requests](#9-accept-or-reject-gas-station-requests)
-- [Mobile version differences](#mobile-version-differences)
+- [10. Mobile version differences](#mobile-version-differences)
 # User view
 
 ## 1. Homepage
@@ -35,7 +33,7 @@ Version: 1
 <img src="../GUI/EZGas_GUI_web/Homepage_without_selected_gas_station.png" width="70%">
 <img src="../GUI/EZGas_GUI_mobile/Homepage_without_selected_gas_station.png" width="25%">
 
-This is the homepage of our application. Any user, even if he/she doesn't have an account, can perform a search of a gas station. He/she can choose if he/she wants to order the gas station found after the search in the window that pops up (on the left in web version and down in telephone version) by price or distance. In this case displayed in the example the user has chosen to order by price.
+This is the homepage of our application. Any user, even if he/she doesn't have an account, can perform a search of a gas station. He/she can choose if he/she wants to order the gas station found after the search in the window that pops up (on the left in web version and down in mobile version) by price or distance. In this case displayed in the example the user has chosen to order by price.
 
 ### 1.2 Selecting a gas station
 
@@ -67,7 +65,9 @@ The user can create an account inside the application by simply choosing a usern
 <img src="../GUI/EZGas_GUI_web/Homepage_Authenticated_Use_without_selected_gas_station.png" width="70%">
 <img src="../GUI/EZGas_GUI_mobile/Homepage_Authenticated_User_without_selected_gas_station.png" width="25%">
 
-This is the homepage of our application for authenticated user. The graphic is equal to the one of the normal user, but there is the additional button operation available which enables the user to perform a request to insert a new gas station into the application's database.
+This is the homepage of our application for authenticated user. The graphic is equal to the one of the normal user, but there is the additional button operation available which enables the user to perform a request to insert a new gas station into the application's database. 
+In the mobile version the insertion button is hidden in the menu on the left (see [10](#10.-Mobile-version-differences)).
+
 The search is performed in the same way as the normal user and the gas station are also diplayed in the same price order in the pop up window on the left (or down in mobile version)
 
 
@@ -83,8 +83,8 @@ Same as the normal user (see [1.2](#1.2-selecting-a-gas-station)), the authentic
 <img src="../GUI/EZGas_GUI_web/Homepage_Authenticated_User_(gas_station_reached)_selected_gas_station.png" width="70%">
 <img src="../GUI/EZGas_GUI_mobile/Homepage_Authenticated_User_(gas_station_reached)_selected_gas_station.png" width="25%">
 
-When an authenticated user reaches the specific chosen gas station, he/she can perform different operations:
-- he/she can insert a new fuel price connected to that station;
+When an authenticated user reaches the specific chosen gas station (within 200m), he/she can perform different operations:
+- he/she can insert a new fuel price connected to that station; (in the mobile version the button is also in the hidden menu on the left (see [10](#10.-Mobile-version-differences)))
 - he/she can vote one of the existing prices. 
 
 If the authenticated user votes a price, the selected price's positive vote is increased by one, while to all the others the negative vote is increased by one.
@@ -117,7 +117,7 @@ The login window for the administrator is the same as the one of the users (see 
 
 The administrator can see on the list on the left all the gas station request received. When he/she selects one anther window pops up next to the list showing all the details of the request. The administrator must check whether the gas station really exists. If it does the admin must insert the brand and accept the request and the gas station will be inserted in the database. In case the gas station is not really in that position he/she can reject the request.
 
-# Mobile version differences
+# 10. Mobile version differences
 
 <img src="../GUI/EZGas_GUI_mobile/Insert_list.png" width="25%">
 <img src="../GUI/EZGas_GUI_mobile/Settings_list.png" width="25%">

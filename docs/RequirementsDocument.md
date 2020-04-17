@@ -2,7 +2,7 @@
 
 Authors: Group 12
 
-Date: 08/04/2020
+Date: 17/04/2020
 
 Version: 1
 
@@ -22,7 +22,6 @@ Version: 1
 	+ [Use cases](#use-cases)
     	+ [Relevant scenarios](#relevant-scenarios)
 - [Glossary](#glossary)
-- [System design](#system-design)
 - [Deployment diagram](#deployment-diagram)
 
 # Abstract
@@ -135,7 +134,7 @@ rectangle EZGas{
   A --> (FR7 Accept new gas station request)
   AU --> (FR1 Enter new price)
   
-  (FR4 Show map and gas stations) --> WA
+  (FR4 Show map and gas stations) <-- WA
   (FR7 Insert new gas station) <-- (FR7 Accept new gas station request)
   (FR2 FR3 Insert search params) --> (FR2 FR3 FR4 Search gas stations)
   (FR2 FR3 FR4 Search gas stations) --> (FR4 Show map and gas stations)
