@@ -35,7 +35,7 @@ The *"EZGas" browser application* has been created for those people, to allow th
 
 A voting system allows users to inform which prices are correct or not by just upvoting or downvoting a price. The votes will be up for 24 hours and will be used to check oscillation in prices in order to have always a correct price on the app.
 
-Only people that have created an account on the app can perform insertion of prices, but that doesn't mean that if you don't create a profile you won't be able to perform your favourite searches.
+Only people that have created an account on the app can perform insertion of prices and vote them, but that doesn't mean that if you don't create a profile you won't be able to perform your favourite searches.
 EZGas thought of you. That's why searches are opened to everyone.
 
 # Stakeholders
@@ -78,7 +78,7 @@ rectangle System{
 
 Jack is a father of 2, each morning drives the kids to school and then goes to work. Every week on Saturday goes to the gas station to fill the tank, but he notices that his usual gas station has increased the price. Since the situation at work is not the best he tries to find a cheaper station, but he doesn't want to create an account to do so, so he goes on the app EZGas and searches for the best price station in the area of his work place.
 
-Alice is a bank officer, a quite wealthy one. She usually does the same route to work every morning, but today her usual gas station has close due to repairs. She wants to find the closest station to fill her tank, regardless of the price. To do so uses the app EZGas, chooses proximity to her position as parameter of the search, and finds what she was looking for. Because of that she can go to work happy because she saved a lot of time and came into work before her shift.
+Alice is a bank officer, a quite wealthy one. She usually does the same route to work every morning, but today her usual gas station has closed due to repairs. She wants to find the closest station to fill her tank, regardless of the price. To do so uses the app EZGas, chooses proximity to her position as parameter of the search, and finds what she was looking for. Because of that she can go to work happy because she saved a lot of time and came into work before her shift.
 
 Maja is a police officer and is very diligent towards precision and correctness in documents. She usually drives to the local gas station to fill her car, but looking at the app EZGas that usually uses, she notices that the prices are not correct. Since she has a steady account on the app, she can vote that the price of her fuel is not correct by putting a thumb down. Since she is quite diligent also inserts a comment on the apposite space. She doesn't want people to have the wrong prices!
 
@@ -134,9 +134,7 @@ rectangle EZGas{
   A --> (FR6 Manage Accounts)
   A --> (FR7 Accept new gas station request)
   AU --> (FR1 Enter new price)
-  'A <-- (FR7 send report)
-
-  'WA --> (FR7 send report)*
+  
   (FR4 Show map and gas stations) --> WA
   (FR7 Insert new gas station) <-- (FR7 Accept new gas station request)
   (FR2 FR3 Insert search params) --> (FR2 FR3 FR4 Search gas stations)
@@ -147,7 +145,8 @@ rectangle EZGas{
 @enduml
 ```
 
-## Use Cases
+## Use Cases 
+## Relevant scenarios
 
 ### Use case 1, UC1 - FR1 Record price of fuel
 
@@ -157,43 +156,6 @@ rectangle EZGas{
 |  Post condition     | Prices inserted |
 |  Nominal Scenario     | User logs into the app with his/her account. Inserts fuel prices|
 |  Variants     | |
-
-### Use case 2, UC2 - FR2 FR3 Search for gas station with certain properties
-
-| Actors Involved        | User, Maps API|
-| ------------- |:-------------:|
-|  Precondition     | User selected a search type (distance, price, type of fuel) |
-|  Post condition     |  Gas station shown on the map |
-|  Nominal Scenario     | Looks for gas stations based on the search type inserted. On the Map will be shown all of the gas stations within a certain range (15 km)|
-|  Variants     | |
-
-### Use case 3, UC3 - FR5 Vote the price of a gas station
-
-| Actors Involved        | Authenticated_user |
-| ------------- |:-------------:|
-|  Precondition     | Active account, Log in operation, Distance of user from gas station < 200 m, price selected |
-|  Post condition     | Vote active for 24h |
-|  Nominal Scenario     | User votes a fuel price (if the price is correct or not). Each user can vote only once in 24 h the fuel price. |
-|  Variants     | A user can change his/her vote during the 24 hours, but cannot add another vote|
-
-
-### Use case 4, UC4 - FR6 Create Account
-
-| Actors Involved        | User |
-| ------------- |:-------------:|
-|  Precondition     | User has not yet an active account. Defines what the credentials (e-mail, username and password) will be|
-|  Post condition     | Being able to perform operation (searching and insertion) on the application|
-|  Nominal Scenario     | The person creates a new account by registering his/hers credentials on the platform and, after, logs in|
-|  Variants     | |
-
-### Use case 5, UC5 - FR7 Insert a new gas station
-
-| Actors Involved        | User, Administrator |
-| ------------- |:-------------:|
-|  Precondition     | User has an active account, must be logged in|
-|  Post condition     | Gas station is inserted and visible on the map|
-|  Nominal Scenario     | User reports the existance of a new gas station in a determined position. The administrator must verify if the gas station really exist and if it does accept the request.|
-|  Variants     | If the gas station is not in the position sent by the user the administrator can refuse the request and the gas station is not inserted |
 
 ## Scenario 1
 
@@ -205,6 +167,15 @@ rectangle EZGas{
 | Step#        |  Step description   |
 |  1	 | The application through web API verifies the position of the user which must be in 200 m from the gas station|
 |  2	 |	User inserts the new prices of fuel into a gas station|
+
+### Use case 2, UC2 - FR2 FR3 Search for gas station with certain properties
+
+| Actors Involved        | User, Maps API|
+| ------------- |:-------------:|
+|  Precondition     | User selected a search type (distance, price, type of fuel) |
+|  Post condition     |  Gas station shown on the map |
+|  Nominal Scenario     | Looks for gas stations based on the search type inserted. On the Map will be shown all of the gas stations within a certain range (15 km)|
+|  Variants     | |
 
 ## Scenario 2
 
@@ -218,6 +189,15 @@ rectangle EZGas{
 |  2     | The application gets the user's position from the Map API and performs the search |
 |  3     | The application calculates which are the gas stations fitting the parameters inserted |
 
+### Use case 3, UC3 - FR5 Vote the price of a gas station
+
+| Actors Involved        | Authenticated_user |
+| ------------- |:-------------:|
+|  Precondition     | Active account, Log in operation, Distance of user from gas station < 200 m, price selected |
+|  Post condition     | Vote active for 24h |
+|  Nominal Scenario     | User votes a fuel price (if the price is correct or not). Each user can vote only once in 24 h the fuel price. |
+|  Variants     | A user can change his/her vote during the 24 hours, but cannot add another vote|
+
 ## Scenario 3
 
 | Scenario ID: SC3        | Corresponds to UC3  |
@@ -228,6 +208,16 @@ rectangle EZGas{
 | Step#        |  Step description   |
 |  1     | The application through web API verifies the position of the user which must be in 200 m from the gas station|
 |  2     | User can upvote or downvote a fuel price whether it's correct or not|
+
+
+### Use case 4, UC4 - FR6 Create Account
+
+| Actors Involved        | User |
+| ------------- |:-------------:|
+|  Precondition     | User has not yet an active account. Defines what the credentials (e-mail, username and password) will be|
+|  Post condition     | Being able to perform operation (searching and insertion) on the application|
+|  Nominal Scenario     | The person creates a new account by registering his/hers credentials on the platform and, after, logs in|
+|  Variants     | |
 
 ## Scenario 4
 
@@ -241,6 +231,16 @@ rectangle EZGas{
 |  2     | User fills out a form with his/her credential (username, email, password)|
 |  3     | User can log in |
 
+
+### Use case 5, UC5 - FR7 Insert a new gas station
+
+| Actors Involved        | User, Administrator |
+| ------------- |:-------------:|
+|  Precondition     | User has an active account, must be logged in|
+|  Post condition     | Gas station is inserted and visible on the map|
+|  Nominal Scenario     | User reports the existance of a new gas station in a determined position. The administrator must verify if the gas station really exist and if it does accept the request.|
+|  Variants     | If the gas station is not in the position sent by the user the administrator can refuse the request and the gas station is not inserted |
+
 ## Scenario 5
 
 | Scenario ID: SC5        | Corresponds to UC5  |
@@ -252,6 +252,7 @@ rectangle EZGas{
 |  1     | The authenticated user inserts the address of the new gas station |
 |  2     | The administrator checks whether the gas station is really present in the location |
 |  3     | The administrator accepts the request |
+
 
 # Glossary
 
@@ -326,7 +327,7 @@ Vote "*" -- Price
 note "A User is a person that uses\nthe application to search\na gas station" as N1
 N1 .. User
 
-note "Only Authenticated User can add price,\nstation, vote price" as N2
+note "Only Authenticated User can add price,\ngas station, vote price" as N2
 N2 .. "Authenticated User"
 
 ' fake hidden relationships for positioning
