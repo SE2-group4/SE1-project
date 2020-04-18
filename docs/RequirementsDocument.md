@@ -43,7 +43,7 @@ EZGas thought of you. That's why searches are opened to everyone.
 | ----------------- |:-----------:|
 | Administrator     | Accepts a user request to insert a gas station |
 | Map API      |Third party server used to implement the map on the application so that people can locate gas stations easily|
-| User              |Uses the application directly. They are interested in finding gas station and share the new ones they find in the platform|
+| User              |Uses the application directly. They are interested in finding gas station, share the new ones they find in the platform and update the fuel prices|
 
 # Context Diagram and interfaces
 
@@ -130,10 +130,9 @@ rectangle EZGas{
 
   AU --> (FR5 Vote a fuel price)
   AU --> (FR7 Insert new gas station)
-  A --> (FR6 Manage Accounts)
   A --> (FR7 Accept new gas station request)
   AU --> (FR1 Enter new price)
-  
+
   (FR4 Show map and gas stations) <-- WA
   (FR7 Insert new gas station) <-- (FR7 Accept new gas station request)
   (FR2 FR3 Insert search params) --> (FR2 FR3 FR4 Search gas stations)
@@ -144,7 +143,7 @@ rectangle EZGas{
 @enduml
 ```
 
-## Use Cases 
+## Use Cases
 ## Relevant scenarios
 
 ### Use case 1, UC1 - FR1 Record price of fuel
@@ -152,8 +151,8 @@ rectangle EZGas{
 | Actors Involved        | Authenticated_user |
 | ------------- |:-------------:|
 |  Precondition     | Active account, log in operation, distance of user from gas station < 200 m |
-|  Post condition     | Prices inserted |
-|  Nominal Scenario     | User logs into the app with his/her account. Inserts fuel prices.|
+|  Post condition     | Price inserted |
+|  Nominal Scenario     | User logs into the app with his/her account. Inserts fuel price for the selected fuel type.|
 |  Variants     | If the fuel is not already present in the list of fuels present at the gas station he/she can insert a new fuel and its connected price.|
 
 ## Scenario 1
@@ -166,14 +165,15 @@ rectangle EZGas{
 | Step#        |  Step description   |
 |  1	 | User selects a gas station|
 |  2   | The application through web API verifies the position of the user which must be in 200 m from the gas station|
-|  3	 |	User inserts the new prices of fuel into a gas station|
+|  3	 |	User selects the fuel type |
+|  4	 |	User inserts the new prices of fuel into a gas station|
 
-### Use case 2, UC2 - FR2 FR3 Search for gas station with certain properties
+### Use case 2, UC2 - FR2 FR3 Search for gas stations with certain properties
 
 | Actors Involved        | User, Maps API|
 | ------------- |:-------------:|
 |  Precondition     | User selected a search type (distance, price, type of fuel) |
-|  Post condition     |  Gas station shown on the map |
+|  Post condition     |  Gas stations shown on the map |
 |  Nominal Scenario     | Looks for gas stations based on the search type inserted. On the Map will be shown all of the gas stations within a certain range, decided by the user through a slider|
 |  Variants     | |
 
@@ -361,9 +361,9 @@ node "Application Server" as AS {
 }
 
 node "Web Server" as W {
-  artifact "Web Site" 
+  artifact "Web Site"
 }
- 
+
 node "DB Server" as DB {
     database Accounts as ACC
     database Votes AS VO
@@ -371,11 +371,11 @@ node "DB Server" as DB {
 }
 
 node Client as C {
-artifact Browser as B 
+artifact Browser as B
 }
 
 node "Maps API" as MA {
-  
+
 }
 
 C -- W : internet
