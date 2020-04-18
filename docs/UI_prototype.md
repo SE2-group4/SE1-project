@@ -104,7 +104,7 @@ When an authenticated user selects "insert a new price", he/she can insert the p
 
 When the authenticated user selects "insert new gas station", he/she can notify the presence of a new gas station by inserting its address in the specific box.
 
-# Administrator
+# Administrator view
 
 ## 8. Login
 
