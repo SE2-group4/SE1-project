@@ -48,8 +48,6 @@ As proposed by the professor, a person can produce about 10 LOC per hour. These 
 
 # Estimate by activity decomposition
 
-
-
 ###
 
 |         Activity name    | Estimated effort (person hours)   |
