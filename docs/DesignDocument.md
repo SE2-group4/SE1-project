@@ -363,13 +363,71 @@ end title
 
 ```
 
-
 # Verification sequence diagrams
 \<select key scenarios from the requirement document. For each of them define a sequence diagram showing that the scenario can be implemented by the classes and methods in the design>
 
+###Scenario 10.1 - Price is correct (UC.10)
 
+```plantuml
 
+@startuml
+hide footbox
+skinparam shadowing false
 
+participant User as U
+participant "Gas Station" as GS
+participant EZGas as E
+participant "User 2" as U2
 
+U -> GS: 1: getGasStationById()
+activate U
+activate GS
 
+deactivate GS
+U -> E: 2: signalPrice()
+deactivate U
+activate E
 
+E -> U2: 3: getUserById()
+activate U2
+
+deactivate U2
+E -> U2: 4: increaseUserReputation()
+activate U2
+
+@enduml
+
+```
+
+###Scenario 10.2 - Price is wrong (UC.10)
+
+```plantuml
+
+@startuml
+hide footbox
+skinparam shadowing false
+
+participant User as U
+participant "Gas Station" as GS
+participant EZGas as E
+participant "User 2" as U2
+
+U -> GS: 1: getGasStationById()
+activate U
+activate GS
+
+deactivate GS
+U -> E: 2: signalPrice()
+deactivate U
+activate E
+
+E -> U2: 3: getUserById()
+activate U2
+
+deactivate U2
+E -> U2: 4: decreaseUserReputation()
+activate U2
+
+@enduml
+
+```
