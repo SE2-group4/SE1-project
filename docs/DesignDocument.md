@@ -229,7 +229,15 @@ package "Backend" {
 
 
 package "it.polito.ezgas.converter" {
-
+    class UserConverter{
+        + toUserDto()
+    }
+    class GasStatioConverter{
+        + toGasStationDto()
+    }
+    class PriceStationConverter{
+        + toPriceStationConverter()
+    }
 }
 
 package "it.polito.ezgas.entity" {
@@ -374,6 +382,7 @@ package "it.polito.ezgas.controller" {
     UserController -- LoginDto
     UserController -- UserDto
     UserController -- UserService
+
 }
 
 
@@ -481,43 +490,43 @@ title
 
   =Verification traceability matrix
 
-  |= |= EZGas |= User |= Administrator |= GasStation |= GeoPoint |= CarSharingCompany |= PriceList |= Anonymous User |
+  |= ||= User |= Administrator |= GasStation |= GeoPoint |= PriceList |= Anonymous User |
   ' Define a new user, or modify an existing user
-  | FR1.1   | | x | x | | | | | |
+  | FR1.1   | x | x | | | | |
   ' Delete a user
-  | FR1.2   | | x | x | | | | | |
+  | FR1.2   | x | x | | | |
   ' List all users
-  | FR1.3   | | | x | | | | | |
+  | FR1.3   | | x | | | | |
   ' Search a user
-  | FR1.4   | | x | x | | | | | |
+  | FR1.4   | x | x | | | | |
   ' Manage rights. Authorize access to functions to specific actors according to access rights
-  | FR2     | | | x | | | | | |
+  | FR2     | | x | | | | |
   ' Manage gas stations
-  | FR3     | | | x | x | | | | |
+  | FR3     | | x | x | | | |
   ' Define a new gas station, or modify an existing gas station
-  | FR3.1   | | | x | x | | | | |
+  | FR3.1   | | x | x | | | |
   ' Delete a gas station
-  | FR3.2   | | | x | x | | | | |
+  | FR3.2   | | x | x | | | |
   ' List all gas stations
-  | FR3.3   | | | x | x | | | | |
+  | FR3.3   | | x | x | | | |
   ' Search gas stations
-  | FR4     | | x | x | x | | | | x |
+  | FR4     | x | x | x | | | x |
   ' Retrieve gas stations within radius r of a given geo point
-  | FR4.1   | | x | x | x | x | | | x |
+  | FR4.1   | x | x | x | x | | x |
   ' Retrieve gas stations within radius r of a given address
-  | FR4.2   | | x | x | x | x | | | x |
+  | FR4.2   | x | x | x | x | | x |
   ' Show given set of gas stations, and their fuel prices on a given map
-  | FR4.3   | | x | x | x | x | | x | x |
+  | FR4.3   | x | x | x | x | x | x |
   ' Sort given set of gas stations according to fuel type price
-  | FR4.4   | | x | x | x | | | x | x |
+  | FR4.4   | x | x | x | | x | x |
   ' Filter out given set of gas stations according to fuel type and or car sharing option
-  | FR4.5   | | x | x | x | | x | x | x |
+  | FR4.5   | x | x | x | | x | x |
   ' Manage fuel prices and trust
-  | FR5.1   | | x | x | x | | | x | |
+  | FR5.1   | x | x | x | | x | |
   ' Update trust level of a price list for a gas station
-  | FR5.2   | x | x | x | x | | | x | |
+  | FR5.2   | x | x | x | | x | |
   ' Evaluate  price list for a gas station
-  | FR5.3   | | x | x | x | | | x | |
+  | FR5.3  | x | x | x | | x | |
 
 end title
 
