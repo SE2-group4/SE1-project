@@ -138,6 +138,7 @@ package "it.polito.ezgas.repository" {
 }
 note "see folder ServicePackage" as n
 n -- ps
+@enduml
 ```
 
 
@@ -223,6 +224,165 @@ Contains Service classes that implement the Service Interfaces in the Service pa
 <Based on the official requirements and on the Spring Boot design guidelines, define the required classes (UML class diagram) of the back-end in the proper packages described in the high-level design section.>
 
 ```plantuml
+package "Backend" {
+
+
+
+package "it.polito.ezgas.converter" {
+
+}
+
+package "it.polito.ezgas.entity" {
+    class GasStation{
+        - gasStationId
+        - gasStationName
+        - gasStationAddress
+        - brand
+        - hasDiesel
+        - hasSuper
+        - hasSuperPlus
+        - hasGas
+        - hasMethane
+        - carSharing
+        - lat
+        - lon
+        - dieselPrice
+        - superPrice
+        - superPlusPrice
+        - gasPrice
+        - methanePrice
+        - reportUser
+        - reportTimestamp
+        - reportDependability
+        - user
+        + Getter()
+        + Setter()
+
+        <non converrebbe mettere
+        un riferimento al price report attuale
+        al posto di ricopiare tutti i valori?
+        vale la pena sostituire lat/lon con una classe?
+    }
+    class User{
+        - userId
+        - userName
+        - password
+        - email
+        - reputation
+        - isAdmin
+        + Getter()
+        + Setter()
+    }
+    class PriceReport{
+        - priceReportId
+        - user
+        - dieselPrice
+        - superPrice
+        - superPlusPrice
+        - gasPrice
+        + Getter()
+        + Setter()
+    }
+
+    User -- PriceReport
+    User -- GasStation
+}
+
+package "it.polito.ezgas.dto" {
+    class IdPw{
+        - user
+        - pw
+        + Getter()
+        + Setter()
+    }
+    class LoginDto{
+        userId
+        userName
+        token
+        email
+        reputation
+        admin
+        + Getter()
+        + Setter()
+    }
+    class UserDto
+    class GasStationDto
+    class PriceReportDto
+
+    User -- PriceReportDto
+    UserDto -- GasStationDto
+}
+
+package "it.polito.ezgas.repository" {
+
+}
+
+package "it.polito.ezgas.service" {
+   interface "GasStationService"{
+       + getGasStationById(gasStationId)
+       + saveGasStation(gasStationDto)
+       + getAllGasStations()
+       + Boolean deleteGasStation(gasStationId)
+       + getGasStationsByGasolineType(gasolinetype)
+       + getGasStationsByProximity(lat, lon)
+       + getGasStationsWithCoordinates(lat, lon, gasolinetype, carsharing)
+       + getGasStationsWithoutCoordinates(gasolinetype, carsharing)
+       + setReport(gasStationId, dieselPrice, superPrice, superPlusPrice, gasPrice, methanePrice, userId)
+       + getGasStationByCarSharing(carSharing)
+   }
+   interface "UserService" {
+       + getUserById(userId)
+       + saveUser(userDto)
+       + getAllUsers()
+       + deleteUser(userId)
+       + login(credentials)
+       + increaseUserReputation(userId)
+       + decreaseUserReputation(userId)
+   }
+
+   UserService -- LoginDto
+   UserService -- UserDto
+   GasStationService - GasStationDto
+}
+
+package "it.polito.ezgas.controller" {
+    class GasStationController{
+        - gasStationService
+        + getGasStationById(gasStationId)
+        + getAllGasStations()
+        + saveGasStation(gasStationDto)
+        + deleteUser(gasStationId)
+        + getGasStationsByGasolineType(gasolineType)
+        + getGasStationsByProximity(myLat, myLon)
+        + getGasStationsWithCoordinates(myLat, myLon, gasolineType, carSharing)
+        + setGasStationReport(gasStationId, dieselPrice, superPrice, superPlusPrice, gasPrice, methanePrice, userId)
+    }
+
+    class UserController{
+        - UserService
+        + getAllUsers()
+        + saveUser(userDto)
+        + deleteUser(userId)
+        + increaseUserReputation(userId)
+        + decreaseUserReputation(userId)
+        + login(credentials)
+    }
+
+    GasStationController -- GasStationService
+    GasStationController -- GasStationDto
+    UserController -- IdPw
+    UserController -- LoginDto
+    UserController -- UserDto
+    UserController -- UserService
+}
+
+
+}
+
+
+
+
+/'
 class EZGas {
     createUserAccount(account_name, account_pwd, email)
     deleteUserAccount(account_name)
@@ -296,7 +456,7 @@ GasStation  -- "0..1" PriceList
 User -- "*" PriceList
 User "*" -- GeoPoint
 GeoPoint -- GasStation
-
+'/
 ```
 
 
