@@ -226,17 +226,14 @@ Contains Service classes that implement the Service Interfaces in the Service pa
 ```plantuml
 package "Backend" {
 
-
-
-package "it.polito.ezgas.converter" {
-    class UserConverter{
-        + toUserDto()
-    }
-    class GasStatioConverter{
-        + toGasStationDto()
-    }
-    class PriceStationConverter{
-        + toPriceStationConverter()
+package "it.polito.ezgas.repository" {
+    interface UserRepository
+    interface GasStationRepository{
+        findByGasolintType(gasolinetype): List<GasStation>
+        findByProximity(GeoPoint): List<GasStation>
+        findByGeoPoint(GeoPoint, gasolinetype, carsharing): List<GasStation>
+        findWithoutGeoPoint(gasolinetype, carsharing): List<GasStation>
+        findByCarSharing(carsharing): List<GasStationDto>
     }
 }
 
@@ -252,24 +249,10 @@ package "it.polito.ezgas.entity" {
         - hasGas
         - hasMethane
         - carSharing
-        - lat
-        - lon
-        - dieselPrice
-        - superPrice
-        - superPlusPrice
-        - gasPrice
-        - methanePrice
-        - reportUser
-        - reportTimestamp
-        - reportDependability
-        - user
+        - priceReport
+        - geoPoint
         + Getter()
         + Setter()
-
-        <non converrebbe mettere
-        un riferimento al price report attuale
-        al posto di ricopiare tutti i valori?
-        vale la pena sostituire lat/lon con una classe?
     }
     class User{
         - userId
@@ -291,9 +274,13 @@ package "it.polito.ezgas.entity" {
         + Getter()
         + Setter()
     }
+    class GeoPoint{
+        - latitude
+        - lonngitude
+        + Getter()
+        + Setter()
+    }
 
-    User -- PriceReport
-    User -- GasStation
 }
 
 package "it.polito.ezgas.dto" {
@@ -313,79 +300,117 @@ package "it.polito.ezgas.dto" {
         + Getter()
         + Setter()
     }
-    class UserDto
-    class GasStationDto
-    class PriceReportDto
-
-    User -- PriceReportDto
-    UserDto -- GasStationDto
+    class UserDto{
+        - userId
+        - userName
+        - password
+        - email
+        - reputation
+        - isAdmin
+        + Getter()
+        + Setter()
+    }
+    class GasStationDto{
+        - gasStationId
+        - gasStationName
+        - gasStationAddress
+        - brand
+        - hasDiesel
+        - hasSuper
+        - hasSuperPlus
+        - hasGas
+        - hasMethane
+        - carSharing
+        - priceReport
+        - geoPoint
+        + Getter()
+        + Setter()
+    }
+    class PriceReportDto{
+        - priceReportId
+        - user
+        - dieselPrice
+        - superPrice
+        - superPlusPrice
+        - gasPrice
+        + Getter()
+        + Setter()
+    }
+    class GeoPointDto{
+        - latitude
+        - lonngitude
+        + Getter()
+        + Setter()
+    }
 }
 
-package "it.polito.ezgas.repository" {
-
+package "it.polito.ezgas.converter" {
+    class UserConverter{
+        + toUserDto(User): UserDto
+    }
+    class GasStatioConverter{
+        + toGasStationDto(GasStation): GasStationDto
+    }
+    class PriceReportConverter{
+        + toPriceReportConverter(PriceReport): PriceReportDto
+    }
+    class GeoPointConverter{
+        + toGeoPointConverter(GeoPoint): GeoPointDto
+    }
 }
 
 package "it.polito.ezgas.service" {
    interface "GasStationService"{
-       + getGasStationById(gasStationId)
-       + saveGasStation(gasStationDto)
-       + getAllGasStations()
-       + Boolean deleteGasStation(gasStationId)
-       + getGasStationsByGasolineType(gasolinetype)
-       + getGasStationsByProximity(lat, lon)
-       + getGasStationsWithCoordinates(lat, lon, gasolinetype, carsharing)
-       + getGasStationsWithoutCoordinates(gasolinetype, carsharing)
-       + setReport(gasStationId, dieselPrice, superPrice, superPlusPrice, gasPrice, methanePrice, userId)
-       + getGasStationByCarSharing(carSharing)
+       + getGasStationById(gasStationId): GasStationDto
+       + saveGasStation(GasStationDto): GasStationDto
+       + getAllGasStations(): List<GasStationDto>
+       + Boolean deleteGasStation(gasStationId): boolean
+       + getGasStationsByGasolineType(gasolinetype):  
+       + getGasStationsByProximity(GeoPoint): List<GasStationDto>
+       + getGasStationsWithCoordinates(Geopoint, gasolinetype, carsharing): List<GasStationDto>
+       + getGasStationsWithoutCoordinates(gasolinetype, carsharing): List<GasStationDto>
+       + setReport(gasStationId, dieselPrice, superPrice, superPlusPrice, gasPrice, methanePrice, userId): void
+       + getGasStationByCarSharing(carSharing): List<GasStationDto>
    }
    interface "UserService" {
-       + getUserById(userId)
-       + saveUser(userDto)
-       + getAllUsers()
-       + deleteUser(userId)
-       + login(credentials)
-       + increaseUserReputation(userId)
-       + decreaseUserReputation(userId)
+       + getUserById(userId): UserDto 
+       + saveUser(userDto): UserDto 
+       + getAllUsers(): List<UserDto>
+       + deleteUser(userId): Boolean
+       + login(credentials): LoginDto
+       + increaseUserReputation(userId): Integer
+       + decreaseUserReputation(userId): Integer
    }
-
-   UserService -- LoginDto
-   UserService -- UserDto
-   GasStationService - GasStationDto
 }
 
-package "it.polito.ezgas.controller" {
+package  "it.polito.ezgas.controller" {
     class GasStationController{
         - gasStationService
-        + getGasStationById(gasStationId)
-        + getAllGasStations()
-        + saveGasStation(gasStationDto)
-        + deleteUser(gasStationId)
-        + getGasStationsByGasolineType(gasolineType)
-        + getGasStationsByProximity(myLat, myLon)
-        + getGasStationsWithCoordinates(myLat, myLon, gasolineType, carSharing)
-        + setGasStationReport(gasStationId, dieselPrice, superPrice, superPlusPrice, gasPrice, methanePrice, userId)
+        + getGasStationById(gasStationId): GasStationDto 
+        + getAllGasStations(): List<GasStationDto>
+        + saveGasStation(gasStationDto): GasStationDto 
+        + deleteUser(gasStationId): Boolean 
+        + getGasStationsByGasolineType(gasolineType): List<GasStationDto>
+        + getGasStationsByProximity(myLat, myLon): List<GasStationDto>
+        + getGasStationsWithCoordinates(myLat, myLon, gasolineType, carSharing): List<GasStationDto>
+        + setGasStationReport(gasStationId, dieselPrice, superPrice, superPlusPrice, gasPrice, methanePrice, userId): void
     }
 
     class UserController{
         - UserService
-        + getAllUsers()
-        + saveUser(userDto)
-        + deleteUser(userId)
-        + increaseUserReputation(userId)
-        + decreaseUserReputation(userId)
-        + login(credentials)
+        + getUserById(userid): UserDto
+        + getAllUsers(): List<UserDto>
+        + saveUser(UserDto): UserDto
+        + deleteUser(userId): Boolean
+        + increaseUserReputation(userId): Integer
+        + decreaseUserReputation(userId): Integer
+        + login(IdPw): LoginDto
     }
-
-    GasStationController -- GasStationService
-    GasStationController -- GasStationDto
-    UserController -- IdPw
-    UserController -- LoginDto
-    UserController -- UserDto
-    UserController -- UserService
-
 }
 
-
+it.polito.ezgas.controller -[hidden]-> it.polito.ezgas.service
+it.polito.ezgas.service -[hidden]-> it.polito.ezgas.repository
+it.polito.ezgas.repository -[hidden]> it.polito.ezgas.converter
 }
 
 
@@ -534,6 +559,48 @@ end title
 
 # Verification sequence diagrams
 \<select key scenarios from the requirement document. For each of them define a sequence diagram showing that the scenario can be implemented by the classes and methods in the design>
+
+###Use case 1, UC1 - Create User Account
+```plantuml
+
+@startuml
+hide footbox
+skinparam shadowing false
+
+participant UserController as UC
+participant UserService as US
+participant UserConverter as UCV
+participant UserRepository as UR
+participant H2Database as H2
+
+activate UC
+UC -> US: 1: saveGasStation()
+activate US
+
+
+US -> UR: 2: saveGasStation()
+activate UR
+
+UR -> H2: 3: save()
+
+activate H2
+H2 -> UR: 4: return User
+deactivate H2
+
+
+UR -> US: 5: return User
+deactivate UR
+
+activate UCV
+US -> UCV: 6: toUserDto()
+UCV -> US: 7: return UserDto
+deactivate UCV
+US -> UC: 8: return UserDto
+deactivate UC
+
+
+
+@enduml
 
 ###Scenario 10.1 - Price is correct (UC.10)
 
