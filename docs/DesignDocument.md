@@ -227,14 +227,25 @@ Contains Service classes that implement the Service Interfaces in the Service pa
 package "Backend" {
 
 package "it.polito.ezgas.repository" {
-    interface UserRepository
-    interface GasStationRepository{
-        findByGasolintType(gasolinetype): List<GasStation>
-        findByProximity(GeoPoint): List<GasStation>
-        findByGeoPoint(GeoPoint, gasolinetype, carsharing): List<GasStation>
-        findWithoutGeoPoint(gasolinetype, carsharing): List<GasStation>
-        findByCarSharing(carsharing): List<GasStationDto>
+    interface UserRepository{
+        + updateUserName(userId, userName): User
+        + updateEmail(userId, email): User
+        + updatePassword(userId, password): User
+        + updateReputation(userId, reputation): User
     }
+    interface GasStationRepository{
+        + updateGasStationName(gasStationId, gasStationName): GasStation
+        + updateGasStationAddress(gasStationId, gasStationAddress): GasStation
+        + updateBrand(gasStationId, brand): GasStation
+        + updateCarSharing(gasStationId, carSharing): GasStation
+        + findByGasolintType(gasolinetype): List<GasStation>
+        + findByProximity(GeoPoint): List<GasStation>
+        + findByGeoPoint(GeoPoint, gasolinetype, carsharing): List<GasStation>
+        + findWithoutGeoPoint(gasolinetype, carsharing): List<GasStation>
+        + findByCarSharing(carsharing): List<GasStation>
+        + updateReport(gasStationId, priceReportId): void
+    }
+    interface PriceReportRepository
 }
 
 package "it.polito.ezgas.entity" {
@@ -243,13 +254,8 @@ package "it.polito.ezgas.entity" {
         - gasStationName
         - gasStationAddress
         - brand
-        - hasDiesel
-        - hasSuper
-        - hasSuperPlus
-        - hasGas
-        - hasMethane
         - carSharing
-        - priceReport
+        - priceReportId
         - geoPoint
         + Getter()
         + Setter()
@@ -271,6 +277,7 @@ package "it.polito.ezgas.entity" {
         - superPrice
         - superPlusPrice
         - gasPrice
+        - time_tag
         + Getter()
         + Setter()
     }
@@ -315,11 +322,6 @@ package "it.polito.ezgas.dto" {
         - gasStationName
         - gasStationAddress
         - brand
-        - hasDiesel
-        - hasSuper
-        - hasSuperPlus
-        - hasGas
-        - hasMethane
         - carSharing
         - priceReport
         - geoPoint
@@ -333,8 +335,10 @@ package "it.polito.ezgas.dto" {
         - superPrice
         - superPlusPrice
         - gasPrice
+        - time_tag
         + Getter()
         + Setter()
+        + getTrustLevel()
     }
     class GeoPointDto{
         - latitude
@@ -361,6 +365,10 @@ package "it.polito.ezgas.converter" {
 
 package "it.polito.ezgas.service" {
    interface "GasStationService"{
+       + modifyGasStationName(gasStationId, gasStationName): GasStationDto
+       + modifyGasStationAddress(gasStationId, gasStationAddress): GasStationDto
+       + modifyBrand(gasStationId, brand): GasStationDto
+       + modifyCarSharing(gasStationId, carSharing): GasStationDto
        + getGasStationById(gasStationId): GasStationDto
        + saveGasStation(GasStationDto): GasStationDto
        + getAllGasStations(): List<GasStationDto>
@@ -369,10 +377,14 @@ package "it.polito.ezgas.service" {
        + getGasStationsByProximity(GeoPoint): List<GasStationDto>
        + getGasStationsWithCoordinates(Geopoint, gasolinetype, carsharing): List<GasStationDto>
        + getGasStationsWithoutCoordinates(gasolinetype, carsharing): List<GasStationDto>
-       + setReport(gasStationId, dieselPrice, superPrice, superPlusPrice, gasPrice, methanePrice, userId): void
-       + getGasStationByCarSharing(carSharing): List<GasStationDto>
+       + setReport(gasStationId, priceReportId): void
+       + getGasStationByCarSharing(carSharing): List<GasStation>
+       + savePriceReport(dieselPrice, superPrice, superPlusPrice, gasPrice, methanePrice, userId): PriceReport
    }
    interface "UserService" {
+       + modifyUserName(userId, userName): UserDto
+       + modifyEmail(userId, email): UserDto
+       + modifyPassword(userId, password): UserDto
        + getUserById(userId): UserDto 
        + saveUser(userDto): UserDto 
        + getAllUsers(): List<UserDto>
@@ -398,6 +410,13 @@ package  "it.polito.ezgas.controller" {
 
     class UserController{
         - UserService
+        + modifyGasStationName(gasStationId, gasStationName): GasStationDto
+        + modifyGasStationAddress(gasStationId, gasStationAddress): GasStationDto
+        + modifyBrand(gasStationId, brand): GasStationDto
+        + modifyCarSharing(gasStationId, carSharing): GasStationDto
+        + modifyUserName(userId, userName): UserDto
+        + modifyEmail(userId, email): UserDto
+        + modifyPassword(userId, password): UserDto
         + getUserById(userid): UserDto
         + getAllUsers(): List<UserDto>
         + saveUser(UserDto): UserDto
@@ -576,7 +595,7 @@ participant H2Database as H2
 activate UC
 UC -> US: 1: saveGasStation()
 activate US
-
+deactivate UC
 
 US -> UR: 2: saveGasStation()
 activate UR
@@ -584,86 +603,368 @@ activate UR
 UR -> H2: 3: save()
 
 activate H2
-H2 -> UR: 4: return User
+H2 --> UR: 4: return User
 deactivate H2
 
 
-UR -> US: 5: return User
+UR --> US: 5: return User
 deactivate UR
 
 activate UCV
 US -> UCV: 6: toUserDto()
-UCV -> US: 7: return UserDto
+UCV --> US: 7: return UserDto
 deactivate UCV
-US -> UC: 8: return UserDto
+activate UC
+US --> UC: 8: return UserDto
 deactivate UC
-
-
-
 @enduml
+```
 
-###Scenario 10.1 - Price is correct (UC.10)
-
+###Use case 2, UC2 - Modify user account (userName)
 ```plantuml
-
 @startuml
 hide footbox
 skinparam shadowing false
 
-participant User as U
-participant "Gas Station" as GS
-participant EZGas as E
-participant "User 2" as U2
+participant UserController as UC
+participant UserService as US
+participant UserConverter as UCV
+participant UserRepository as UR
+participant H2Database as H2
 
-U -> GS: 1: getGasStationById()
-activate U
+activate UC
+UC -> US: 1: modifyUserName()
+activate US
+deactivate UC
+
+US -> UR: 2: modifyUserName()
+activate UR
+
+UR -> H2: 3: updateUserName()
+
+activate H2
+H2 --> UR: 4: return User
+deactivate H2
+
+
+UR --> US: 5: return User
+deactivate UR
+
+activate UCV
+US -> UCV: 6: toUserDto()
+UCV --> US: 7: return UserDto
+deactivate UCV
+activate UC
+US --> UC: 8: return UserDto
+deactivate UC
+@enduml
+```
+
+###Use case 3, UC3 - Delete user account 
+```plantuml
+@startuml
+hide footbox
+skinparam shadowing false
+
+participant UserController as UC
+participant UserService as US
+participant UserRepository as UR
+participant H2Database as H2
+
+activate UC
+UC -> US: 1: deleteUser()
+activate US
+deactivate UC
+
+US -> UR: 2: deleteUser()
+activate UR
+
+UR -> H2: 3: deleteById()
+
+activate H2
+H2 --> UR: 4: return Boolean
+deactivate H2
+
+
+UR --> US: 5: return Boolean
+deactivate UR
+activate UC
+US --> UC: 8: return Boolean
+deactivate UC
+@enduml
+```
+
+###Use case 4, UC4 - Create Gas Station
+```plantuml
+@startuml
+hide footbox
+skinparam shadowing false
+
+participant GasStationController as GC
+participant GasStationService as GS
+participant GasStationRepository as GR
+participant GasStationConverter as GCV
+participant H2Database as H2
+
+activate GC
+GC -> GS: 1: saveGasStation()
+activate GS
+deactivate GC
+
+GS -> GR: 2: saveGasStation()
+activate GR
+
+GR -> H2: 3: deleteById()
+
+activate H2
+H2 --> GR: 4: return GasStation
+deactivate H2
+
+GR --> GS: 5: return GasStation
+deactivate GR
+
+activate GCV
+GS -> GCV: 6: toGasStationDto()
+GCV --> GS: 7: return GasStationDto
+deactivate GCV
+activate GC
+GS --> GC: 8: return GasStationDto
+deactivate GC
+@enduml
+```
+###Use case 5, UC5 - Modify Gas Station information (gasStationName)
+```plantuml
+@startuml
+hide footbox
+skinparam shadowing false
+
+participant GasStationController as GC
+participant GasStationService as GS
+participant GasStationConverter as GCV
+participant GasStationRepository as GR
+participant H2Database as H2
+
+activate GC
+GC -> GS: 1: modifyGasStationName()
+deactivate GC
 activate GS
 
-deactivate GS
-U -> E: 2: signalPrice()
-deactivate U
-activate E
 
-E -> U2: 3: getUserById()
-activate U2
+GS -> GR: 2: modifyGasStation()
+activate GR
 
-deactivate U2
-E -> U2: 4: increaseUserReputation()
-activate U2
+GR -> H2: 3: updateGasStation()
 
+activate H2
+H2 --> GR: 4: return GasStation
+deactivate H2
+
+
+GR --> GS: 5: return GasStation
+deactivate UR
+
+activate GCV
+GS -> GCV: 6: toGasStationDto()
+GCV --> GS: 7: return GasStationDto
+deactivate GCV
+
+activate GC
+GS --> GC: 8: return GasStationDto
+deactivate GC
 @enduml
+```
 
+###Use case 6, UC6 - Delete Gas Station
+```plantuml
+@startuml
+hide footbox
+skinparam shadowing false
+
+participant GasStationController as GC
+participant GasStationService as GS
+participant GasStationRepository as GR
+participant H2Database as H2
+
+activate GC
+GC -> GS: 1: deleteGasStation()
+activate GS
+deactivate GC
+
+GS -> GR: 2: deleteGasStation()
+activate GR
+
+GR -> H2: 3: deleteById()
+
+activate H2
+H2 --> GR: 4: return Boolean
+deactivate H2
+
+
+GR --> GS: 5: return Boolean
+deactivate UR
+
+activate GC
+GS --> GC: 8: return Boolean
+deactivate GC
+@enduml
+```
+###Use case 7, UC7 - Report fuel price for a gas station
+```plantuml
+@startuml
+hide footbox
+skinparam shadowing false
+
+participant GasStationController as GC
+participant GasStationService as GS
+participant GasStationRepository as GR
+participant PriceReportRepository as PRR
+participant PriceReport as PR
+participant H2Database as H2
+
+activate GC
+GC -> GS: 1: setGasStationReport()
+deactivate GC
+
+activate GS
+GS -> PRR: 2: savePriceReport()
+activate PRR
+PRR -> H2: 3: save()
+activate H2
+H2 --> PRR: 4: return PriceReport
+deactivate H2
+PRR --> GS: 5: return PriceReport
+deactivate PRR
+GS -> GR: 6: setReport()
+deactivate GS
+activate GR 
+GR -> H2: updateReport()
+deactivate GR
+@enduml
+```
+
+###Use case 8, UC8 - Obtain price of fuel for gas stations in a certain geographic area
+```plantuml
+@startuml
+hide footbox
+skinparam shadowing false
+
+participant GasStationController as GC
+participant GasStationService as GS
+participant GasStationConverter as GCV
+participant GasStationRepository as GR
+participant H2Database as H2
+
+activate GC
+GC -> GS: 1: getGasStationsByProximity()
+deactivate GC
+activate GS
+
+
+GS -> GR: 2: getGasStationsByProximity()
+activate GR
+
+GR -> H2: 3: findByProximity()
+
+activate H2
+H2 --> GR: 4: return List<GasStation>
+deactivate H2
+
+
+GR --> GS: 5: return List<GasStation>
+deactivate UR
+
+activate GCV
+GS -> GCV: 6: for each(toGasStationDto())
+GCV --> GS: 7: return GasStationDto
+deactivate GCV
+
+activate GC
+GS --> GC: 8: return List<GasStationDto>
+deactivate GC
+@enduml
+```
+
+###Use case 9, UC9 - Update trust level of price list
+
+
+###Scenario 10.1 - Price is correct (UC.10)
+
+```plantuml
+@startuml
+hide footbox
+skinparam shadowing false
+
+participant UserController as UC
+participant UserService as US
+participant UserConverter as UCV
+participant UserRepository as UR
+participant H2Database as H2
+
+activate UC
+UC -> US: 1: increaseUserReputation()
+activate US
+deactivate UC
+
+US -> UR: 2: increaseUserReputation()
+activate UR
+
+UR -> H2: 3: updateReputation()
+
+activate H2
+H2 --> UR: 4: return User
+deactivate H2
+
+
+UR --> US: 5: return User
+deactivate UR
+
+activate UCV
+US -> UCV: 6: toUserDto()
+UCV --> US: 7: return UserDto
+deactivate UCV
+activate UC
+US --> UC: 8: return Integer
+deactivate UC
+@enduml
 ```
 
 ###Scenario 10.2 - Price is wrong (UC.10)
 
 ```plantuml
-
 @startuml
 hide footbox
 skinparam shadowing false
 
-participant User as U
-participant "Gas Station" as GS
-participant EZGas as E
-participant "User 2" as U2
+participant UserController as UC
+participant UserService as US
+participant UserConverter as UCV
+participant UserRepository as UR
+participant H2Database as H2
 
-U -> GS: 1: getGasStationById()
-activate U
-activate GS
+activate UC
+UC -> US: 1: decreaseUserReputation()
+activate US
+deactivate UC
 
-deactivate GS
-U -> E: 2: signalPrice()
-deactivate U
-activate E
+US -> UR: 2: decreaseUserReputation()
+activate UR
 
-E -> U2: 3: getUserById()
-activate U2
+UR -> H2: 3: updateReputation()
 
-deactivate U2
-E -> U2: 4: decreaseUserReputation()
-activate U2
+activate H2
+H2 --> UR: 4: return User
+deactivate H2
 
+
+UR --> US: 5: return User
+deactivate UR
+
+activate UCV
+US -> UCV: 6: toUserDto()
+UCV --> US: 7: return UserDto
+deactivate UCV
+activate UC
+US --> UC: 8: return Integer
+deactivate UC
 @enduml
-
 ```
