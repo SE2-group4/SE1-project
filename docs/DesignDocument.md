@@ -527,6 +527,38 @@ GeoPoint -- GasStation
 \<for each functional requirement from the requirement document, list which classes concur to implement it>
 
 
+<!-- CHECK THIS -->
+
+Only classes and interfaces from the following packages have been considered in the traceability matrix:
+
+- it.polity.ezgas.entity
+- it.polito.ezgas.service
+- it.polito.ezgas.repository
+- it.polito.ezgas.controller
+
+Others are support classes (or interfaces) and do not perform operations to directly implement functional requirements.
+
+|       | User | GasStation | GeoPoint | PriceList | UserService | GasStationService | UserController | GasStationController | UserRepository | GasStationRepository | PriceListRepository |
+| :-    | :-:  | :-:        | :-:      | :-:       | :-:         | :-:               | :-:            | :-:                  | :-:            | :-:                  | :-: |
+| FR1.1 | x    |            |          |           | x           |                   | x              |                      | x              |                      |     |
+| FR1.2 | x    |            |          |           | x           |                   | x              |                      | x              |                      |     |
+| FR1.3 | x    |            |          |           | x           |                   | x              |                      | x              |                      |     |
+| FR1.4 | x    |            |          |           | x           |                   | x              |                      | x              |                      |     |
+| FR2   | x    |            |          |           | x           |                   | x              |                      |                |                      |     |
+| FR3.1 | x    |            |          |           | x           |                   | x              | x                    |                | x                    | x   |
+| FR3.2 | x    |            |          |           | x           |                   | x              | x                    |                | x                    |     |
+| FR3.3 | x    | x          |          |           | x           | x                 | x              | x                    |                | x                    |     |
+| FR4.1 | x    | x          | x        |           | x           | x                 | x              | x                    |                | x                    |     | 
+| FR4.2 | x    | x          | x        |           | x           | x                 | x              | x                    |                | x                    |     | 
+| FR4.3 | x    | x          | x        | x         | x           | x                 | x              | x                    |                | x                    | x   | 
+| FR4.4 | x    | x          |          | x         | x           | x                 | x              | x                    |                | x                    | x   | 
+| FR4.5 | x    | x          |          | x         | x           | x                 | x              | x                    |                | x                    | x   | 
+| FR5.1 | x    | x          |          | x         | x           | x                 | x              | x                    |                |                      | x   |
+| FR5.2 | x    | x          |          | x         | x           | x                 | x              | x                    |                |                      | x   |
+| FR5.3 | x    | x          |          | x         | x           | x                 | x              | x                    |                |                      | x   | 
+
+<!-- CHECK THIS END -->
+
 ```plantuml
 @startuml
 
