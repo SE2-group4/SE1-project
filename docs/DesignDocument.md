@@ -579,9 +579,9 @@ end title
 # Verification sequence diagrams
 \<select key scenarios from the requirement document. For each of them define a sequence diagram showing that the scenario can be implemented by the classes and methods in the design>
 
-###Use case 1, UC1 - Create User Account
-```plantuml
+### Use case 1, UC1 - Create User Account
 
+```plantuml
 @startuml
 hide footbox
 skinparam shadowing false
@@ -595,7 +595,6 @@ participant H2Database as H2
 activate UC
 UC -> US: 1: saveGasStation()
 activate US
-deactivate UC
 
 US -> UR: 2: saveGasStation()
 activate UR
@@ -606,21 +605,21 @@ activate H2
 H2 --> UR: 4: return User
 deactivate H2
 
-
 UR --> US: 5: return User
 deactivate UR
 
-activate UCV
 US -> UCV: 6: toUserDto()
+activate UCV
 UCV --> US: 7: return UserDto
 deactivate UCV
-activate UC
 US --> UC: 8: return UserDto
+deactivate US
 deactivate UC
 @enduml
 ```
 
-###Use case 2, UC2 - Modify user account (userName)
+### Use case 2, UC2 - Modify user account (userName)
+
 ```plantuml
 @startuml
 hide footbox
@@ -635,7 +634,6 @@ participant H2Database as H2
 activate UC
 UC -> US: 1: modifyUserName()
 activate US
-deactivate UC
 
 US -> UR: 2: modifyUserName()
 activate UR
@@ -650,17 +648,18 @@ deactivate H2
 UR --> US: 5: return User
 deactivate UR
 
-activate UCV
 US -> UCV: 6: toUserDto()
+activate UCV
 UCV --> US: 7: return UserDto
 deactivate UCV
-activate UC
 US --> UC: 8: return UserDto
+deactivate US
 deactivate UC
 @enduml
 ```
 
-###Use case 3, UC3 - Delete user account 
+### Use case 3, UC3 - Delete user account
+
 ```plantuml
 @startuml
 hide footbox
@@ -674,7 +673,6 @@ participant H2Database as H2
 activate UC
 UC -> US: 1: deleteUser()
 activate US
-deactivate UC
 
 US -> UR: 2: deleteUser()
 activate UR
@@ -685,16 +683,16 @@ activate H2
 H2 --> UR: 4: return Boolean
 deactivate H2
 
-
 UR --> US: 5: return Boolean
 deactivate UR
-activate UC
 US --> UC: 8: return Boolean
+deactivate US
 deactivate UC
 @enduml
 ```
 
-###Use case 4, UC4 - Create Gas Station
+### Use case 4, UC4 - Create Gas Station
+
 ```plantuml
 @startuml
 hide footbox
@@ -709,7 +707,6 @@ participant H2Database as H2
 activate GC
 GC -> GS: 1: saveGasStation()
 activate GS
-deactivate GC
 
 GS -> GR: 2: saveGasStation()
 activate GR
@@ -723,16 +720,17 @@ deactivate H2
 GR --> GS: 5: return GasStation
 deactivate GR
 
-activate GCV
 GS -> GCV: 6: toGasStationDto()
+activate GCV
 GCV --> GS: 7: return GasStationDto
 deactivate GCV
-activate GC
 GS --> GC: 8: return GasStationDto
+deactivate GS
 deactivate GC
 @enduml
 ```
-###Use case 5, UC5 - Modify Gas Station information (gasStationName)
+### Use case 5, UC5 - Modify Gas Station information (gasStationName)
+
 ```plantuml
 @startuml
 hide footbox
@@ -746,9 +744,7 @@ participant H2Database as H2
 
 activate GC
 GC -> GS: 1: modifyGasStationName()
-deactivate GC
 activate GS
-
 
 GS -> GR: 2: modifyGasStation()
 activate GR
@@ -759,22 +755,23 @@ activate H2
 H2 --> GR: 4: return GasStation
 deactivate H2
 
-
 GR --> GS: 5: return GasStation
 deactivate UR
+deactivate GR
 
-activate GCV
 GS -> GCV: 6: toGasStationDto()
+activate GCV
 GCV --> GS: 7: return GasStationDto
 deactivate GCV
 
-activate GC
 GS --> GC: 8: return GasStationDto
+deactivate GS
 deactivate GC
 @enduml
 ```
 
-###Use case 6, UC6 - Delete Gas Station
+### Use case 6, UC6 - Delete Gas Station
+
 ```plantuml
 @startuml
 hide footbox
@@ -788,7 +785,6 @@ participant H2Database as H2
 activate GC
 GC -> GS: 1: deleteGasStation()
 activate GS
-deactivate GC
 
 GS -> GR: 2: deleteGasStation()
 activate GR
@@ -801,14 +797,15 @@ deactivate H2
 
 
 GR --> GS: 5: return Boolean
-deactivate UR
+deactivate GR
 
-activate GC
 GS --> GC: 8: return Boolean
+deactivate GS
 deactivate GC
 @enduml
 ```
-###Use case 7, UC7 - Report fuel price for a gas station
+### Use case 7, UC7 - Report fuel price for a gas station
+
 ```plantuml
 @startuml
 hide footbox
@@ -839,10 +836,14 @@ deactivate GS
 activate GR 
 GR -> H2: updateReport()
 deactivate GR
+activate H2
+deactivate H2
+
 @enduml
 ```
 
-###Use case 8, UC8 - Obtain price of fuel for gas stations in a certain geographic area
+### Use case 8, UC8 - Obtain price of fuel for gas stations in a certain geographic area
+
 ```plantuml
 @startuml
 hide footbox
@@ -856,7 +857,6 @@ participant H2Database as H2
 
 activate GC
 GC -> GS: 1: getGasStationsByProximity()
-deactivate GC
 activate GS
 
 
@@ -869,25 +869,24 @@ activate H2
 H2 --> GR: 4: return List<GasStation>
 deactivate H2
 
-
 GR --> GS: 5: return List<GasStation>
-deactivate UR
+deactivate GR
 
-activate GCV
 GS -> GCV: 6: for each(toGasStationDto())
+activate GCV
 GCV --> GS: 7: return GasStationDto
 deactivate GCV
 
-activate GC
 GS --> GC: 8: return List<GasStationDto>
+deactivate GS
 deactivate GC
 @enduml
 ```
 
-###Use case 9, UC9 - Update trust level of price list
+### Use case 9, UC9 - Update trust level of price list
 
 
-###Scenario 10.1 - Price is correct (UC.10)
+#### Scenario 10.1 - Price is correct (UC.10)
 
 ```plantuml
 @startuml
@@ -903,7 +902,6 @@ participant H2Database as H2
 activate UC
 UC -> US: 1: increaseUserReputation()
 activate US
-deactivate UC
 
 US -> UR: 2: increaseUserReputation()
 activate UR
@@ -922,13 +920,14 @@ activate UCV
 US -> UCV: 6: toUserDto()
 UCV --> US: 7: return UserDto
 deactivate UCV
-activate UC
+
 US --> UC: 8: return Integer
+deactivate US
 deactivate UC
 @enduml
 ```
 
-###Scenario 10.2 - Price is wrong (UC.10)
+#### Scenario 10.2 - Price is wrong (UC.10)
 
 ```plantuml
 @startuml
@@ -944,7 +943,6 @@ participant H2Database as H2
 activate UC
 UC -> US: 1: decreaseUserReputation()
 activate US
-deactivate UC
 
 US -> UR: 2: decreaseUserReputation()
 activate UR
@@ -955,16 +953,16 @@ activate H2
 H2 --> UR: 4: return User
 deactivate H2
 
-
 UR --> US: 5: return User
 deactivate UR
 
-activate UCV
 US -> UCV: 6: toUserDto()
+activate UCV
 UCV --> US: 7: return UserDto
 deactivate UCV
-activate UC
+
 US --> UC: 8: return Integer
+deactivate US
 deactivate UC
 @enduml
 ```
