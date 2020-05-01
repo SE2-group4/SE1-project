@@ -238,7 +238,7 @@ package "it.polito.ezgas.repository" {
         + updateGasStationAddress(gasStationId, gasStationAddress): GasStation
         + updateBrand(gasStationId, brand): GasStation
         + updateCarSharing(gasStationId, carSharing): GasStation
-        + findByGasolintType(gasolinetype): List<GasStation>
+        + findByGasolineType(gasolinetype): List<GasStation>
         + findByProximity(GeoPoint): List<GasStation>
         + findByGeoPoint(GeoPoint, gasolinetype, carsharing): List<GasStation>
         + findWithoutGeoPoint(gasolinetype, carsharing): List<GasStation>
@@ -283,7 +283,7 @@ package "it.polito.ezgas.entity" {
     }
     class GeoPoint{
         - latitude
-        - lonngitude
+        - longitude
         + Getter()
         + Setter()
     }
@@ -342,7 +342,7 @@ package "it.polito.ezgas.dto" {
     }
     class GeoPointDto{
         - latitude
-        - lonngitude
+        - longitude
         + Getter()
         + Setter()
     }
@@ -352,7 +352,7 @@ package "it.polito.ezgas.converter" {
     class UserConverter{
         + toUserDto(User): UserDto
     }
-    class GasStatioConverter{
+    class GasStationConverter{
         + toGasStationDto(GasStation): GasStationDto
     }
     class PriceReportConverter{
@@ -372,7 +372,7 @@ package "it.polito.ezgas.service" {
        + getGasStationById(gasStationId): GasStationDto
        + saveGasStation(GasStationDto): GasStationDto
        + getAllGasStations(): List<GasStationDto>
-       + Boolean deleteGasStation(gasStationId): boolean
+       + deleteGasStation(gasStationId): Boolean
        + getGasStationsByGasolineType(gasolinetype):  
        + getGasStationsByProximity(GeoPoint): List<GasStationDto>
        + getGasStationsWithCoordinates(Geopoint, gasolinetype, carsharing): List<GasStationDto>
@@ -409,7 +409,7 @@ package  "it.polito.ezgas.controller" {
     }
 
     class UserController{
-        - UserService
+        - userService
         + modifyGasStationName(gasStationId, gasStationName): GasStationDto
         + modifyGasStationAddress(gasStationId, gasStationAddress): GasStationDto
         + modifyBrand(gasStationId, brand): GasStationDto
@@ -526,7 +526,9 @@ GeoPoint -- GasStation
 
 \<for each functional requirement from the requirement document, list which classes concur to implement it>
 
+
 ```plantuml
+@startuml
 
 skinparam defaultTextAlignment center
 
@@ -574,6 +576,7 @@ title
 
 end title
 
+@enduml
 ```
 
 # Verification sequence diagrams
