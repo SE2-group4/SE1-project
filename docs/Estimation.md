@@ -8,29 +8,29 @@ Version: 1.0
 
 # Contents
 
-- [Estimate by product decomposition]
-- [Estimate by activity decomposition ]
+- [Estimation approach](#estimation-approach)
+- [Estimate by product decomposition](#estimate-by-product-decomposition)
+- [Estimate by activity decomposition](#estimate-by-activity-decomposition)
+    + [Gantt diagram](#gantt-diagram)
 
 # Estimation approach
 
-<Consider the EZGas  project as described in YOUR requirement document, assume that you are going to develop the project INDEPENDENT of the deadlines of the course>
-
-This is a formal approach. We can assume there are 4 main activities to end the project: requirements, design, coding, testing.
+This is a formal approach. We can assume there are four main activities to end the project: requirements, design, coding, testing.
 As we don't know how much time each activity could take, we can consider a uniformal distribution among them. So, the effort for each activity will be the same:
 
 ```
 requirements effort = design effort = coding effort = testing effort
 ```
 
-The overall project effort needed is:
+This project is quite small, so one module is enough to contain all parts. In this case, we do not have to perform the same activity more times. The overall project effort needed is:
 
 ```
-overall effort = requirements effort + design effort + coding effort + testing effort = coding effort * 4
+overall effort = (requirements effort + design effort + coding effort + testing effort) * number of modules = coding effort * 4 * 1
 ```
 
 The easiest effort to compute is the coding effort. We can assume we need 10 classes, each class is 120 LOC.
 
-As proposed by the professor, a person can produce about 10 LOC per hour. These values considers writing requirements, designing, coding and testing (all the 4 main activities for the project). It is important that, computing the overall project effort, we consider not only the coding time, but even requirements, design and testing times.
+We also suppose a person can produce about 10 LOC per hour. These values considers writing requirements, designing, coding and testing (all the 4 main activities for the project). It is important that, computing the overall project effort, we consider not only the coding time, but even requirements, design and testing times.
 
 # Estimate by product decomposition
 
@@ -48,32 +48,26 @@ As proposed by the professor, a person can produce about 10 LOC per hour. These 
 
 # Estimate by activity decomposition
 
-###
-
 |         Activity name    | Estimated effort (person hours)   |
 | ----------- | ------------------------------- |
-| Requirements document | 60 |
-| GUI prototype | 20 |
-| Estimation document | 4 |
-| Design document | 50 |
-| Code | 100 |
-| Test cases | 80 |
-| Time sheet | 2 |
+| Requirements document | 80 |
+| GUI prototype | 50 |
+| Estimation document | 10 |
+| Design document | 100 |
+| Coding | 120 |
+| Testing | 120 |
 
-###
-Insert here Gantt chart with above activities
+## Gantt diagram
 
 ```plantuml
-
 @startuml
 
 [Requirements document] lasts 80 days
-[GUI prototype] lasts 40 days
+[GUI prototype] lasts 50 days
 [Estimation document] lasts 10 days
-[Design document] lasts 10 days
-[Code] lasts 100 days
-[Test cases] lasts 100 days
-[Time sheet] lasts 2 days
+[Design document] lasts 100 days
+[Code] lasts 120 days
+[Test cases] lasts 120 days
 
 
 [GUI prototype] starts at [Requirements document]'s end
@@ -84,6 +78,5 @@ Insert here Gantt chart with above activities
 [Time sheet] starts at [Design document]'s end
 
 @enduml
-
 ```
 
