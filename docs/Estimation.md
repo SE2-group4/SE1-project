@@ -15,23 +15,11 @@ Version: 1.0
 
 # Estimation approach
 
-<!-- This is a formal approach. We can assume there are four main activities to end the project: requirements, design, coding, testing.
-As we don't know how much time each activity could take, we can consider a uniformal distribution among them. So, the effort for each activity will be the same:
+As described in the glossary in the requirements document, we suppose to have about 10 classes (at least the most important ones).
 
-```
-requirements effort = design effort = coding effort = testing effort
-```
+The project will be implemented using the Spring framework, so functionalities and data from each class will be splitted among many classes or interfaces in different modules.
 
-This project is quite small, so one module is enough to contain all parts. In this case, we do not have to perform the same activity more times. The overall project effort needed is:
-
-```
-overall effort = (requirements effort + design effort + coding effort + testing effort) * number of modules = coding effort * 4 * 1
-```
-
-The easiest effort to compute is the coding effort. We can assume we need 10 classes, each class is 120 LOC.
-
-We also suppose a person can produce about 10 LOC per hour. These values considers writing requirements, designing, coding and testing (all the 4 main activities for the project). It is important that, computing the overall project effort, we consider not only the coding time, but even requirements, design and testing times.
--->
+We have not considered all those design details in these estimations, but classes (as taken from the glossary) have an higher number of LOC as they implement all functionalities and data.
 
 # Estimate by product decomposition
 
@@ -39,12 +27,12 @@ We also suppose a person can produce about 10 LOC per hour. These values conside
 
 |             | Estimate                        |
 | ----------- | ------------------------------- |
-| NC =  Estimated number of classes to be developed   | 21 |
-| A = Estimated average size per class, in LOC        | 100 |
-| S = Estimated size of project, in LOC (= NC * A) | 2100 |
-| E = Estimated effort, in person hours (here use productivity 10 LOC per person hour)  | 2100 / 10 = 210 |
-| C = Estimated cost, in euro (here use 1 person hour cost = 30 euro) | 210 * 30 = 6300 |
-| Estimated calendar time, in calendar weeks (Assume team of 4 people, 8 hours per day, 5 days per week ) | 2 |
+| NC =  Estimated number of classes to be developed   | 10 |
+| A = Estimated average size per class, in LOC        | 200 |
+| S = Estimated size of project, in LOC (= NC * A) | 200 |
+| E = Estimated effort, in person hours (here use productivity 10 LOC per person hour)  | 2000 / 10 = 200 |
+| C = Estimated cost, in euro (here use 1 person hour cost = 30 euro) | 200 * 30 = 6000 |
+| Estimated calendar time, in calendar weeks (Assume team of 4 people, 8 hours per day, 5 days per week ) | 1.25 (about 1 week and 2 days) |
 
 
 # Estimate by activity decomposition
@@ -62,8 +50,9 @@ We also suppose a person can produce about 10 LOC per hour. These values conside
 
 ```plantuml
 @startgantt
+scale 1.5
 
-Project starts the 2020/04/06
+Project starts the 2020/04/22
 
 saturday are closed
 sunday are closed
@@ -73,18 +62,17 @@ sunday are closed
 [GUI prototype] lasts 2 days
 [Estimation document] lasts 1 days
 [Design document] lasts 4 days
-[Code] lasts 5 days
-[Test cases] lasts 5 days
+[Coding] lasts 5 days
+[Testing] lasts 5 days
 [Time sheet] lasts 1 days
 
 
 [GUI prototype] starts at [Requirements document]'s end
 [Estimation document] starts at [Requirements document]'s end
 [Design document] starts at [Estimation document]'s end
-[Code] starts at [Design document]'s end
-[Test cases] starts at [Design document]'s end
+[Coding] starts at [Design document]'s end
+[Testing] starts at [Design document]'s end
 [Time sheet] starts at [Design document]'s end
 
 @endgantt
 ```
-
