@@ -42,7 +42,7 @@ EZGas thought of you. That's why searches are opened to everyone.
 | Stakeholder name  | Description |
 | ----------------- |:-----------:|
 | Administrator     | Accepts a user request to insert a gas station |
-| Map API      |Third party server used to implement the map on the application so that people can locate gas stations easily|
+| Google Maps API      |Third party server used to implement the map on the application so that people can locate gas stations easily|
 | User              |Uses the application directly. They are interested in finding gas station, share the new ones they find in the platform and update the fuel prices|
 
 # Context Diagram and interfaces
