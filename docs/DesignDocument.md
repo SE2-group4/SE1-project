@@ -210,18 +210,7 @@ The Java interfaces are already defined (see file ServicePackage.zip) and the lo
 
 Contains Service classes that implement the Service Interfaces in the Service package.
 
-
-
-
-
-
-
-
-
-
 # Low level design
-
-<Based on the official requirements and on the Spring Boot design guidelines, define the required classes (UML class diagram) of the back-end in the proper packages described in the high-level design section.>
 
 ```plantuml
 package "Backend" {
@@ -272,7 +261,7 @@ package "it.polito.ezgas.entity" {
     }
     class PriceReport{
         - priceReportId
-        - user
+        - userId
         - dieselPrice
         - superPrice
         - superPlusPrice
@@ -401,7 +390,7 @@ package  "it.polito.ezgas.controller" {
         + getGasStationById(gasStationId): GasStationDto 
         + getAllGasStations(): List<GasStationDto>
         + saveGasStation(gasStationDto): GasStationDto 
-        + deleteUser(gasStationId): Boolean 
+        + deleteGasStation(gasStationId): Boolean 
         + getGasStationsByGasolineType(gasolineType): List<GasStationDto>
         + getGasStationsByProximity(myLat, myLon): List<GasStationDto>
         + getGasStationsWithCoordinates(myLat, myLon, gasolineType, carSharing): List<GasStationDto>
@@ -432,102 +421,8 @@ it.polito.ezgas.service -[hidden]-> it.polito.ezgas.repository
 it.polito.ezgas.repository -[hidden]> it.polito.ezgas.converter
 }
 
-
-
-
-/'
-class EZGas {
-    createUserAccount(account_name, account_pwd, email)
-    deleteUserAccount(account_name)
-    searchGasStations(radius, address)
-    searchGasStations(radius, geoPoint)
-    searchUser(account_name)
-}
-class GUI
-class AnonymousUser
-class User {
- account_name
- account_pwd
- email
- trust_level
- modifyUserAccount()
- reportFuelPriceForGasStation(gasStation)
- evaluatePriceList(gasStation)
-
-}
-class Administrator {
-    getListOfUsers()
-    getListOfGasStations()
-    createGasStation()
-    manageRights()
-    modifyGasStationInformation(gasStation)
-    deleteGasStation(gasStation)
-}
-note "trust_level ranges from -5  to 5" as N1
-N1 .. User
-class GasStation {
- ID
- name
- address
- brand
- hasDiesel
- hasGasoline
- hasPremiumDiesel
- hasPremiumGasoline
- hasLPG
- hasMethane
-}
-class GeoPoint {
- latitude
- longitude
-}
-class CarSharingCompany {
- name
-}
-class PriceList {
- time_tag
- dieselPrice
- gasolinePrice
- premiumDieselPrice
- premiumGasolinePrice
- LPGPrice
- methanePrice
- trust_level
- evaluate()
-}
-
-note bottom: "trust_level ranges from 0 to 100 \ntime_tag is the time when the price list is created" as N2
-GUI -- EZGas
-N2 .. PriceList
-Administrator -up-|> User
-User -up-|> AnonymousUser
-GeoPoint -- AnonymousUser
-EZGas -- "*" AnonymousUser
-EZGas -- "*" GasStation
-GasStation "*" -- "0..1" CarSharingCompany
-GasStation  -- "0..1" PriceList
-User -- "*" PriceList
-User "*" -- GeoPoint
-GeoPoint -- GasStation
-'/
 ```
-
-
-
-
-
-
-
-
-
-
-
 # Verification traceability matrix
-
-\<for each functional requirement from the requirement document, list which classes concur to implement it>
-
-
-<!-- CHECK THIS -->
 
 Only classes and interfaces from the following packages have been considered in the traceability matrix:
 
@@ -557,62 +452,7 @@ Others are support classes (or interfaces) and do not perform operations to dire
 | FR5.2 | x    | x          |          | x         | x           | x                 | x              | x                    |                |                      | x   |
 | FR5.3 | x    | x          |          | x         | x           | x                 | x              | x                    |                |                      | x   | 
 
-<!-- CHECK THIS END -->
-
-```plantuml
-@startuml
-
-skinparam defaultTextAlignment center
-
-title
-
-  =Verification traceability matrix
-
-  |= ||= User |= Administrator |= GasStation |= GeoPoint |= PriceList |= Anonymous User |
-  ' Define a new user, or modify an existing user
-  | FR1.1   | x | x | | | | |
-  ' Delete a user
-  | FR1.2   | x | x | | | |
-  ' List all users
-  | FR1.3   | | x | | | | |
-  ' Search a user
-  | FR1.4   | x | x | | | | |
-  ' Manage rights. Authorize access to functions to specific actors according to access rights
-  | FR2     | | x | | | | |
-  ' Manage gas stations
-  | FR3     | | x | x | | | |
-  ' Define a new gas station, or modify an existing gas station
-  | FR3.1   | | x | x | | | |
-  ' Delete a gas station
-  | FR3.2   | | x | x | | | |
-  ' List all gas stations
-  | FR3.3   | | x | x | | | |
-  ' Search gas stations
-  | FR4     | x | x | x | | | x |
-  ' Retrieve gas stations within radius r of a given geo point
-  | FR4.1   | x | x | x | x | | x |
-  ' Retrieve gas stations within radius r of a given address
-  | FR4.2   | x | x | x | x | | x |
-  ' Show given set of gas stations, and their fuel prices on a given map
-  | FR4.3   | x | x | x | x | x | x |
-  ' Sort given set of gas stations according to fuel type price
-  | FR4.4   | x | x | x | | x | x |
-  ' Filter out given set of gas stations according to fuel type and or car sharing option
-  | FR4.5   | x | x | x | | x | x |
-  ' Manage fuel prices and trust
-  | FR5.1   | x | x | x | | x | |
-  ' Update trust level of a price list for a gas station
-  | FR5.2   | x | x | x | | x | |
-  ' Evaluate  price list for a gas station
-  | FR5.3  | x | x | x | | x | |
-
-end title
-
-@enduml
-```
-
 # Verification sequence diagrams
-\<select key scenarios from the requirement document. For each of them define a sequence diagram showing that the scenario can be implemented by the classes and methods in the design>
 
 ### Use case 1, UC1 - Create User Account
 
@@ -628,10 +468,10 @@ participant UserRepository as UR
 participant H2Database as H2
 
 activate UC
-UC -> US: 1: saveGasStation()
+UC -> US: 1: saveUser()
 activate US
 
-US -> UR: 2: saveGasStation()
+US -> UR: 2: saveUser()
 activate UR
 
 UR -> H2: 3: save()
@@ -746,7 +586,7 @@ activate GS
 GS -> GR: 2: saveGasStation()
 activate GR
 
-GR -> H2: 3: deleteById()
+GR -> H2: 3: saveById()
 
 activate H2
 H2 --> GR: 4: return GasStation
@@ -764,7 +604,7 @@ deactivate GS
 deactivate GC
 @enduml
 ```
-### Use case 5, UC5 - Modify Gas Station information (gasStationName)
+### Use case 5, UC5 - Modify Gas Station Information (gasStationName)
 
 ```plantuml
 @startuml
@@ -791,7 +631,6 @@ H2 --> GR: 4: return GasStation
 deactivate H2
 
 GR --> GS: 5: return GasStation
-deactivate UR
 deactivate GR
 
 GS -> GCV: 6: toGasStationDto()
@@ -815,6 +654,7 @@ skinparam shadowing false
 participant GasStationController as GC
 participant GasStationService as GS
 participant GasStationRepository as GR
+participant PriceListRepository as PR
 participant H2Database as H2
 
 activate GC
@@ -824,9 +664,17 @@ activate GS
 GS -> GR: 2: deleteGasStation()
 activate GR
 
+GS -> PR: 2: deleteById()
+activate PR
+
 GR -> H2: 3: deleteById()
 
 activate H2
+PR -> H2: 3: deleteById()
+
+H2 --> PR: 4: return Boolean
+deactivate PR
+
 H2 --> GR: 4: return Boolean
 deactivate H2
 
@@ -919,8 +767,9 @@ deactivate GC
 ```
 
 ### Use case 9, UC9 - Update trust level of price list
+This use case doesn't have a sequence diagram since the trust level is computed by the getTrustLevel() function in the PriceReportDto and is returned to the Gas station.
 
-
+### Use Case 10, UC10 - Evaluate price
 #### Scenario 10.1 - Price is correct (UC.10)
 
 ```plantuml
