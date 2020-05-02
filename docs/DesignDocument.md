@@ -951,8 +951,8 @@ deactivate H2
 UR --> US: 5: return User
 deactivate UR
 
-activate UCV
 US -> UCV: 6: toUserDto()
+activate UCV
 UCV --> US: 7: return UserDto
 deactivate UCV
 
