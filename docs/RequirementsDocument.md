@@ -131,19 +131,23 @@ Actor Web_API as WA
 
 U <|-- AU
 rectangle EZGas{
-  U -> (FR5.1 Create a new account)
+  U -> (FR5 Manage Account)
   U -> (FR2 Insert search params)
 
   AU --> (FR4 Vote a fuel price)
-  AU --> (FR6 Insert new gas station)
+  AU --> (FR6.1 Insert new gas station)
   A --> (FR6.2 Accept new gas station request)
   AU --> (FR1 Enter new price)
 
   (FR2 Show map and gas stations) <-- WA
-  (FR6 Insert new gas station) <-- (FR6.2 Accept new gas station request)
+  (FR6.1 Insert new gas station) <-- (FR6.2 Accept new gas station request)
   (FR2 Insert search params) --> (FR2 FR3 Search gas stations)
   (FR2 FR3 Search gas stations) --> (FR2 Show map and gas stations)
   WA --> (FR1 Enter new price)
+
+  (FR5 Manage Account) .> (FR5.1 Create Account) : include
+  (FR5 Manage Account) .> (FR5.2 Log in) : include
+  (FR5 Manage Account) .> (FR5.3 Log Out) : include
 }
 
 @enduml
