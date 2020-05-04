@@ -40,7 +40,7 @@ public class UserTests {
 	public void testReputation() {
 		int newReputation = 999;
 		this.user.setReputation(newReputation);
-		assertFalse("Trust level must by in [-5, +5]!", this.user.getReputation() >= +5 || this.user.getReputation() <= -5);
+		assertTrue("Trust level must by in [-5, +5]!", this.user.getReputation() <= +5 && this.user.getReputation() >= -5);
 	}
 	
 	@After
