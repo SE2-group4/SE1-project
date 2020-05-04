@@ -2,9 +2,9 @@
 
 Authors: Group 12
 
-Date: 17/04/2020
+Date: 30/04/2020
 
-Version: 1
+Version: 3
 
 # Contents
 - [Abstract](#abstract)
@@ -42,7 +42,7 @@ EZGas thought of you. That's why searches are opened to everyone.
 | Stakeholder name  | Description |
 | ----------------- |:-----------:|
 | Administrator     | Accepts a user request to insert a gas station |
-| Map API      |Third party server used to implement the map on the application so that people can locate gas stations easily|
+| Google Maps API      |Third party server used to implement the map on the application so that people can locate gas stations easily|
 | User              |Uses the application directly. They are interested in finding gas station, share the new ones they find in the platform and update the fuel prices|
 
 # Context Diagram and interfaces
@@ -54,12 +54,12 @@ EZGas thought of you. That's why searches are opened to everyone.
 
 left to right direction
 actor "Administrator" as a
-actor "Map API" as c
+actor "Google Maps" as c
 actor "User" as d
 rectangle System{
-	a -- (EZGas)
+	a --> (EZGas)
 	(EZGas) -- c
-	(EZGas) -- d
+	(EZGas) <-- d
 }
 
 @enduml
@@ -71,7 +71,7 @@ rectangle System{
 | ------------- |:-------------:| -----:|
 | Administrator	| GUI			| Screen, keyboard, smartphone |
 | User			| GUI			|Screen, keyboard, smartphone|
-| Maps API		|Web Services API |Internet Connection|
+| Google Maps		|Google Maps API |Internet Connection|
 
 # Stories and personas
 
@@ -91,13 +91,19 @@ Jackson is the owner of a gas station. He is struggling in the last period since
 
 | ID        | Description  |
 | ------------- |:-------------:|
-|  FR1	| Record the prices of fuel into a specific gas station|
-|  FR2  | Look for cheapest gas station in a certain area |
-|  FR3  | Look for closest gas station in a certain area|
-|  FR4	| Track user with position|
-|  FR5 	| Let user votes the fuel price|
-|  FR6	| Manage Accounts|
-|  FR7 	| Manage insertion and position of a gas station|
+|  **FR1**	 | Record the prices of fuel into a specific gas station|
+|  **FR2**   | Search Gas Stations |
+|  FR2.1 | Search for cheapest gas station in a certain area|
+|  FR2.2 | Search for closest gas station in a certain area|
+|  **FR3**   | Track user with position|
+|  **FR4** 	 | Let user votes the fuel price|
+|  **FR5**	 | Manage Accounts|
+|  FR5.1 | Create Account|
+|  FR5.2 | Log in|
+|  FR5.3 | Log Out|
+|  **FR6** 	 | Manage insertion and position of a gas station|
+|  FR6.1 | Insert a new gas station |
+|  FR6.2 | Accept request of insertion of a gas station and insert parameters|
 
 ## Non Functional Requirements
 
@@ -125,19 +131,23 @@ Actor Web_API as WA
 
 U <|-- AU
 rectangle EZGas{
-  U -> (FR6 Create a new account)
-  U -> (FR2 FR3 Insert search params)
+  U -> (FR5 Manage Account)
+  U -> (FR2 Insert search params)
 
-  AU --> (FR5 Vote a fuel price)
-  AU --> (FR7 Insert new gas station)
-  A --> (FR7 Accept new gas station request)
+  AU --> (FR4 Vote a fuel price)
+  AU --> (FR6.1 Insert new gas station)
+  A --> (FR6.2 Accept new gas station request)
   AU --> (FR1 Enter new price)
 
-  (FR4 Show map and gas stations) <-- WA
-  (FR7 Insert new gas station) <-- (FR7 Accept new gas station request)
-  (FR2 FR3 Insert search params) --> (FR2 FR3 FR4 Search gas stations)
-  (FR2 FR3 FR4 Search gas stations) --> (FR4 Show map and gas stations)
+  (FR2 Show map and gas stations) <-- WA
+  (FR6.1 Insert new gas station) <-- (FR6.2 Accept new gas station request)
+  (FR2 Insert search params) --> (FR2 FR3 Search gas stations)
+  (FR2 FR3 Search gas stations) --> (FR2 Show map and gas stations)
   WA --> (FR1 Enter new price)
+
+  (FR5 Manage Account) .> (FR5.1 Create Account) : include
+  (FR5 Manage Account) .> (FR5.2 Log in) : include
+  (FR5 Manage Account) .> (FR5.3 Log Out) : include
 }
 
 @enduml
@@ -168,28 +178,40 @@ rectangle EZGas{
 |  3	 |	User selects the fuel type |
 |  4	 |	User inserts the new prices of fuel into a gas station|
 
-### Use case 2, UC2 - FR2 FR3 Search for gas stations with certain properties
+### Use case 2, UC2 - FR2 Search for gas stations with certain properties
 
-| Actors Involved        | User, Maps API|
+| Actors Involved        | User, Google Maps API|
 | ------------- |:-------------:|
 |  Precondition     | User selected a search type (distance, price, type of fuel) |
 |  Post condition     |  Gas stations shown on the map |
 |  Nominal Scenario     | Looks for gas stations based on the search type inserted. On the Map will be shown all of the gas stations within a certain range, decided by the user through a slider|
 |  Variants     | |
 
-## Scenario 2
+## Scenario 2.1
 
 | Scenario ID: SC2        | Corresponds to UC2  |
 | ------------- |:-------------|
-| Description | Search of a gas station with certain properties|
+| Description | Search the cheapest gas station in a certain radius|
 |Precondition | User must have GPS activated|
 |Postcondition | Gas stations that fit the requirement are shown on the map |
 | Step#        | Step description  |
 |  1     | User must fill out the parameters required: fuel type, distance. He can choose to show the gas station in price order or distance order |
 |  2     | The application gets the user's position from the Map API and performs the search |
-|  3     | The application calculates which are the gas stations fitting the parameters inserted |
+|  3     | The application calculates which are the gas stations with the lower prices for the fuel type inserted and shows them on the map|
 
-### Use case 3, UC3 - FR5 Vote the price of a gas station
+## Scenario 2.2
+
+| Scenario ID: SC2        | Corresponds to UC2  |
+| ------------- |:-------------|
+| Description | Search the closest gas station in a certain radius|
+|Precondition | User must have GPS activated|
+|Postcondition | Gas stations that fit the requirement are shown on the map |
+| Step#        | Step description  |
+|  1     | User must fill out the parameters required: fuel type, distance. He can choose to show the gas station in price order or distance order |
+|  2     | The application gets the user's position from the Map API and performs the search |
+|  3     |The application calculates which are the gas stations that are closest to the user position and shows them on the map|
+
+### Use case 3, UC3 - FR4 Vote the price of a gas station
 
 | Actors Involved        | Authenticated_user |
 | ------------- |:-------------:|
@@ -210,7 +232,7 @@ rectangle EZGas{
 |  2     | User can upvote the correct fuel price among those displayed in the list connected to that gas station and fuel type|
 
 
-### Use case 4, UC4 - FR6 Create Account
+### Use case 4, UC4 - FR5.1 Create Account
 
 | Actors Involved        | User |
 | ------------- |:-------------:|
@@ -232,7 +254,7 @@ rectangle EZGas{
 |  3     | User can log in |
 
 
-### Use case 5, UC5 - FR7 Insert a new gas station
+### Use case 5, UC5 - FR6 Insertion of a new gas station
 
 | Actors Involved        | User, Administrator |
 | ------------- |:-------------:|
@@ -374,7 +396,7 @@ node Client as C {
 artifact Browser as B
 }
 
-node "Maps API" as MA {
+node "Google Maps API" as MA {
 
 }
 
