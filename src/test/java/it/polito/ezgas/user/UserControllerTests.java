@@ -97,7 +97,7 @@ public class UserControllerTests {
 		} catch (InvalidUserException e) {
 			fail();
 		}
-		assertTrue("User reputation should be less then before!", previousReputation < user.getReputation());
+		assertTrue("User reputation should be less then before!", previousReputation >= user.getReputation());
 	}
 	
 	@Test
@@ -118,7 +118,7 @@ public class UserControllerTests {
 		} catch (InvalidUserException e) {
 			fail();
 		}
-		assertTrue("User reputation should be more then before!", previousReputation > user.getReputation());
+		assertTrue("User reputation should be more then before!", user.getReputation() >= previousReputation);
 	}
 	
 	@After
