@@ -22,6 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import exception.InvalidUserException;
 import it.polito.ezgas.controller.UserController;
 import it.polito.ezgas.dto.UserDto;
+import it.polito.ezgas.entity.User;
 import it.polito.ezgas.service.UserService;
 
 @RunWith(SpringRunner.class)
@@ -31,7 +32,7 @@ public class UserServiceTests {
     private UserService service;
     
     private int initSize;
-    private List<UserDto> myList;
+    private List<User> myList;
     
     public UserServiceTests() {
 		List<UserDto> list = this.service.getAllUsers();
@@ -42,10 +43,40 @@ public class UserServiceTests {
 	@Before
 	public void setUp() throws Exception {
 		this.myList = new ArrayList<>();
+		User user;
 
+		user = new User();
+		user.setUserId(1);
+		user.setUserName("Aldo");
+		user.setPassword("buonaquestacadrega");
+		user.setEmail("aldo.baglio@agg.it");
+		user.setReputation(-3);
+		user.setAdmin(false);
+		this.myList.add(user);
+
+		user = new User();
+		user.setUserId(2);
+		user.setUserName("Giovanni");
+		user.setPassword("franco");
+		user.setEmail("giovanni.storti@agg.it");
+		user.setReputation(+5);
+		user.setAdmin(true);
+		this.myList.add(user);
+
+		user = new User();
+		user.setUserId(3);
+		user.setUserName("Giacomo");
+		user.setPassword("ilnonno");
+		user.setEmail("giacomo.poretti@agg.it");
+		user.setReputation(+1);
+		user.setAdmin(false);
+		this.myList.add(user);
+
+		/*
 		myList.add(new UserDto(1, "Aldo", "buonaquestacadrega", "aldo.baglio@agg.it", -3, false));
 		myList.add(new UserDto(2, "Giovanni", "franco", "giovanni.storti@agg.it", +5, true));
 		myList.add(new UserDto(3, "Giacomo", "ilnonno", "giacomo.poretti@agg.it", +1, false));
+		*/
 	}
 	
 	public int getExpectedSize() {
@@ -53,9 +84,21 @@ public class UserServiceTests {
 	}
 	
 	@Test
+	public void testUniqueUser(){
+		UserDto user = new UserDto(4, "Silvana", "worstactress", "silvana.fallisi@agg.it", 5);
+		
+		UserDto insertedUser1 = this.service.saveUser(user);
+		assertTrue("Init reputation must be 0!", insertedUser1.getReputation() == 0);
+		
+		user.setUserId(5);
+		UserDto insertedUser2 = this.service.saveUser(user);
+		assertTrue("Email must be unique!", insertedUser1.getEmail().compareTo(insertedUser2.getEmail()) != 0);
+	}
+	
+	@Test
 	public void testGet() {
 		List<UserDto> list = this.service.getAllUsers();
-		UserDto myUser = this.myList.get(0);
+		User myUser = this.myList.get(0);
 		
 		assertEquals(list.size(), this.getExpectedSize());
 		
@@ -71,7 +114,7 @@ public class UserServiceTests {
 	
 	@Test
 	public void testDelete() {
-		UserDto user = this.myList.remove(2);
+		User user = this.myList.remove(2);
 		
 		try {
 			this.service.deleteUser(user.getUserId());			
@@ -125,9 +168,53 @@ public class UserServiceTests {
 		assertTrue("User reputation should be more then before!", user.getReputation() >= previousReputation);
 	}
 	
+	@Test
+	public void testGetUserException() {
+		try {
+			this.service.getUserById(-1);
+			fail();
+		} catch (InvalidUserException e) {}
+		catch(Exception e) {
+			fail();
+		}
+	}
+
+	@Test
+	public void testDeleteUserException() {
+		try {
+			this.service.deleteUser(-1);
+			fail();
+		} catch (InvalidUserException e) {}
+		catch(Exception e) {
+			fail();
+		}
+	}
+
+	@Test
+	public void testDecreaseReputationException() {
+		try {
+			this.service.decreaseUserReputation(-1);
+			fail();
+		} catch (InvalidUserException e) {}
+		catch(Exception e) {
+			fail();
+		}
+	}
+
+	@Test
+	public void testIncreaseReputationException() {
+		try {
+			this.service.increaseUserReputation(-1);
+			fail();
+		} catch (InvalidUserException e) {}
+		catch(Exception e) {
+			fail();
+		}
+	}
+	
 	@After
 	public void tearDown() throws Exception {
-		for(UserDto user : this.myList)
+		for(User user : this.myList)
 			this.service.deleteUser(user.getUserId());
 	}
 }

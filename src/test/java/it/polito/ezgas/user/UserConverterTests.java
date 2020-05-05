@@ -1,39 +1,35 @@
 package it.polito.ezgas.user;
 
+import static org.junit.Assert.assertTrue;
+
 import org.junit.*;
 
+import it.polito.ezgas.converter.UserConverter;
 import it.polito.ezgas.dto.UserDto;
 import it.polito.ezgas.entity.User;
 
 public class UserConverterTests {
-	private User user;
-	private UserDto userDto;
 	
 	@Before
 	public void setUp() throws Exception {
-		this.user = new User();		
-		this.user.setUserName("Aldo");
-		this.user.setEmail("aldo.baglio@agg.it");
-		this.user.setPassword("buonaquestacadrega");
-		this.user.setReputation(0);
-		this.user.setAdmin(false);
-		
-		this.userDto = new UserDto();	
-		this.userDto.setUserName("Aldo");
-		this.userDto.setEmail("aldo.baglio@agg.it");
-		this.userDto.setPassword("buonaquestacadrega");
-		this.userDto.setReputation(0);
-		this.userDto.setAdmin(false);
 	}
-	
+
 	@Test
-	public void testUserToDto() {
-				
-	}
-	
-	@Test
-	public void testDtoToUser() {
+	public void testConversion() {
+		UserDto userDto = new UserDto(1, "Aldo", "buonaquestacadrega", "aldo.baglio@agg.it", -3, true);
+		User user = new User();
+		user.setUserId(1);
+		user.setUserName("Aldo");
+		user.setPassword("buonaquestacadrega");
+		user.setEmail("aldo.baglio@agg.it");
+		user.setReputation(-3);
+		user.setAdmin(true);
 		
+		User user2 = UserConverter.userDtoConvertToUser(userDto);
+		assertTrue(userDto.getUserId() == user2.getUserId());
+		
+		UserDto userDto2 = UserConverter.userConvertToUserDto(user);
+		assertTrue(user.getAdmin() == userDto2.getAdmin());
 	}
 	
 	@After
