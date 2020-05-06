@@ -64,7 +64,7 @@ public class UserControllerTests {
 		assertTrue(true);*/
     }
 	
-	@Before
+    @Before
 	public void setUp() throws Exception {
 		this.myList = new ArrayList<>();
 		User user;
