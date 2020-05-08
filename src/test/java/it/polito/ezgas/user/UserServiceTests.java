@@ -5,7 +5,6 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.awt.PageAttributes.MediaType;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,63 +13,91 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.test.context.junit4.SpringRunner;
 import exception.InvalidUserException;
-import it.polito.ezgas.controller.UserController;
+import it.polito.ezgas.converter.UserConverter;
 import it.polito.ezgas.dto.UserDto;
 import it.polito.ezgas.entity.User;
+import it.polito.ezgas.repository.UserRepository;
 import it.polito.ezgas.service.UserService;
+import it.polito.ezgas.service.impl.UserServiceImpl;
 
 @RunWith(SpringRunner.class)
 public class UserServiceTests {
+	@TestConfiguration
+    static class UserServiceImplTestContextConfiguration {
+  
+        @Bean
+        public UserService userService() {
+            return new UserServiceImpl();
+        }
+    }
 	
+	/*
+	 * not working...
+	 * 
+	@Autowired
+    private TestEntityManager entityManager;
+    */
+    
+    @Autowired
+    private UserService service;   
+    
     @MockBean
-    private UserService service;
+    private UserRepository userRepository;
     
     private int initSize;
     private List<User> myList;
-    
-    public UserServiceTests() {
-		List<UserDto> list = this.service.getAllUsers();
-			
-		this.initSize = list.size();
-    }
 	
 	@Before
 	public void setUp() throws Exception {
+		List<UserDto> list = this.service.getAllUsers();
+			
+		this.initSize = list.size();
+		
 		this.myList = new ArrayList<>();
 		User user;
 
 		user = new User();
-		user.setUserId(1);
+		//user.setUserId(1);
 		user.setUserName("Aldo");
 		user.setPassword("buonaquestacadrega");
 		user.setEmail("aldo.baglio@agg.it");
 		user.setReputation(-3);
 		user.setAdmin(false);
 		this.myList.add(user);
+		assertTrue(this.service.saveUser(UserConverter.userConvertToUserDto(user)) != null);
+		//assertTrue(this.userRepository.save(user) != null);
+		//this.entityManager.persist(user);
 
 		user = new User();
-		user.setUserId(2);
+		//user.setUserId(2);
 		user.setUserName("Giovanni");
 		user.setPassword("franco");
 		user.setEmail("giovanni.storti@agg.it");
 		user.setReputation(+5);
 		user.setAdmin(true);
 		this.myList.add(user);
+		assertTrue(this.userRepository.save(user) != null);
+		//this.entityManager.persist(user);
 
 		user = new User();
-		user.setUserId(3);
+		//user.setUserId(3);
 		user.setUserName("Giacomo");
 		user.setPassword("ilnonno");
 		user.setEmail("giacomo.poretti@agg.it");
 		user.setReputation(+1);
 		user.setAdmin(false);
 		this.myList.add(user);
+		assertTrue(this.userRepository.save(user) != null);
+		//this.entityManager.persist(user);
+		
+		assertEquals(this.getExpectedSize(), this.userRepository.count());
+		//this.entityManager.flush();
 
 		/*
 		myList.add(new UserDto(1, "Aldo", "buonaquestacadrega", "aldo.baglio@agg.it", -3, false));
@@ -88,20 +115,22 @@ public class UserServiceTests {
 		UserDto user = new UserDto(4, "Silvana", "worstactress", "silvana.fallisi@agg.it", 5);
 		
 		UserDto insertedUser1 = this.service.saveUser(user);
+		assertTrue(insertedUser1 != null);
 		assertTrue("Init reputation must be 0!", insertedUser1.getReputation() == 0);
 		
 		user.setUserId(5);
 		UserDto insertedUser2 = this.service.saveUser(user);
+		assertTrue(insertedUser2 != null);
 		assertTrue("Email must be unique!", insertedUser1.getEmail().compareTo(insertedUser2.getEmail()) != 0);
 	}
 	
 	@Test
 	public void testGet() {
 		List<UserDto> list = this.service.getAllUsers();
-		User myUser = this.myList.get(0);
+		assertTrue(list != null);
+		assertEquals(this.getExpectedSize(), list.size());
 		
-		assertEquals(list.size(), this.getExpectedSize());
-		
+		User myUser = this.myList.get(0);		
 		UserDto user = null;
 		try {
 			user = this.service.getUserById(myUser.getUserId());
@@ -159,6 +188,7 @@ public class UserServiceTests {
 			fail();
 		}
 
+		assertTrue(user != null);
 		previousReputation = user.getReputation();		
 		try {
 			this.service.increaseUserReputation(id);
@@ -172,10 +202,10 @@ public class UserServiceTests {
 	public void testGetUserException() {
 		try {
 			this.service.getUserById(-1);
-			fail();
+			fail("InvalidUserException expected!");
 		} catch (InvalidUserException e) {}
 		catch(Exception e) {
-			fail();
+			fail("InvalidUserException expected!");
 		}
 	}
 
@@ -183,10 +213,10 @@ public class UserServiceTests {
 	public void testDeleteUserException() {
 		try {
 			this.service.deleteUser(-1);
-			fail();
+			fail("InvalidUserException expected!");
 		} catch (InvalidUserException e) {}
 		catch(Exception e) {
-			fail();
+			fail("InvalidUserException expected!");
 		}
 	}
 
@@ -214,7 +244,13 @@ public class UserServiceTests {
 	
 	@After
 	public void tearDown() throws Exception {
-		for(User user : this.myList)
-			this.service.deleteUser(user.getUserId());
+		for(User user : this.myList) {
+			try {
+				this.service.deleteUser(user.getUserId());
+			} catch(Exception e) {}
+		}
+		this.myList.clear();
+		
+		//this.entityManager.clear();
 	}
 }

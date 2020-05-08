@@ -18,28 +18,15 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import static org.hamcrest.Matchers.*;
-import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
-
-import org.springframework.beans.factory.annotation.*;
-import org.springframework.boot.json.JsonParser;
-import org.springframework.boot.test.autoconfigure.web.servlet.*;
-import org.springframework.boot.test.mock.mockito.*;
-
-import static org.assertj.core.api.Assertions.*;
-import static org.mockito.BDDMockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import exception.InvalidUserException;
 import it.polito.ezgas.controller.UserController;
 import it.polito.ezgas.converter.UserConverter;
 import it.polito.ezgas.dto.UserDto;
 import it.polito.ezgas.entity.User;
 import it.polito.ezgas.service.UserService;
 import net.minidev.json.JSONObject;
-import net.minidev.json.parser.JSONParser;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(UserController.class)
@@ -52,20 +39,13 @@ public class UserControllerTests {
     
     private int initSize;
     private List<User> myList;
-    
-    public UserControllerTests() throws Exception {
+	
+    @Before
+	public void setUp() throws Exception {
 		List<UserDto> list = this.service.getAllUsers();
 			
 		this.initSize = list.size();
 		
-		/*given(this.service.getAllUsers()).willReturn(list);
-		this.mvc.perform(get("URL").contentType(MediaType.APPLICATION_JSON)).andReturn();
-		
-		assertTrue(true);*/
-    }
-	
-    @Before
-	public void setUp() throws Exception {
 		this.myList = new ArrayList<>();
 		User user;
 
