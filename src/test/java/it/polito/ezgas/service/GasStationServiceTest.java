@@ -1,4 +1,4 @@
-package it.polito.ezgas.service;
+/*package it.polito.ezgas.service;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
@@ -169,23 +169,23 @@ public class GasStationServiceTest {
 	@DisplayName("Test for getGasStationsWithCoordinates")
 	public class GetGasStationsWithCoordinates{
 		/***** DA COMPLETARE *****/
-	}
+	/*}
 	
 	@Nested
 	@DisplayName("Test for getGasStationsWithoutCoordinates")
 	public class GetGasStationsWithoutCoordinates{
 		/***** DA COMPLETARE *****/
-	}
+	/*}
 	
 	@Nested
 	@DisplayName("Test for setReport")
 	public class SetReport{
 		/***** DA COMPLETARE *****/
-	}
+	/*}
 	
 	@Nested
 	@DisplayName("Test for getGasStationByCarSharing")
 	public class GetGasStationByCarSharing{
 		/***** DA COMPLETARE *****/
-	}
-}
+	/*}
+/*}*/
