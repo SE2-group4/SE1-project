@@ -38,15 +38,39 @@ public class GasStationServiceimpl implements GasStationService {
 
 	@Override
 	public GasStationDto getGasStationById(Integer gasStationId) throws InvalidGasStationException {
+		if(gasStationId < 0) {
+			throw new InvalidGasStationException("Invalid (negative) gasStationId");
+		}
 		GasStation gasStation = this.gasStationRepository.findByGasStationId(gasStationId).get(0);
 		return GasStationConverter.GasStationConvertToGasStationDto(gasStation);
 	}
 
 	@Override
 	public GasStationDto saveGasStation(GasStationDto gasStationDto) throws PriceException, GPSDataException {
-			
-		GasStation gasStation = this.gasStationRepository.save(GasStationConverter.GasStationDtoConvertToGasStation(gasStationDto));
-		System.out.println(gasStation);
+		GasStation gasStation = GasStationConverter.GasStationDtoConvertToGasStation(gasStationDto);
+		if((gasStation.getMethanePrice()!=-1 && gasStation.getMethanePrice()<0) ||
+		   (gasStation.getSuperPlusPrice()!=-1 && gasStation.getSuperPlusPrice()<0) ||
+		   (gasStation.getSuperPrice()!=-1 && gasStation.getSuperPrice()<0) ||
+		   (gasStation.getGasPrice()!=-1 && gasStation.getGasPrice()<0) ||
+		   (gasStation.getDieselPrice()!=-1 && gasStation.getDieselPrice()<0)) {
+				throw new PriceException("Invalid (negative) price"); 
+		}
+		if(gasStation.getLat() <-90 || gasStation.getLon() <-180 || 
+		   gasStation.getLat() > 90 || gasStation.getLon() > 180) {
+			throw new GPSDataException("Latitude and Longitude are invalid");
+		}
+		if((gasStation.getMethanePrice()==-1) ||
+		   (gasStation.getSuperPlusPrice()==-1) ||
+		   (gasStation.getSuperPrice()==-1) ||
+		   (gasStation.getGasPrice()==-1) ||
+		   (gasStation.getDieselPrice()==-1)) {
+				gasStation.setMethanePrice(2);
+				gasStation.setSuperPlusPrice(2);
+				gasStation.setSuperPrice(2);
+				gasStation.setGasPrice(2);
+				gasStation.setDieselPrice(2);
+				}
+		this.gasStationRepository.save(gasStation);
 		return GasStationConverter.GasStationConvertToGasStationDto(gasStation);
 	}
 	
@@ -84,63 +108,48 @@ public class GasStationServiceimpl implements GasStationService {
 				for(GasStation g : gasStationsMethane) {
 					gasStationDto.add(GasStationConverter.GasStationConvertToGasStationDto(g));
 				}
-				gasStationDto.sort(new Comparator<GasStationDto>() {
+				gasStationDto.sort(Comparator.comparing(GasStationDto::getMethanePrice));
+				/*gasStationDto.sort(new Comparator<GasStationDto>() {
 					@Override
 					 public int compare(GasStationDto g1, GasStationDto g2) {
 					        return Double.compare(g1.getMethanePrice(), g2.getMethanePrice());
 					    }
-				});
+				});*/
 				return gasStationDto;
+				
 			case "super": 
 				List<GasStation> gasStationsSuper = this.gasStationRepository.findByHasSuper();
 				for(GasStation g : gasStationsSuper) {
 					gasStationDto.add(GasStationConverter.GasStationConvertToGasStationDto(g));
 				}
-				gasStationDto.sort(new Comparator<GasStationDto>() {
-					@Override
-					 public int compare(GasStationDto g1, GasStationDto g2) {
-					        return Double.compare(g1.getSuperPrice(), g2.getSuperPrice());
-					    }
-				});
+				gasStationDto.sort(Comparator.comparing(GasStationDto::getSuperPrice));
 				return gasStationDto;
+				
 			case "superPlus": 
 				List<GasStation> gasStationsSuperPlus = this.gasStationRepository.findByHasSuperPlus();
 				for(GasStation g : gasStationsSuperPlus) {
 					gasStationDto.add(GasStationConverter.GasStationConvertToGasStationDto(g));
 				}
-				gasStationDto.sort(new Comparator<GasStationDto>() {
-					@Override
-					 public int compare(GasStationDto g1, GasStationDto g2) {
-					        return Double.compare(g1.getSuperPlusPrice(), g2.getSuperPlusPrice());
-					    }
-				});
+				gasStationDto.sort(Comparator.comparing(GasStationDto::getSuperPlusPrice));
 				return gasStationDto;
+				
 			case "gas": 
 				List<GasStation> gasStationsGas = this.gasStationRepository.findByHasGas();
 				for(GasStation g : gasStationsGas) {
 					gasStationDto.add(GasStationConverter.GasStationConvertToGasStationDto(g));
 				}
-				gasStationDto.sort(new Comparator<GasStationDto>() {
-					@Override
-					 public int compare(GasStationDto g1, GasStationDto g2) {
-					        return Double.compare(g1.getGasPrice(), g2.getGasPrice());
-					    }
-				});
+				gasStationDto.sort(Comparator.comparing(GasStationDto::getGasPrice));
 				return gasStationDto;
+				
 			case "diesel": 
 				List<GasStation> gasStationsDiesel = this.gasStationRepository.findByHasDiesel();
 				for(GasStation g : gasStationsDiesel) {
 					gasStationDto.add(GasStationConverter.GasStationConvertToGasStationDto(g));
 				}
-				gasStationDto.sort(new Comparator<GasStationDto>() {
-					@Override
-					 public int compare(GasStationDto g1, GasStationDto g2) {
-					        return Double.compare(g1.getDieselPrice(), g2.getDieselPrice());
-					    }
-				});
+				gasStationDto.sort(Comparator.comparing(GasStationDto::getDieselPrice));
 				return gasStationDto;
 		}
-		return null;
+		return new ArrayList<>();
 	}
 
 	@Override
