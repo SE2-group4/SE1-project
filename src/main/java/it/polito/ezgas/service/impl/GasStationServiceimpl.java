@@ -61,10 +61,15 @@ public class GasStationServiceimpl implements GasStationService {
 		   (gasStation.getSuperPrice()==-1) &&
 		   (gasStation.getGasPrice()==-1) &&
 		   (gasStation.getDieselPrice()==-1)) {
+			if(gasStation.getHasMethane())
 				gasStation.setMethanePrice(2);
+			if(gasStation.getHasSuperPlus())
 				gasStation.setSuperPlusPrice(2);
+			if(gasStation.getHasSuper())
 				gasStation.setSuperPrice(2);
+			if(gasStation.getHasGas())
 				gasStation.setGasPrice(2);
+			if(gasStation.getHasDiesel())
 				gasStation.setDieselPrice(2);
 				}
 		this.gasStationRepository.save(gasStation);
@@ -199,7 +204,7 @@ public class GasStationServiceimpl implements GasStationService {
 	public void setReport(Integer gasStationId, double dieselPrice, double superPrice, double superPlusPrice,
 			double gasPrice, double methanePrice, Integer userId)
 			throws InvalidGasStationException, PriceException, InvalidUserException {
-		
+						
 		if(userId < 0) {
 			throw new InvalidUserException("Invalid (negative) userId");
 		}
@@ -209,6 +214,15 @@ public class GasStationServiceimpl implements GasStationService {
 		
 		GasStation gasStation = gasStationRepository.findByGasStationId(gasStationId).get(0);
 		User user = userRepository.findByUserId(userId).get(0);
+		
+		if((gasStation.getMethanePrice()!=-1 && gasStation.getMethanePrice()<0) ||
+		   (gasStation.getSuperPlusPrice()!=-1 && gasStation.getSuperPlusPrice()<0) ||
+		   (gasStation.getSuperPrice()!=-1 && gasStation.getSuperPrice()<0) ||
+		   (gasStation.getGasPrice()!=-1 && gasStation.getGasPrice()<0) ||
+		   (gasStation.getDieselPrice()!=-1 && gasStation.getDieselPrice()<0)) {
+				throw new PriceException("Invalid (negative) price"); 
+		}
+		
 		
 		gasStation.setDieselPrice(dieselPrice);
 		gasStation.setSuperPrice(superPrice);
