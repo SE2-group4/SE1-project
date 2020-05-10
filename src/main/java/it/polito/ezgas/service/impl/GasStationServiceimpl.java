@@ -5,9 +5,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.lang.Math;
-import java.util.stream.Collectors.*;
-import static java.util.Comparator.*;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -59,10 +56,10 @@ public class GasStationServiceimpl implements GasStationService {
 		   gasStation.getLat() > 90 || gasStation.getLon() > 180) {
 			throw new GPSDataException("Latitude and Longitude are invalid");
 		}
-		if((gasStation.getMethanePrice()==-1) ||
-		   (gasStation.getSuperPlusPrice()==-1) ||
-		   (gasStation.getSuperPrice()==-1) ||
-		   (gasStation.getGasPrice()==-1) ||
+		if((gasStation.getMethanePrice()==-1) &&
+		   (gasStation.getSuperPlusPrice()==-1) &&
+		   (gasStation.getSuperPrice()==-1) &&
+		   (gasStation.getGasPrice()==-1) &&
 		   (gasStation.getDieselPrice()==-1)) {
 				gasStation.setMethanePrice(2);
 				gasStation.setSuperPlusPrice(2);
@@ -104,7 +101,7 @@ public class GasStationServiceimpl implements GasStationService {
 		}
 		switch(gasolinetype) {
 			case "methane": 
-				List<GasStation> gasStationsMethane = this.gasStationRepository.findByHasMethane();
+				List<GasStation> gasStationsMethane = this.gasStationRepository.findByHasMethaneTrue();
 				for(GasStation g : gasStationsMethane) {
 					gasStationDto.add(GasStationConverter.GasStationConvertToGasStationDto(g));
 				}
@@ -118,7 +115,7 @@ public class GasStationServiceimpl implements GasStationService {
 				return gasStationDto;
 				
 			case "super": 
-				List<GasStation> gasStationsSuper = this.gasStationRepository.findByHasSuper();
+				List<GasStation> gasStationsSuper = this.gasStationRepository.findByHasSuperTrue();
 				for(GasStation g : gasStationsSuper) {
 					gasStationDto.add(GasStationConverter.GasStationConvertToGasStationDto(g));
 				}
@@ -126,7 +123,7 @@ public class GasStationServiceimpl implements GasStationService {
 				return gasStationDto;
 				
 			case "superPlus": 
-				List<GasStation> gasStationsSuperPlus = this.gasStationRepository.findByHasSuperPlus();
+				List<GasStation> gasStationsSuperPlus = this.gasStationRepository.findByHasSuperPlusTrue();
 				for(GasStation g : gasStationsSuperPlus) {
 					gasStationDto.add(GasStationConverter.GasStationConvertToGasStationDto(g));
 				}
@@ -134,7 +131,7 @@ public class GasStationServiceimpl implements GasStationService {
 				return gasStationDto;
 				
 			case "gas": 
-				List<GasStation> gasStationsGas = this.gasStationRepository.findByHasGas();
+				List<GasStation> gasStationsGas = this.gasStationRepository.findByHasGasTrue();
 				for(GasStation g : gasStationsGas) {
 					gasStationDto.add(GasStationConverter.GasStationConvertToGasStationDto(g));
 				}
@@ -142,7 +139,7 @@ public class GasStationServiceimpl implements GasStationService {
 				return gasStationDto;
 				
 			case "diesel": 
-				List<GasStation> gasStationsDiesel = this.gasStationRepository.findByHasDiesel();
+				List<GasStation> gasStationsDiesel = this.gasStationRepository.findByHasDieselTrue();
 				for(GasStation g : gasStationsDiesel) {
 					gasStationDto.add(GasStationConverter.GasStationConvertToGasStationDto(g));
 				}
