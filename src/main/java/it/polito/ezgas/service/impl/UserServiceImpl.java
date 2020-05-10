@@ -28,14 +28,21 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserDto getUserById(Integer userId) throws InvalidUserException {
 		// TODO Auto-generated method stub
-		User user = this.userRepository.findByUserId(userId).get(0);
-		return UserConverter.userConvertToUserDto(user);
+		User user;
+		
+		if(userId >= 0) {
+			user = this.userRepository.findByUserId(userId).get(0);
+			return UserConverter.userConvertToUserDto(user);
+		} else {
+			throw new InvalidUserException("Invalid (negative) userId");
+		}
 	}
 
 	@Override
 	public UserDto saveUser(UserDto userDto) {
 		// TODO Auto-generated method stub
 		User user = this.userRepository.save(UserConverter.userDtoConvertToUser(userDto));
+		System.out.println(user.getReputation());
 		return UserConverter.userConvertToUserDto(user);
 	}
 
@@ -53,47 +60,64 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public Boolean deleteUser(Integer userId) throws InvalidUserException {
 		// TODO Auto-generated method stub
-		boolean isDeleted = false;
-		try {
-			this.userRepository.delete(userId);
-			isDeleted = true;
+		if(userId < 0) {
+			throw new InvalidUserException("Invalid (negative) userId");
 		}
-		catch(Exception e) {
-			isDeleted = false;
-			System.out.println(e.getMessage());
+		this.userRepository.delete(userId);
+		if(this.userRepository.findByUserId(userId).isEmpty()) {
+			return true;
 		}
-		return isDeleted;
+		return false;
 	}
 
 	@Override
 	public LoginDto login(IdPw credentials) throws InvalidLoginDataException {
-		// TODO Auto-generated method stub
-		System.out.println(credentials.getUser());
-		User user = this.userRepository.findByEmailAndPassword(credentials.getUser(), credentials.getPw()).get(0);
-		LoginDto userLogin = new LoginDto(user.getUserId(), user.getUserName(), user.getPassword(), user.getEmail(), user.getReputation());
-		userLogin.setAdmin(user.getAdmin());
-		System.out.println("Valerio");
+		LoginDto userLogin;
+		if(credentials.getUser().compareTo("") != 0 || credentials.getPw().compareTo("") != 0) {
+			// TODO Auto-generated method stub
+			User user = this.userRepository.findByEmailAndPassword(credentials.getUser(), credentials.getPw()).get(0);
+			userLogin = new LoginDto(user.getUserId(), user.getUserName(), user.getPassword(), user.getEmail(), user.getReputation());
+			userLogin.setAdmin(user.getAdmin());
+		}
+		else {
+			throw new InvalidLoginDataException("Username or password is empty.");
+		}
 		return userLogin;
 	}
 
 	@Override
 	public Integer increaseUserReputation(Integer userId) throws InvalidUserException {
 		// TODO Auto-generated method stub	
-		User user = this.userRepository.findByUserId(userId).get(0);
-		Integer new_reputation = user.getReputation()+1;
-		user.setReputation(new_reputation);
-		this.userRepository.save(user);
-		return new_reputation;
+		if(userId >= 0) {
+			User user = this.userRepository.findByUserId(userId).get(0);
+			if(user.getReputation() < 5 && user.getReputation() >= -5) {
+				Integer new_reputation = user.getReputation()+1;
+				user.setReputation(new_reputation);
+				this.userRepository.save(user);
+				return new_reputation;
+			} else {
+				return 5;
+			}
+		} else {
+			throw new InvalidUserException("Invalid (negative) userId");
+		}
 	}
 
 	@Override
 	public Integer decreaseUserReputation(Integer userId) throws InvalidUserException {
 		// TODO Auto-generated method stub
-		User user = this.userRepository.findByUserId(userId).get(0);
-		Integer new_reputation = user.getReputation()-1;
-		user.setReputation(new_reputation);
-		this.userRepository.save(user);
-		return new_reputation;
+		if(userId >= 0) {
+			User user = this.userRepository.findByUserId(userId).get(0);
+			if(user.getReputation() <= 5 && user.getReputation() > -5) {
+				Integer new_reputation = user.getReputation()-1;
+				user.setReputation(new_reputation);
+				this.userRepository.save(user);
+				return new_reputation;
+			} else {
+				return -5;
+			}
+		} else {
+			throw new InvalidUserException("Invalid (negative) userId");
+		}
 	}
-	
 }
