@@ -1,18 +1,21 @@
 package it.polito.ezgas.converter;
 
+import org.springframework.beans.BeanUtils;
+
 import it.polito.ezgas.dto.GasStationDto;
 import it.polito.ezgas.dto.UserDto;
 import it.polito.ezgas.entity.GasStation;
 import it.polito.ezgas.entity.User;
-import it.polito.ezgas.converter.UserConverter;
 
 public class GasStationConverter {
 
-public static GasStationDto GasStationConvertToGasStationDto(GasStation gasStation) {
+	public static GasStationDto GasStationConvertToGasStationDto(GasStation gasStation) {
 		
 		GasStationDto gasStationDto = new GasStationDto();
+		BeanUtils.copyProperties(gasStation, gasStationDto);
+		
+		/*GasStationDto gasStationDto = new GasStationDto();
 		User user = gasStation.getUser();
-		//new UserConverter();
 		UserDto userDto = UserConverter.userConvertToUserDto(user);
 		
 		gasStationDto.setGasStationId(gasStation.getGasStationId());
@@ -34,7 +37,7 @@ public static GasStationDto GasStationConvertToGasStationDto(GasStation gasStati
 		gasStationDto.setReportUser(gasStation.getReportUser());
 		gasStationDto.setReportDependability(gasStation.getReportDependability());
 		gasStationDto.setUserDto(userDto);
-		
+		*/
 		
 		return gasStationDto;
 		
@@ -43,10 +46,11 @@ public static GasStationDto GasStationConvertToGasStationDto(GasStation gasStati
 public static GasStation GasStationDtoConvertToGasStation(GasStationDto gasStationDto) {
 	
 	GasStation gasStation = new GasStation();
+	BeanUtils.copyProperties(gasStationDto, gasStation);
+	/*
 	UserDto userDto = gasStationDto.getUserDto();
-	//new UserConverter();
 	User user = UserConverter.userDtoConvertToUser(userDto);
-	
+	GasStationDto gasStationDto = new GasStation();
 	gasStation.setGasStationId(gasStationDto.getGasStationId());
 	gasStation.setGasStationName(gasStationDto.getGasStationName());
 	gasStation.setGasStationAddress(gasStationDto.getGasStationAddress());
@@ -66,10 +70,9 @@ public static GasStation GasStationDtoConvertToGasStation(GasStationDto gasStati
 	gasStation.setReportUser(gasStationDto.getReportUser());
 	gasStation.setReportDependability(gasStationDto.getReportDependability());
 	gasStation.setUser(user);
-	
+	*/
 	
 	return gasStation;
 	
-}
-	
+	}	
 }
