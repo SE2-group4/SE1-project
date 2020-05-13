@@ -26,7 +26,7 @@ Version:
     the set up of all Spring components
     >
 
- ### **Class *User* - method *getUserId***
+### **Class *User* - method *getUserId***
 
 **Criteria for method *getUserId*:**
 	
@@ -61,7 +61,7 @@ Version:
 | [1, max_int]  | valid             | Spring works in this way...   | testGetUserId_returnId()  |
 
 
- ### **Class *User* - method *setUserId***
+### **Class *User* - method *setUserId***
 
 **Criteria for method *setUserId*:**
 	
@@ -94,6 +94,42 @@ Version:
 |-------|-------|-------|-------|-------|-------|
 | [min_int, 0]  | valid             | omission in requirements      | testSetUserId()  |
 | [1, max_int]  | valid             | compliant as Spring works     | testSetUserId()  |
+
+### **Class *User* - method *getUserReputation***
+
+**Criteria for method *getUserReputation*:**
+	
+<!-- input space -->
+ - reputation (int), as returned from the function
+
+**Predicates for method *getUserReputation*:**
+
+| Criteria      | Predicate     |
+| --------      | ---------     |
+| reputation    | [min_int, -6] |
+|               | [-5, 5]       |
+|               | [6, max_int]  |
+
+**Boundaries**:
+
+| Criteria | Boundary values |
+| -------- | --------------- |
+| id       | min_int         |
+|          | min_int +1      |
+|          | -6              |
+|          | -5              |
+|          | 5               |
+|          | 6               |
+|          | max_int -1      |
+|          | max_int         |
+
+**Combination of predicates**:
+
+| id            | Valid / Invalid   | Description of the test case  | JUnit test case           |
+|-------|-------|-------|-------|-------|-------|
+| [min_int, -6] | invalid           | as described in the glossary  | testGetUserReputation_returnReputation()  |
+| [-5, 5]       | valid           | as described in the glossary  | testGetUserReputation_returnReputation()  |
+| [6, max_int]  | invalid           | as described in the glossary  | testGetUserReputation_returnReputation()  |
 
 <!--
 ### **Class *class_name* - method *name***
