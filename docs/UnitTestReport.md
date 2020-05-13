@@ -26,7 +26,77 @@ Version:
     the set up of all Spring components
     >
 
- ### **Class *class_name* - method *name***
+ ### **Class *User* - method *getUserId***
+
+**Criteria for method *getUserId*:**
+	
+<!-- input space -->
+ - id (int), as returned from the function
+
+**Predicates for method *getUserId*:**
+
+| Criteria | Predicate      |
+| -------- | ---------      |
+| id       | [min_int, 0]   |
+|          | [1, max_int]   |
+
+**Boundaries**:
+
+| Criteria | Boundary values |
+| -------- | --------------- |
+| id       | min_int         |
+|          | min_int +1      |
+|          | -1              |
+|          | 0               |
+|          | 1               |
+|          | 2               |
+|          | max_int -1      |
+|          | max_int         |
+
+**Combination of predicates**:
+
+| id            | Valid / Invalid   | Description of the test case  | JUnit test case           |
+|-------|-------|-------|-------|-------|-------|
+| [min_int, 0]  | invalid           | Spring works in this way...   | testGetUserId_returnId()  |
+| [1, max_int]  | valid             | Spring works in this way...   | testGetUserId_returnId()  |
+
+
+ ### **Class *User* - method *setUserId***
+
+**Criteria for method *setUserId*:**
+	
+<!-- input space -->
+ - id (int)
+
+**Predicates for method *setUserId*:**
+
+| Criteria | Predicate      |
+| -------- | ---------      |
+| id       | [min_int, 0]   |
+|          | [1, max_int]   |
+
+**Boundaries**:
+
+| Criteria | Boundary values |
+| -------- | --------------- |
+| id       | min_int         |
+|          | min_int +1      |
+|          | -1              |
+|          | 0               |
+|          | 1               |
+|          | 2               |
+|          | max_int -1      |
+|          | max_int         |
+
+**Combination of predicates**:
+
+| id            | Valid / Invalid   | Description of the test case  | JUnit test case           |
+|-------|-------|-------|-------|-------|-------|
+| [min_int, 0]  | valid             | omission in requirements      | testSetUserId()  |
+| [1, max_int]  | valid             | compliant as Spring works     | testSetUserId()  |
+
+<!--
+### **Class *class_name* - method *name***
 
 
 
@@ -72,6 +142,7 @@ Version:
 |||||||
 |||||||
 |||||||
+-->
 
 
 
