@@ -29,12 +29,12 @@ public class UserServiceImpl implements UserService {
 	public UserDto getUserById(Integer userId) throws InvalidUserException {
 		// TODO Auto-generated method stub
 		User user;
-		
-		if(userId >= 0) {
+		try {
 			user = this.userRepository.findByUserId(userId).get(0);
 			return UserConverter.userConvertToUserDto(user);
-		} else {
-			throw new InvalidUserException("Invalid (negative) userId");
+		}
+		catch(Exception e) {
+			throw new InvalidUserException(e.getMessage());
 		}
 	}
 
@@ -42,7 +42,6 @@ public class UserServiceImpl implements UserService {
 	public UserDto saveUser(UserDto userDto) {
 		// TODO Auto-generated method stub
 		User user = this.userRepository.save(UserConverter.userDtoConvertToUser(userDto));
-		System.out.println(user.getReputation());
 		return UserConverter.userConvertToUserDto(user);
 	}
 
@@ -60,27 +59,29 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public Boolean deleteUser(Integer userId) throws InvalidUserException {
 		// TODO Auto-generated method stub
-		if(userId < 0) {
-			throw new InvalidUserException("Invalid (negative) userId");
+		boolean isDeleted = false;
+		try {
+			this.userRepository.delete(userId);
+			isDeleted = true;
 		}
-		this.userRepository.delete(userId);
-		if(this.userRepository.findByUserId(userId).isEmpty()) {
-			return true;
+		catch(Exception e) {
+			isDeleted = false;
+			throw new InvalidUserException(e.getMessage());
 		}
-		return false;
+		return isDeleted;
 	}
 
 	@Override
 	public LoginDto login(IdPw credentials) throws InvalidLoginDataException {
 		LoginDto userLogin;
-		if(credentials.getUser().compareTo("") != 0 || credentials.getPw().compareTo("") != 0) {
+		try {
 			// TODO Auto-generated method stub
 			User user = this.userRepository.findByEmailAndPassword(credentials.getUser(), credentials.getPw()).get(0);
 			userLogin = new LoginDto(user.getUserId(), user.getUserName(), user.getPassword(), user.getEmail(), user.getReputation());
 			userLogin.setAdmin(user.getAdmin());
 		}
-		else {
-			throw new InvalidLoginDataException("Username or password is empty.");
+		catch(Exception e) {
+			throw new InvalidLoginDataException(e.getMessage());
 		}
 		return userLogin;
 	}
@@ -88,7 +89,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public Integer increaseUserReputation(Integer userId) throws InvalidUserException {
 		// TODO Auto-generated method stub	
-		if(userId >= 0) {
+		try {
 			User user = this.userRepository.findByUserId(userId).get(0);
 			if(user.getReputation() < 5 && user.getReputation() >= -5) {
 				Integer new_reputation = user.getReputation()+1;
@@ -98,7 +99,7 @@ public class UserServiceImpl implements UserService {
 			} else {
 				return 5;
 			}
-		} else {
+		} catch(Exception e) {
 			throw new InvalidUserException("Invalid (negative) userId");
 		}
 	}
@@ -106,7 +107,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public Integer decreaseUserReputation(Integer userId) throws InvalidUserException {
 		// TODO Auto-generated method stub
-		if(userId >= 0) {
+		try {
 			User user = this.userRepository.findByUserId(userId).get(0);
 			if(user.getReputation() <= 5 && user.getReputation() > -5) {
 				Integer new_reputation = user.getReputation()-1;
@@ -116,7 +117,7 @@ public class UserServiceImpl implements UserService {
 			} else {
 				return -5;
 			}
-		} else {
+		} catch(Exception e) {
 			throw new InvalidUserException("Invalid (negative) userId");
 		}
 	}
