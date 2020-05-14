@@ -71,18 +71,6 @@
 			<artifactId>spring-restdocs-mockmvc</artifactId>
 			<scope>test</scope>
 		</dependency>
-	    <!--  Gson: Java to Json conversion -->
-	    <dependency>
-	      <groupId>com.google.code.gson</groupId>
-	      <artifactId>gson</artifactId>
-	      <scope>compile</scope>
-	    </dependency>
-	    <!--  Dependencies for testing -->
-		<dependency>
-		    <groupId>com.h2database</groupId>
-		    <artifactId>h2</artifactId>
-		    <scope>test</scope>
-		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
