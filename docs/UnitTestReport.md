@@ -28,9 +28,9 @@ Version:
 
 <!-- START doc structure change -->
 
-## **Class *User* - all tests*
+## **Class *User* - all tests**
 
-# Formal and pratical approach
+### Formal and pratical approach
 
 In this documents all setters and getters tests have been described in a formal way.
 In the JUnit test, they have been tested in couples. At the begin, all values are setted through the class constructor (it is checked by Java compiler / runtime environment). Then, all getters are tested. Finally, all setters are tested and checked with the linked getter.
@@ -433,6 +433,320 @@ No boundaries.
 |-------|-------|-------|-------|-------|-------|
 | true  | valid             |                               | testSetAdmin_ShouldSetAdmin()     |
 | false | valid             |                               | testSetAdmin_ShouldSetAdmin()     |
+
+
+## **Class *GasStation* - all tests**
+
+### Formal and pratical approach
+
+<!-- END doc structure change -->
+
+### **Class *GasStation* - Getters for integer ids**
+
+**Method list:**
+- getGasStationId
+- getReportUser
+
+**Criteria:**
+	
+<!-- input space -->
+ - return value (int), as returned from the method
+
+**Predicates:**
+
+| Criteria      | Predicate      |
+| ------------- | ---------      |
+| return value  | [min_int, 0]   |
+|               | [1, max_int]   |
+
+**Boundaries**:
+
+| Criteria      | Boundary values |
+| ------------- | --------------- |
+| return value  | min_int         |
+|               | min_int +1      |
+|               | -1              |
+|               | 0               |
+|               | 1               |
+|               | 2               |
+|               | max_int -1      |
+|               | max_int         |
+
+**Combination of predicates**:
+
+| return value  | Valid / Invalid   | Description of the test case  | JUnit test case                       |
+|-------|-------|-------|-------|-------|-------|
+| [min_int, 0]  | invalid           | setter() -> return id (id should not be <= 0)   | getGasStationId__returnGasStationId(), getReportUSer__returnReportUSer()    |
+| [1, max_int]  | valid             | setter() -> return id   | getGasStationId__returnGasStationId(), getReportUSer__returnReportUSer()    |
+
+### **Class *GasStation* - Setters for integer ids**
+	
+**Method list:**
+- setGasStationId
+- setReportUser
+
+**Criteria:**
+
+<!-- input space -->
+ - input (int)
+
+**Predicates:**
+
+| Criteria      | Predicate      |
+| ------------- | ---------      |
+| input         | [min_int, 0]   |
+|               | [1, max_int]   |
+
+**Boundaries**:
+
+| Criteria      | Boundary values |
+| ------------- | --------------- |
+| input         | min_int         |
+|               | min_int +1      |
+|               | -1              |
+|               | 0               |
+|               | 1               |
+|               | 2               |
+|               | max_int -1      |
+|               | max_int         |
+
+**Combination of predicates**:
+
+| input  | Valid / Invalid   | Description of the test case  | JUnit test case                   |
+|-------|-------|-------|-------|-------|-------|
+| [min_int, 0]  | invalid             | setter() -> modify id (id should not be <= 0>)      | setGasStationId__modifyGasStationId(), setReportUSer__modifyReportUSer()   |
+| [1, max_int]  | valid             | setter() -> modify id     | setGasStationId__modifyGasStationId(), getReportUSer__modifyReportUSer()   |
+
+### **Class *GasStation* - Getters for prices**
+
+**Method list:**
+- getDieselPrice
+- getSuperPrice
+- getSuperPlusPrice
+- getGasPrice
+- getMethanePrice
+
+**Criteria:**
+	
+<!-- input space -->
+ - price (double), as returned from the method
+
+**Predicates:**
+
+| Criteria  | Predicate      |
+| --------- | ---------      |
+| price     | [min_double, 0]|
+|           | [0.001, max_double] |
+
+**Boundaries**:
+
+| Criteria  | Boundary values |
+| --------- | --------------- |
+| price     | min_double      |
+|           | min_double+0.001|
+|           | -0.001          |
+|           | 0               |
+|           | 0.001           |
+|           | max_double-0-001|
+|           | max_double      |
+
+**Combination of predicates**:
+
+| price    | Valid / Invalid   | Description of the test case  | JUnit test case                       |
+|-------|-------|-------|-------|-------|-------|
+| [min_double, 0]  | invalid           | getter()->return price (price should not be <= 0)  | getDieselPrice__returDieselPrice(), getSuperPrice__returnSuperPrice(), getSuperPlusPrice__returnSuperPlusPrice(), getGasPrice__returnSuperPlusPrice(), getMethanePrice__returnMethanePrice() |
+| [0.001, max_double]  | valid             | getter()->return price   | getDieselPrice__returDieselPrice(), getSuperPrice__returnSuperPrice(), getSuperPlusPrice__returnSuperPlusPrice(), getGasPrice__returnSuperPlusPrice(), getMethanePrice__returnMethanePrice()    |
+
+### **Class *GasStation* - Setters for double**
+
+**Method list:**
+- setDieselPrice
+- setSuperPrice
+- setSuperPlusPrice
+- setGasPrice
+- setMethanePrice
+
+**Criteria:**
+	
+<!-- input space -->
+ - price (double), as returned from the method
+
+**Predicates:**
+
+| Criteria  | Predicate      |
+| --------- | ---------      |
+| price     | [min_double, 0]|
+|           | [0.001, max_double] |
+
+**Boundaries**:
+
+| Criteria  | Boundary values |
+| --------- | --------------- |
+| price     | min_double      |
+|           | min_double+0.001|
+|           | -0.001          |
+|           | 0               |
+|           | 0.001           |
+|           | max_double-0-001|
+|           | max_double      |
+
+**Combination of predicates**:
+
+| price    | Valid / Invalid   | Description of the test case  | JUnit test case                       |
+|-------|-------|-------|-------|-------|-------|
+| [min_double, 0]  | invalid | setter()->modify price (price should not be <= 0)   | setDieselPrice__modifyDieselPrice(), setSuperPrice__modifySuperPrice(), setSuperPlusPrice__modifySuperPlusPrice(), setGasPrice__modifySuperPlusPrice(), setMethanePrice__modifyMethanePrice()  |
+| [0.001, max_double]  | valid             | setter()->modify price   | setDieselPrice__modifyDieselPrice(), setSuperPrice__modifySuperPrice(), setSuperPlusPrice__modifySuperPlusPrice(), setGasPrice__modifySuperPlusPrice(), setMethanePrice__modifyMethanePrice()  |
+
+
+
+### **Class *GasStation* - Getters for String**
+
+**Method list:**
+- getGasStationName
+- getGasStationAddress
+- getCarSharing
+- getReportTimestamp
+
+**Criteria:**
+
+- return value (String), as returned from the method
+
+**Predicates:**
+
+| Criteria      | Predicate          |
+| ------------- | ---------          |
+| return value  | "" (empty string)  |
+|               | null               |
+|               | any other string   |
+
+**Boundaries**:
+
+| Criteria      | Boundary values    |
+| ------------- | ---------------    |
+| return value  | "" (empty string)  |
+|               | null               |
+|               | any other string   |
+
+**Combination of predicates**:
+
+| return value           | Valid / Invalid  | Description of the test case  | JUnit test case                           |
+|-------|-------|-------|-------|-------|-------|
+| "" (empty string)  | invalid          | getter() -> return string (string should not be empty) | getGasStationName__returnGasStationName(), getGasStationAddress__returnGasStationAddress(), getCarSharing__returnCarSharing(), getReportTimestamp__returnReportTimestamp()    |
+| null               | invalid          | getter() -> return null | getGasStationName__returnGasStationName(), getGasStationAddress__returnGasStationAddress(), getCarSharing__returnCarSharing(), getReportTimestamp__returnReportTimestamp()    |
+| any other string   | valid            | getter() -> return string | getGasStationName__returnGasStationName(), getGasStationAddress__returnGasStationAddress(), getCarSharing__returnCarSharing(), getReportTimestamp__returnReportTimestamp()    |
+
+### **Class *GasStation* - Setters for String**
+
+**Method list:**
+- settGasStationName
+- setGasStationAddress
+- setCarSharing
+- setReportTimestamp
+
+**Criteria:**
+
+- input (String)
+
+**Predicates:**
+
+| Criteria      | Predicate          |
+| ------------- | ---------          |
+| input         | "" (empty string)  |
+|               | null               |
+|               | any other string   |
+
+**Boundaries**:
+
+| Criteria      | Boundary values    |
+| ------------- | ---------------    |
+| input         | "" (empty string)  |
+|               | null               |
+|               | any other string   |
+
+**Combination of predicates**:
+
+| userName           | Valid / Invalid  | Description of the test case  | JUnit test case                           |
+|-------|-------|-------|-------|-------|-------|
+| "" (empty string)  | invalid          | setter() -> modify string (string should not be empty)      | setGasStationName__modifyGasStationName(), setGasStationAddress__modifyGasStationAddress(), setCarSharing__modifyCarSharing(), setReportTimestamp__modifyReportTimestamp()       |
+| null               | invalid          | setter() -> modify string (string should not be null)      | setGasStationName__modifyGasStationName(), setGasStationAddress__modifyGasStationAddress(), setCarSharing__modifyCarSharing(), setReportTimestamp__modifyReportTimestamp()       |
+| any other string   | valid            | setter() -> modify string | setGasStationName__modifyGasStationName(), setGasStationAddress__modifyGasStationAddress(), setCarSharing__modifyCarSharing(), setReportTimestamp__modifyReportTimestamp()       |
+
+### **Class *GasStation* - Getters for boolean**
+
+**Method list:**
+- getHasDiesel
+- getHasSuper
+- getHasSuperPlus
+- getHasGas
+- getHasMethane
+
+**Criteria:**
+
+- return value (boolean), as returned from the method
+
+**Predicates:**
+
+| Criteria      | Predicate |
+| ------------- | --------- |
+| return value  | true      |
+|               | false     |
+|               | other     |
+
+**Boundaries**:
+
+| Criteria      | Boundary values |
+| ------------- | --------------- |
+| return value  | true            |
+|               | false           |
+|               | other           |
+
+**Combination of predicates**:
+
+
+| return value | Valid / Invalid | Description of the test case | JUnit test case |
+|-------|-------|-------|-------|-------|-------|
+| true  | valid     | getter() -> return boolean |getHasDiesel__returnHasDiesel(), getHasSuper__returnHasSuper(), getHasSuperPlus__returnHasSuperPlus(), getHasGas__returnHasGas(), getHasMethane__returnHasMethane()|
+| false | valid     | getter() -> return boolean |getHasDiesel__returnHasDiesel(), getHasSuper__returnHasSuper(), getHasSuperPlus__returnHasSuperPlus(), getHasGas__returnHasGas(), getHasMethane__returnHasMethane()|
+| other | invalid   | getter() -> exception |getHasDiesel__returnHasDiesel(), getHasSuper__returnHasSuper(), getHasSuperPlus__returnHasSuperPlus(), getHasGas__returnHasGas(), getHasMethane__returnHasMethane()|
+
+### **Class *GasStation* - Setters for boolean**
+
+**Method list:**
+- setHasDiesel
+- setHasSuper
+- setHasSuperPlus
+- setHasGas
+- setHasMethane
+
+**Criteria:**
+
+- input (boolean)
+
+**Predicates:**
+
+| Criteria  | Predicate |
+| --------- | --------- |
+| input     | true      |
+|           | false     |
+|           | other     |
+
+**Boundaries**:
+
+| Criteria  | Boundary values |
+| --------- | --------------- |
+| input     | true            |
+|           | false           |
+|           | other           |
+
+**Combination of predicates**:
+
+
+| input | Valid / Invalid | Description of the test case | JUnit test case |
+|-------|-------|-------|-------|-------|-------|
+| true  | valid     | setter() -> value = true |setHasDiesel__modifyHasDiesel(), setHasSuper__modifyHasSuper(), setHasSuperPlus__modifyHasSuperPlus(), setHasGas__modifyHasGas(), setHasMethane__modifyHasMethane()|
+| false | valid     | setter() -> value = true |setHasDiesel__modifyHasDiesel(), setHasSuper__modifyHasSuper(), setHasSuperPlus__modifyHasSuperPlus(), setHasGas__modifyHasGas(), setHasMethane__modifyHasMethane()|
+| other | invalid   ||setHasDiesel__modifyHasDiesel(), setHasSuper__modifyHasSuper(), setHasSuperPlus__modifyHasSuperPlus(), setHasGas__modifyHasGas(), setHasMethane__modifyHasMethane()|
+
 
 
 <!--
