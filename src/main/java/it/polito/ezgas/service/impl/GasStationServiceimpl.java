@@ -101,23 +101,28 @@ public class GasStationServiceimpl implements GasStationService {
 	@Override
 	public List<GasStationDto> getGasStationsByGasolineType(String gasolinetype) throws InvalidGasTypeException {
 		List<GasStationDto> gasStationDto = new ArrayList<>();
+		System.out.println("#######################################");
+		System.out.println(gasolinetype);
 		if(gasolinetype.compareTo("")==0) {
 			throw new InvalidGasTypeException("Invalid gas type");
 		}
-		switch(gasolinetype) {
+		
+		if(gasolinetype.toLowerCase().compareTo("methane") == 0) {
+			List<GasStation> gasStationsMethane = this.gasStationRepository.findByHasMethaneTrue();
+			for(GasStation g : gasStationsMethane) {
+				gasStationDto.add(GasStationConverter.GasStationConvertToGasStationDto(g));
+			}
+			gasStationDto.sort(Comparator.comparing(GasStationDto::getMethanePrice));
+			return gasStationDto;
+		}
+		/*switch(gasolinetype.toLowerCase()) {
 			case "methane": 
 				List<GasStation> gasStationsMethane = this.gasStationRepository.findByHasMethaneTrue();
 				for(GasStation g : gasStationsMethane) {
 					gasStationDto.add(GasStationConverter.GasStationConvertToGasStationDto(g));
 				}
 				gasStationDto.sort(Comparator.comparing(GasStationDto::getMethanePrice));
-				/*gasStationDto.sort(new Comparator<GasStationDto>() {
-					@Override
-					 public int compare(GasStationDto g1, GasStationDto g2) {
-					        return Double.compare(g1.getMethanePrice(), g2.getMethanePrice());
-					    }
-				});*/
-				return gasStationDto;
+				break;
 				
 			case "super": 
 				List<GasStation> gasStationsSuper = this.gasStationRepository.findByHasSuperTrue();
@@ -150,7 +155,7 @@ public class GasStationServiceimpl implements GasStationService {
 				}
 				gasStationDto.sort(Comparator.comparing(GasStationDto::getDieselPrice));
 				return gasStationDto;
-		}
+		}*/
 		return new ArrayList<>();
 	}
 
@@ -159,7 +164,11 @@ public class GasStationServiceimpl implements GasStationService {
 		if(lat < -90 || lon < -180 || lat > 90 || lon > 180) {
 			throw new GPSDataException("Latitude and Longitude are invalid");
 		}
-		List<GasStation> gasStationsbyProx = this.gasStationRepository.findAll().stream().filter(g -> Math.abs(g.getLat()-lat)<(Math.sqrt(2)*1000)).filter(g -> Math.abs(g.getLon()-lon)<(Math.sqrt(2)*1000)).collect(Collectors.toList());
+		List<Object> ObjectGasStationByProx = this.gasStationRepository.findByLatAndLon(lat, lon);
+		List<GasStation> gasStationsbyProx = new ArrayList<>();		
+		for(Object o : ObjectGasStationByProx) {
+			gasStationsbyProx.add((GasStation) o);
+		}
 		List<GasStationDto> gDto = new ArrayList<>();
 		for(GasStation g : gasStationsbyProx) {
 			gDto.add(GasStationConverter.GasStationConvertToGasStationDto(g));			
@@ -234,10 +243,11 @@ public class GasStationServiceimpl implements GasStationService {
 
 	@Override
 	public List<GasStationDto> getGasStationByCarSharing(String carSharing) {
-		List<GasStation> gasStationsByCarShare = gasStationRepository.findAll().stream().filter(g -> g.getCarSharing().compareTo(carSharing)==0).collect(Collectors.toList());
+		System.out.println("BYSHARING!");
+		List<GasStation> gasStationsByCarShare = gasStationRepository.findByCarSharing(carSharing);
 		List<GasStationDto> gDto = new ArrayList<>();
 		for(GasStation g : gasStationsByCarShare) {
-			gDto.add(GasStationConverter.GasStationConvertToGasStationDto(g));			
+			gDto.add(GasStationConverter.GasStationConvertToGasStationDto(g));	
 		}
 		return gDto;
 	}
