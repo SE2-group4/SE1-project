@@ -28,7 +28,6 @@ import it.polito.ezgas.entity.User;
 import it.polito.ezgas.service.UserService;
 import net.minidev.json.JSONObject;
 
-@RunWith(SpringRunner.class)
 @WebMvcTest(UserController.class)
 public class UserControllerTests {
 	@Autowired
