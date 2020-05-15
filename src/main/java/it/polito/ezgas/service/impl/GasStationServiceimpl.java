@@ -2,6 +2,7 @@ package it.polito.ezgas.service.impl;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.lang.Math;
@@ -33,6 +34,75 @@ public class GasStationServiceimpl implements GasStationService {
 	@Autowired
 	UserRepository userRepository;
 
+	
+	//calculate distance of heart
+	private boolean calculateDistance(double userLat, double userLng, double venueLat, double venueLng) {
+	    double AVERAGE_RADIUS_OF_EARTH = 6371;
+	    
+	    if(Double.compare(userLat, venueLat) == 0 && Double.compare(userLng, venueLng) == 0) {
+	    	return true;
+	    }
+	    
+	    userLat = Math.toRadians(userLat);
+	    userLng = Math.toRadians(userLng);
+	    venueLng = Math.toRadians(venueLng);
+	    venueLat = Math.toRadians(venueLat);
+	    
+	    double latDistance = venueLat - userLat;
+	    double lngDistance = venueLng - userLng;
+	
+	    double a = (Math.pow(Math.sin(latDistance / 2), 2) +
+	               (Math.cos(userLat)) *
+	               (Math.cos(venueLat)) *
+	               (Math.pow(Math.sin(venueLng / 2), 2)));
+	
+	    double c = 2 * Math.asin(Math.sqrt(a));
+	    if(c*AVERAGE_RADIUS_OF_EARTH < 1) {
+	    	return true;
+	    } else {
+	    	return false;
+	    }
+	}
+	  
+
+	  /*
+	   *  P.trust_level = 50 * (U.trust_level +5)/10 + 50 * obsolescence
+	obsolescence = 0 if (today - P.time_tag) > 7 days
+	otherwise obsolescence = 1 - (today - P.time_tag)/7
+	   * 
+	   */
+	  
+	  private double calculateTrust(int userRep, String timestamp) {
+	    double obsolescence;
+	    double trust;
+	    Long timestamp_l = Long.parseLong(timestamp);
+	    Date today = new Date();
+	    Long today_l = today.getTime();
+	    
+	    if(today_l - timestamp_l > 604800000) {    //7 days
+	      obsolescence = 0.0;
+	    }
+	    else { 
+	      obsolescence = 1 - (today_l - timestamp_l)/604800000.0;
+	    }
+	    
+	    trust = 50 * (userRep + 5)/10 + 50 * obsolescence;
+	    return trust;
+	  }
+	  
+	  // calculate intersection
+	  public <T> List<T> intersection(List<T> list1, List<T> list2) {
+	        List<T> list = new ArrayList<T>();
+
+	        for (T t : list1) {
+	            if(list2.contains(t)) {
+	                list.add(t);
+	            }
+	        }
+
+	        return list;
+	    }
+	
 	@Override
 	public GasStationDto getGasStationById(Integer gasStationId) throws InvalidGasStationException {
 		if(gasStationId < 0) {
@@ -99,79 +169,62 @@ public class GasStationServiceimpl implements GasStationService {
 	}
 
 	@Override
-	public List<GasStationDto> getGasStationsByGasolineType(String gasolinetype) throws InvalidGasTypeException {
-		List<GasStationDto> gasStationDto = new ArrayList<>();
-		System.out.println("#######################################");
-		System.out.println(gasolinetype);
-		if(gasolinetype.compareTo("")==0) {
-			throw new InvalidGasTypeException("Invalid gas type");
-		}
-		
-		if(gasolinetype.toLowerCase().compareTo("methane") == 0) {
-			List<GasStation> gasStationsMethane = this.gasStationRepository.findByHasMethaneTrue();
-			for(GasStation g : gasStationsMethane) {
-				gasStationDto.add(GasStationConverter.GasStationConvertToGasStationDto(g));
-			}
-			gasStationDto.sort(Comparator.comparing(GasStationDto::getMethanePrice));
-			return gasStationDto;
-		}
-		/*switch(gasolinetype.toLowerCase()) {
-			case "methane": 
-				List<GasStation> gasStationsMethane = this.gasStationRepository.findByHasMethaneTrue();
-				for(GasStation g : gasStationsMethane) {
-					gasStationDto.add(GasStationConverter.GasStationConvertToGasStationDto(g));
-				}
-				gasStationDto.sort(Comparator.comparing(GasStationDto::getMethanePrice));
-				break;
-				
-			case "super": 
-				List<GasStation> gasStationsSuper = this.gasStationRepository.findByHasSuperTrue();
-				for(GasStation g : gasStationsSuper) {
-					gasStationDto.add(GasStationConverter.GasStationConvertToGasStationDto(g));
-				}
-				gasStationDto.sort(Comparator.comparing(GasStationDto::getSuperPrice));
-				return gasStationDto;
-				
-			case "superPlus": 
-				List<GasStation> gasStationsSuperPlus = this.gasStationRepository.findByHasSuperPlusTrue();
-				for(GasStation g : gasStationsSuperPlus) {
-					gasStationDto.add(GasStationConverter.GasStationConvertToGasStationDto(g));
-				}
-				gasStationDto.sort(Comparator.comparing(GasStationDto::getSuperPlusPrice));
-				return gasStationDto;
-				
-			case "gas": 
-				List<GasStation> gasStationsGas = this.gasStationRepository.findByHasGasTrue();
-				for(GasStation g : gasStationsGas) {
-					gasStationDto.add(GasStationConverter.GasStationConvertToGasStationDto(g));
-				}
-				gasStationDto.sort(Comparator.comparing(GasStationDto::getGasPrice));
-				return gasStationDto;
-				
-			case "diesel": 
-				List<GasStation> gasStationsDiesel = this.gasStationRepository.findByHasDieselTrue();
-				for(GasStation g : gasStationsDiesel) {
-					gasStationDto.add(GasStationConverter.GasStationConvertToGasStationDto(g));
-				}
-				gasStationDto.sort(Comparator.comparing(GasStationDto::getDieselPrice));
-				return gasStationDto;
-		}*/
-		return new ArrayList<>();
-	}
-
+	  public List<GasStationDto> getGasStationsByGasolineType(String gasolinetype) throws InvalidGasTypeException {
+	    List<GasStationDto> gasStationDto = new ArrayList<>();
+	    if(gasolinetype.toLowerCase().compareTo("")==0) {
+	      throw new InvalidGasTypeException("Invalid gas type");
+	    }
+	    
+	    if(gasolinetype.toLowerCase().compareTo("methane") == 0) {
+	      List<GasStation> gasStationsMethane = this.gasStationRepository.findByHasMethaneTrueOrderByMethanePriceDesc();
+	      for(GasStation g : gasStationsMethane) {
+	        gasStationDto.add(GasStationConverter.GasStationConvertToGasStationDto(g));
+	      }
+	      //gasStationDto.sort(Comparator.comparing(GasStationDto::getMethanePrice));
+	    }
+	    if(gasolinetype.toLowerCase().compareTo("super") == 0) { 
+	      List<GasStation> gasStationsSuper = this.gasStationRepository.findByHasSuperTrueOrderBySuperPriceDesc();
+	      for(GasStation g : gasStationsSuper) {
+	        gasStationDto.add(GasStationConverter.GasStationConvertToGasStationDto(g));
+	      }
+	      //gasStationDto.sort(Comparator.comparing(GasStationDto::getSuperPrice));
+	    }
+	    if(gasolinetype.toLowerCase().compareTo("superplus") == 0) {
+	      List<GasStation> gasStationsSuperPlus = this.gasStationRepository.findByHasSuperPlusTrueOrderBySuperPlusPriceDesc();
+	      for(GasStation g : gasStationsSuperPlus) {
+	        gasStationDto.add(GasStationConverter.GasStationConvertToGasStationDto(g));
+	      }
+	      //gasStationDto.sort(Comparator.comparing(GasStationDto::getSuperPlusPrice));
+	    }
+	    if(gasolinetype.toLowerCase().compareTo("gas") == 0) {
+	      List<GasStation> gasStationsGas = this.gasStationRepository.findByHasGasTrueOrderByGasPriceDesc();
+	      for(GasStation g : gasStationsGas) {
+	        gasStationDto.add(GasStationConverter.GasStationConvertToGasStationDto(g));
+	      }
+	      //gasStationDto.sort(Comparator.comparing(GasStationDto::getGasPrice));
+	    }
+	    if(gasolinetype.toLowerCase().compareTo("diesel") == 0) {
+	      List<GasStation> gasStationsDiesel = this.gasStationRepository.findByHasDieselTrueOrderByDieselPriceDesc();
+	      for(GasStation g : gasStationsDiesel) {
+	        gasStationDto.add(GasStationConverter.GasStationConvertToGasStationDto(g));
+	      }
+	      //gasStationDto.sort(Comparator.comparing(GasStationDto::getDieselPrice));
+	    }
+	    return gasStationDto;
+	  }
+	
+	
 	@Override
 	public List<GasStationDto> getGasStationsByProximity(double lat, double lon) throws GPSDataException {
-		if(lat < -90 || lon < -180 || lat > 90 || lon > 180) {
+		if(lat < (double)-90 || lon < (double)-180 || lat > (double)90 || lon > (double)180) {
 			throw new GPSDataException("Latitude and Longitude are invalid");
 		}
-		List<Object> ObjectGasStationByProx = this.gasStationRepository.findByLatAndLon(lat, lon);
-		List<GasStation> gasStationsbyProx = new ArrayList<>();		
-		for(Object o : ObjectGasStationByProx) {
-			gasStationsbyProx.add((GasStation) o);
-		}
+		List<GasStation> gasStationsbyProx = this.gasStationRepository.findAll();
 		List<GasStationDto> gDto = new ArrayList<>();
 		for(GasStation g : gasStationsbyProx) {
-			gDto.add(GasStationConverter.GasStationConvertToGasStationDto(g));			
+			if(calculateDistance(lat, lon, g.getLat(), g.getLon())) {
+				gDto.add(GasStationConverter.GasStationConvertToGasStationDto(g));
+			}		
 		}
 		return gDto;
 	}
@@ -179,20 +232,78 @@ public class GasStationServiceimpl implements GasStationService {
 	@Override
 	public List<GasStationDto> getGasStationsWithCoordinates(double lat, double lon, String gasolinetype,
 			String carsharing) throws InvalidGasTypeException, GPSDataException {
-		if(gasolinetype.compareTo("")==0) {
+		if(gasolinetype.toLowerCase().compareTo("")==0) {
 			throw new InvalidGasTypeException("Invalid gas type");
 		}
-		if(lat < -90 || lon < -180 || lat > 90 || lon > 180) {
-			throw new GPSDataException("Latitude and Longitude are invalid");
+		if(lat < (double)-90 || lon < (double)-180 || lat > (double)90 || lon > (double)180) {
+			throw new GPSDataException("Latitude and Longitude are invalid with coordinates");
 		}
-		List<GasStationDto> gDtobyProx = getGasStationsByProximity(lat, lon);
-		List<GasStationDto> gDtobyGasType = getGasStationsByGasolineType(gasolinetype);
+		
+		List<GasStation> gasStationsbyProx = this.gasStationRepository.findAll();
+		List<GasStationDto> gDtobyProx = new ArrayList<>();
+		for(GasStation g : gasStationsbyProx) {
+			if(calculateDistance(lat, lon, g.getLat(), g.getLon())) {
+				System.out.println("OKAY BY PROX");
+				gDtobyProx.add(GasStationConverter.GasStationConvertToGasStationDto(g));
+			}		
+		}
+		
+		
+		List<GasStationDto> gasStationDto = new ArrayList<>();
+	    if(gasolinetype.compareTo("")==0) {
+	      throw new InvalidGasTypeException("Invalid gas type");
+	    }
+	    
+	    if(gasolinetype.toLowerCase().compareTo("methane") == 0) {
+	      List<GasStation> gasStationsMethane = this.gasStationRepository.findByHasMethaneTrueOrderByMethanePriceDesc();
+	      for(GasStation g : gasStationsMethane) {
+	    	  System.out.println(g.getGasStationId());
+	        gasStationDto.add(GasStationConverter.GasStationConvertToGasStationDto(g));
+	      }
+	      //gasStationDto.sort(Comparator.comparing(GasStationDto::getMethanePrice));
+	    }
+	    if(gasolinetype.toLowerCase().compareTo("super") == 0) { 
+	      List<GasStation> gasStationsSuper = this.gasStationRepository.findByHasSuperTrueOrderBySuperPriceDesc();
+	      for(GasStation g : gasStationsSuper) {
+	        gasStationDto.add(GasStationConverter.GasStationConvertToGasStationDto(g));
+	      }
+	      //gasStationDto.sort(Comparator.comparing(GasStationDto::getSuperPrice));
+	    }
+	    if(gasolinetype.toLowerCase().compareTo("superplus") == 0) {
+	      List<GasStation> gasStationsSuperPlus = this.gasStationRepository.findByHasSuperPlusTrueOrderBySuperPlusPriceDesc();
+	      for(GasStation g : gasStationsSuperPlus) {
+	        gasStationDto.add(GasStationConverter.GasStationConvertToGasStationDto(g));
+	      }
+	      //gasStationDto.sort(Comparator.comparing(GasStationDto::getSuperPlusPrice));
+	    }
+	    if(gasolinetype.toLowerCase().compareTo("gas") == 0) {
+	      List<GasStation> gasStationsGas = this.gasStationRepository.findByHasGasTrueOrderByGasPriceDesc();
+	      for(GasStation g : gasStationsGas) {
+	        gasStationDto.add(GasStationConverter.GasStationConvertToGasStationDto(g));
+	      }
+	      //gasStationDto.sort(Comparator.comparing(GasStationDto::getGasPrice));
+	    }
+	    if(gasolinetype.toLowerCase().compareTo("diesel") == 0) {
+	    	System.out.println("OKAY");
+	      List<GasStation> gasStationsDiesel = this.gasStationRepository.findByHasDieselTrueOrderByDieselPriceDesc();
+	      for(GasStation g : gasStationsDiesel) {
+	        gasStationDto.add(GasStationConverter.GasStationConvertToGasStationDto(g));
+	      }
+	      //gasStationDto.sort(Comparator.comparing(GasStationDto::getDieselPrice));
+	    }
+	    
+	    
 		List<GasStationDto> gDtobyCarShare = getGasStationByCarSharing(carsharing);
 		
-		gDtobyProx.retainAll(gDtobyGasType);
-		gDtobyProx.retainAll(gDtobyCarShare);	
+				
+		List<GasStationDto> sharingtype = intersection(gDtobyProx, gasStationDto);
 		
-		return gDtobyProx;
+		gDtobyProx.stream().distinct().filter(gasStationDto::contains).collect(Collectors.toList());
+		System.out.println(gDtobyProx);
+	    //gDtobyProx.stream().distinct().filter(gDtobyCarShare::contains).collect(Collectors.toList());
+		
+		return sharingtype;
+		
 	}
 
 	@Override
@@ -204,7 +315,7 @@ public class GasStationServiceimpl implements GasStationService {
 		List<GasStationDto> gDtobyGasType = getGasStationsByGasolineType(gasolinetype);
 		List<GasStationDto> gDtobyCarShare = getGasStationByCarSharing(carsharing);
 		
-		gDtobyGasType.retainAll(gDtobyCarShare);	
+		gDtobyGasType.stream().distinct().filter(gDtobyCarShare::contains).collect(Collectors.toList());
 		
 		return gDtobyGasType;
 	}
@@ -243,7 +354,6 @@ public class GasStationServiceimpl implements GasStationService {
 
 	@Override
 	public List<GasStationDto> getGasStationByCarSharing(String carSharing) {
-		System.out.println("BYSHARING!");
 		List<GasStation> gasStationsByCarShare = gasStationRepository.findByCarSharing(carSharing);
 		List<GasStationDto> gDto = new ArrayList<>();
 		for(GasStation g : gasStationsByCarShare) {
