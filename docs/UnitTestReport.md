@@ -557,7 +557,7 @@ No boundaries.
 | [min_double, 0]  | invalid           | getter()->return price (price should not be <= 0)  | getDieselPrice__returDieselPrice(), getSuperPrice__returnSuperPrice(), getSuperPlusPrice__returnSuperPlusPrice(), getGasPrice__returnSuperPlusPrice(), getMethanePrice__returnMethanePrice() |
 | [0.001, max_double]  | valid             | getter()->return price   | getDieselPrice__returDieselPrice(), getSuperPrice__returnSuperPrice(), getSuperPlusPrice__returnSuperPlusPrice(), getGasPrice__returnSuperPlusPrice(), getMethanePrice__returnMethanePrice()    |
 
-### **Class *GasStation* - Setters for double**
+### **Class *GasStation* - Setters for prices**
 
 **Method list:**
 - setDieselPrice
@@ -569,7 +569,7 @@ No boundaries.
 **Criteria:**
 	
 <!-- input space -->
- - price (double), as returned from the method
+ - price (double)
 
 **Predicates:**
 
@@ -596,6 +596,234 @@ No boundaries.
 |-------|-------|-------|-------|-------|-------|
 | [min_double, 0]  | invalid | setter()->modify price (price should not be <= 0)   | setDieselPrice__modifyDieselPrice(), setSuperPrice__modifySuperPrice(), setSuperPlusPrice__modifySuperPlusPrice(), setGasPrice__modifySuperPlusPrice(), setMethanePrice__modifyMethanePrice()  |
 | [0.001, max_double]  | valid             | setter()->modify price   | setDieselPrice__modifyDieselPrice(), setSuperPrice__modifySuperPrice(), setSuperPlusPrice__modifySuperPlusPrice(), setGasPrice__modifySuperPlusPrice(), setMethanePrice__modifyMethanePrice()  |
+
+### **Class *GasStation* - getLat **
+
+**Criteria:**
+	
+<!-- input space -->
+ - latitude (double), as returned from the method
+
+**Predicates:**
+
+| Criteria  | Predicate         |
+| --------- | ------------------|
+| latitude  | [min_double, -90) |
+|           | [-90, 90]         |
+|           | (90, max_double]  |
+
+**Boundaries**:
+
+| Criteria  | Boundary values |
+| --------- | --------------- |
+| price     | min_double      |
+|           | min_double+0.001|
+|           | -90.001         |
+|           | -90             |
+|           | -89.999         |
+|           | 89.999          |
+|           | 90              |
+|           | 90.001          |
+|           | max_double-0-001|
+|           | max_double      |
+
+**Combination of predicates**:
+
+| price    | Valid / Invalid   | Description of the test case  | JUnit test case                       |
+|-------|-------|-------|-------|-------|-------|
+| [min_double, -90)  | invalid           | getter()->return latitude (latitude should not be < -90)  | getLat__returnLat() |
+| [-90, 90]  | valid             | getter()->return latitude   | getLat__returnLat |
+| (90, max_double)  | invalid           | getter()->return latitude (latitude should not be > 90]  | getLat__returnLat() |
+
+### **Class *GasStation* - setLat**
+
+**Criteria:**
+	
+<!-- input space -->
+ - latitude (double)
+
+**Predicates:**
+
+| Criteria  | Predicate         |
+| --------- | ------------------|
+| latitude  | [min_double, -90) |
+|           | [-90, 90]         |
+|           | (90, max_double]  |
+
+**Boundaries**:
+
+| Criteria  | Boundary values |
+| --------- | --------------- |
+| price     | min_double      |
+|           | min_double+0.001|
+|           | -90.001         |
+|           | -90             |
+|           | -89.999         |
+|           | 89.999          |
+|           | 90              |
+|           | 90.001          |
+|           | max_double-0-001|
+|           | max_double      |
+
+**Combination of predicates**:
+
+| price    | Valid / Invalid   | Description of the test case  | JUnit test case                       |
+|-------|-------|-------|-------|-------|-------|
+| [min_double, -90)  | invalid           | getter()->modify latitude (latitude should not be < -90)  | setLat__modifyLat() |
+| [-90, 90]  | valid             | getter()->modify latitude   | setLat__modifyLat |
+| (90, max_double)  | invalid           | getter()->modify latitude (latitude should not be > 90]  | setLat__modifyLat() |
+
+### **Class *GasStation* - getLon **
+
+**Criteria:**
+	
+<!-- input space -->
+ - longitude (double), as returned from the method
+
+**Predicates:**
+
+| Criteria  | Predicate         |
+| --------- | ------------------|
+| longitude | [min_double, -180)|
+|           | [-180, 180]       |
+|           | (180, max_double] |
+
+**Boundaries**:
+
+| Criteria  | Boundary values |
+| --------- | --------------- |
+| longitude | min_double      |
+|           | min_double+0.001|
+|           | -180.001        |
+|           | -180            |
+|           | -179.999        |
+|           | 180             |
+|           | 179.999         |
+|           | 180.001         |
+|           | max_double-0-001|
+|           | max_double      |
+
+**Combination of predicates**:
+
+| price    | Valid / Invalid   | Description of the test case  | JUnit test case                       |
+|-------|-------|-------|-------|-------|-------|
+| [min_double, -180)  | invalid           | getter()->return longitude (longitude should not be < -180)  | getLon__returnLon() |
+| [-180, 180]  | valid             | getter()->return longitude   | getLon__returnLon() |
+| (180, max_double)  | invalid           | getter()->return longitude (longitude should not be > 180]  | getLon__returnLon() |
+
+### **Class *GasStation* - setLon**
+
+**Criteria:**
+	
+<!-- input space -->
+ - longitude (double)
+
+**Predicates:**
+
+| Criteria  | Predicate         |
+| --------- | ------------------|
+| longitude  | [min_double, -180)|
+|           | [-180, 180]       |
+|           | (180, max_double] |
+
+**Boundaries**:
+
+| Criteria  | Boundary values |
+| --------- | --------------- |
+| longitude     | min_double      |
+|           | min_double+0.001|
+|           | -180.001        |
+|           | -180            |
+|           | -179.999        |
+|           | 180             |
+|           | 179.999         |
+|           | 180.001         |
+|           | max_double-0-001|
+|           | max_double      |
+
+**Combination of predicates**:
+
+| longitude    | Valid / Invalid   | Description of the test case  | JUnit test case                       |
+|-------|-------|-------|-------|-------|-------|
+| [min_double, -180)  | invalid           | getter()->modify longitude (longitude should not be < -180)  | setLon__modifyLon() |
+| [-180, 180]  | valid             | getter()->modify longitude   | setLon__modifyLon() |
+| (180, max_double)  | invalid           | getter()->modify longitude (longitude should not be > 180]  | setLon__modifyLon() |
+
+### **Class *GasStation* - getReportDependability **
+
+**Criteria:**
+	
+<!-- input space -->
+ - reportDependability (double), as returned from the method
+
+**Predicates:**
+
+| Criteria  | Predicate         |
+| --------- | ------------------|
+| reportDependability | [min_double, 0)|
+|           | [0, 100]       |
+|           | (180, max_double] |
+
+**Boundaries**:
+
+| Criteria  | Boundary values |
+| --------- | --------------- |
+| reportDependability | min_double      |
+|           | min_double+0.001|
+|           | -0.001          |
+|           | 0               |
+|           | -0.001          |
+|           | 99.999             |
+|           | 100         |
+|           | 100.001         |
+|           | max_double-0-001|
+|           | max_double      |
+
+**Combination of predicates**:
+
+| reportDependability    | Valid / Invalid   | Description of the test case  | JUnit test case                       |
+|-------|-------|-------|-------|-------|-------|
+| [min_double, 0)  | invalid           | getter()->return reportDependability (reportDependability should not be < 0)  | getReportDependability__returnReportDependability() |
+| [0, 100]  | valid             | getter()->return reportDependability   | getReportDependability__returnReportDependability() |
+| (100, max_double)  | invalid           | getter()->return reportDependability (reportDependability should not be > 100]  | getReportDependability__returnReportDependability() |
+
+### **Class *GasStation* - setReportDependability **
+
+**Criteria:**
+	
+<!-- input space -->
+ - reportDependability (double)
+
+**Predicates:**
+
+| Criteria  | Predicate         |
+| --------- | ------------------|
+| reportDependability | [min_double, 0)|
+|           | [0, 100]       |
+|           | (180, max_double] |
+
+**Boundaries**:
+
+| Criteria  | Boundary values |
+| --------- | --------------- |
+| reportDependability | min_double      |
+|           | min_double+0.001|
+|           | -0.001          |
+|           | 0               |
+|           | -0.001          |
+|           | 99.999             |
+|           | 100         |
+|           | 100.001         |
+|           | max_double-0-001|
+|           | max_double      |
+
+**Combination of predicates**:
+
+| reportDependability    | Valid / Invalid   | Description of the test case  | JUnit test case                       |
+|-------|-------|-------|-------|-------|-------|
+| [min_double, 0)  | invalid           | getter()->modify reportDependability (reportDependability should not be < 0)  | setReportDependability__modifyReportDependability() |
+| [0, 100]  | valid             | getter()->modify reportDependability   | setReportDependability__modifyReportDependability() |
+| (100, max_double)  | invalid           | getter()->modify reportDependability (reportDependability should not be > 100]  | setReportDependability__modifyReportDependability() |
 
 
 
@@ -747,7 +975,61 @@ No boundaries.
 | false | valid     | setter() -> value = true |setHasDiesel__modifyHasDiesel(), setHasSuper__modifyHasSuper(), setHasSuperPlus__modifyHasSuperPlus(), setHasGas__modifyHasGas(), setHasMethane__modifyHasMethane()|
 | other | invalid   ||setHasDiesel__modifyHasDiesel(), setHasSuper__modifyHasSuper(), setHasSuperPlus__modifyHasSuperPlus(), setHasGas__modifyHasGas(), setHasMethane__modifyHasMethane()|
 
+### **Class *GasStation* - getUser**
 
+**Criteria:**
+
+- return value
+
+**Predicates:**
+
+| Criteria      | Predicate |
+| ------------- | --------- |
+| return value  | user      |
+|               | null      |
+
+**Boundaries**:
+
+| Criteria      | Boundary values |
+| ------------- | --------------- |
+| return value  | user            |
+|               | null            |
+
+**Combination of predicates**:
+
+
+| return value | Valid / Invalid | Description of the test case | JUnit test case |
+|-------|-------|-------|-------|-------|-------|
+| user  | valid     | getUser() -> return user |getUser__returnUser() |
+| null  | valid     | getUser() -> return null |getUser__returnUser() |
+
+### **Class *GasStation* - setUser**
+
+**Criteria:**
+
+- input
+
+**Predicates:**
+
+| Criteria      | Predicate |
+| ------------- | --------- |
+| input         | user      |
+|               | null      |
+
+**Boundaries**:
+
+| Criteria      | Boundary values |
+| ------------- | --------------- |
+| input         | user            |
+|               | null            |
+
+**Combination of predicates**:
+
+
+| input | Valid / Invalid | Description of the test case | JUnit test case |
+|-------|-------|-------|-------|-------|-------|
+| user  | valid     | setUser() -> modify user |setUser__modifyUser() |
+| null  | valid     | setUser() -> modify user |setUser__modifyUser() |
 
 <!--
 ### **Class *class_name* - method *name***
