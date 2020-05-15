@@ -70,12 +70,12 @@ class GasStationTest {
 	}
 
 	@Test
-	void getReportUSer__returnReportUSer() {
+	void getReportUSer__returnReportUser() {
 		assertTrue(this.gasStation.getReportUser() == 1);
 	}
 
 	@Test
-	void setReportUSer__modifyReportUSer() {
+	void setReportUSer__modifyReportUser() {
 		Integer newValue = 2;
 		this.gasStation.setReportUser(newValue);
 		assertEquals(newValue, this.gasStation.getReportUser());
