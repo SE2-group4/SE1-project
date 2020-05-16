@@ -92,6 +92,7 @@ public class UserServiceImpl implements UserService {
 		try {
 			User user = this.userRepository.findByUserId(userId).get(0);
 			if(user.getReputation() < 5 && user.getReputation() >= -5) {
+				System.out.println("Sei un grande!");
 				Integer new_reputation = user.getReputation()+1;
 				user.setReputation(new_reputation);
 				this.userRepository.save(user);

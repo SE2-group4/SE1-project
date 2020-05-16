@@ -6,6 +6,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.lang.Math;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -64,7 +67,15 @@ public class GasStationServiceimpl implements GasStationService {
 	private double calculateTrust(int userRep, String timestamp) {
 		double obsolescence;
 		double trust;
-		Long timestamp_l = Date.parse(timestamp);		
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy");
+		Date data = new Date();
+		try {
+			data = sdf.parse(timestamp);
+		} catch(Exception e) {
+			System.out.println(e.getMessage());
+		}
+		Long timestamp_l = data.getTime();		
 		Date today = new Date();
 		Long today_l = today.getTime();
 
@@ -203,6 +214,7 @@ public class GasStationServiceimpl implements GasStationService {
 		gasStation.setGasPrice(gasPrice);
 		gasStation.setMethanePrice(methanePrice);
 		gasStation.setUser(user);
+		gasStation.setReportUser(userId);
 		gasStation.setReportTimestamp((new Date()).toString());
 		gasStationRepository.save(gasStation);
 	}
