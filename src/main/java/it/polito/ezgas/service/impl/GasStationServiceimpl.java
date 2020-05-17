@@ -7,10 +7,8 @@ import java.util.Locale;
 import java.util.stream.Collectors;
 import java.lang.Math;
 import java.text.SimpleDateFormat;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import exception.GPSDataException;
 import exception.InvalidGasStationException;
 import exception.InvalidGasTypeException;
@@ -54,41 +52,27 @@ public class GasStationServiceimpl implements GasStationService {
 				|| (gasStation.getDieselPrice() != -1 && gasStation.getDieselPrice() < 0)) {
 			throw new PriceException("Invalid (negative) price");
 		}
-		if (gasStation.getLat() < -90 || gasStation.getLon() < -180 || gasStation.getLat() > 90
-				|| gasStation.getLon() > 180) {
-			throw new GPSDataException("Latitude and Longitude are invalid");
-		}
-		if ((gasStation.getMethanePrice() == -1) && (gasStation.getSuperPlusPrice() == -1)
-				&& (gasStation.getSuperPrice() == -1) && (gasStation.getGasPrice() == -1)
-				&& (gasStation.getDieselPrice() == -1)) {
-			if (gasStation.getHasMethane())
-				gasStation.setMethanePrice(2);
-			if (gasStation.getHasSuperPlus())
-				gasStation.setSuperPlusPrice(2);
-			if (gasStation.getHasSuper())
-				gasStation.setSuperPrice(2);
-			if (gasStation.getHasGas())
-				gasStation.setGasPrice(2);
-			if (gasStation.getHasDiesel())
-				gasStation.setDieselPrice(2);
-			
-			g = this.gasStationRepository.save(gasStation);
-			
-		}else {
-			if (gasStation.getHasMethane())
-				gasStation.setMethanePrice(2);
-			if (gasStation.getHasSuperPlus())
-				gasStation.setSuperPlusPrice(2);
-			if (gasStation.getHasSuper())
-				gasStation.setSuperPrice(2);
-			if (gasStation.getHasGas())
-				gasStation.setGasPrice(2);
-			if (gasStation.getHasDiesel())
-				gasStation.setDieselPrice(2);
-			
-			g = this.gasStationRepository.save(gasStation);			
-		}
 		
+		if (!checkCoordinates(gasStation.getLat(), gasStation.getLon()))
+			throw new GPSDataException("Coordinates error");
+		
+		if (gasStation.getHasMethane())
+			gasStation.setMethanePrice(2);
+		else gasStation.setMethanePrice(-1);
+		if (gasStation.getHasSuperPlus())
+			gasStation.setSuperPlusPrice(2);
+		else gasStation.setSuperPlusPrice(-1);
+		if (gasStation.getHasSuper())
+			gasStation.setSuperPrice(2);
+		else gasStation.setSuperPrice(-1);
+		if (gasStation.getHasGas())
+			gasStation.setGasPrice(2);
+		else gasStation.setGasPrice(-1);
+		if (gasStation.getHasDiesel())
+			gasStation.setDieselPrice(2);
+		else gasStation.setDieselPrice(-1);
+			
+		g = this.gasStationRepository.save(gasStation);			
 		return GasStationConverter.GasStationConvertToGasStationDto(g);
 	}
 
