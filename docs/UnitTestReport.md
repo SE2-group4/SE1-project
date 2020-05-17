@@ -28,6 +28,60 @@ Version:
 
 <!-- START doc structure change -->
 
+### **Class *GasStationServiceImpl* - method *checkCoordinates***
+**Criteria for method *checkCoordinates*:**
+	
+<!-- input space -->
+- lat (double)
+- lon (double)
+
+**Predicates for method *checkCoordinates*:**
+
+| Criteria  | Predicate         |
+| --------- | ------------------|
+| lat       | [min_double, -90) |
+|           | [-90, 90]         |
+|           | (90, max_double]  |
+| lon       | [min_double, -180)|
+|           | [-180, 180]       |
+|           | (180, max_double] |
+
+**Boundaries**:
+
+| Criteria  | Boundary values |
+| --------- | --------------- |
+| lat       | min_double      |
+|           | min_double+0.001|
+|           | -90.001         |
+|           | -90             |
+|           | -89.999         |
+|           | 89.999          |
+|           | 90              |
+|           | 90.001          |
+|           | max_double-0-001|
+|           | max_double      |
+| lon       | min_double      |
+|           | min_double+0.001|
+|           | -180.001        |
+|           | -180            |
+|           | -179.999        |
+|           | 180             |
+|           | 179.999         |
+|           | 180.001         |
+|           | max_double-0-001|
+|           | max_double      |
+
+**Combination of predicates**:
+
+| latitude | longitude | Valid / Invalid   | Description of the test case  | JUnit test case    |
+|-------|-------|-------|-------|-------|-------| ------- |
+| [min_double, -90) | / | Invalid | checkCoordinates(-90.1, -180.1) -> return false | |
+| [-90, 90]         | [min_double, -180)| Invalid | checkCoordinates( 0, -180.001) -> return false | |
+| [-90, 90]         | [180, 180]        | Valid   | checkCoordinates( 50.2, 41) -> return true | |
+| [-90, 90]         | (180, max_double] | Invalid | checkCoordinates( -89.0, 180.001) -> return false | |
+| (90, max_double]  | / | Invalid | checkCoordinates( 90.1, -10000) -> return false | |
+
+
 ## **Class *User* - all tests**
 
 ### Formal and pratical approach
@@ -654,7 +708,7 @@ No boundaries.
 
 | Criteria  | Boundary values |
 | --------- | --------------- |
-| price     | min_double      |
+| latitude  | min_double      |
 |           | min_double+0.001|
 |           | -90.001         |
 |           | -90             |
@@ -705,7 +759,7 @@ No boundaries.
 
 **Combination of predicates**:
 
-| price    | Valid / Invalid   | Description of the test case  | JUnit test case                       |
+| longitude    | Valid / Invalid   | Description of the test case  | JUnit test case                       |
 |-------|-------|-------|-------|-------|-------|
 | [min_double, -180)  | invalid           | getter()->return longitude (longitude should not be < -180)  | getLon__returnLon() |
 | [-180, 180]  | valid             | getter()->return longitude   | getLon__returnLon() |
@@ -1104,6 +1158,8 @@ No boundaries.
     the Eclemma tool. >
 
 
+
+<!--
 ### Loop coverage analysis
 
     <Identify significant loops in the units and reports the test cases
@@ -1113,7 +1169,7 @@ No boundaries.
 |---|---|---|---|
 |||||
 |||||
-||||||
+|||||| -->
 
 
 
