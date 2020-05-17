@@ -1,12 +1,11 @@
 package it.polito.ezgas.service.impl;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 import java.lang.Math;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +24,7 @@ import it.polito.ezgas.repository.GasStationRepository;
 import it.polito.ezgas.repository.UserRepository;
 import it.polito.ezgas.service.GasStationService;
 
-/**
- * Created by softeng on 27/4/2020.
- */
+
 @Service
 public class GasStationServiceimpl implements GasStationService {
 
@@ -37,59 +34,6 @@ public class GasStationServiceimpl implements GasStationService {
 	@Autowired
 	UserRepository userRepository;
 
-	// calculate distance of heart
-	private boolean calculateDistance(double userLat, double userLng, double venueLat, double venueLng) {
-		double AVERAGE_RADIUS_OF_EARTH = 6371;
-
-		if (Double.compare(userLat, venueLat) == 0 && Double.compare(userLng, venueLng) == 0) {
-			return true;
-		}
-
-		userLat = Math.toRadians(userLat);
-		userLng = Math.toRadians(userLng);
-		venueLng = Math.toRadians(venueLng);
-		venueLat = Math.toRadians(venueLat);
-
-		double latDistance = venueLat - userLat;
-		double lngDistance = venueLng - userLng;
-
-		double a = (Math.pow(Math.sin(latDistance / 2), 2)
-				+ (Math.cos(userLat)) * (Math.cos(venueLat)) * (Math.pow(Math.sin(venueLng / 2), 2)));
-
-		double c = 2 * Math.asin(Math.sqrt(a));
-		if (c * AVERAGE_RADIUS_OF_EARTH < 1) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	private double calculateTrust(int userRep, String timestamp) {
-		double obsolescence;
-		double trust;
-		
-		SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy");
-		Date data = new Date();
-		try {
-			data = sdf.parse(timestamp);
-		} catch(Exception e) {
-			System.out.println(e.getMessage());
-		}
-		Long timestamp_l = data.getTime();		
-		Date today = new Date();
-		Long today_l = today.getTime();
-
-		if (today_l - timestamp_l > 604800000) { // 7 days
-			obsolescence = 0.0;
-		} else {
-			obsolescence = 1 - (today_l - timestamp_l) / 604800000.0;
-		}
-
-		trust = 50 * (userRep + 5) / 10 + 50 * obsolescence;
-		return trust;
-	}
-
-	
 	@Override
 	public GasStationDto getGasStationById(Integer gasStationId) throws InvalidGasStationException {
 		if (gasStationId < 0) {
@@ -102,6 +46,7 @@ public class GasStationServiceimpl implements GasStationService {
 	@Override
 	public GasStationDto saveGasStation(GasStationDto gasStationDto) throws PriceException, GPSDataException {
 		GasStation gasStation = GasStationConverter.GasStationDtoConvertToGasStation(gasStationDto);
+		GasStation g = new GasStation();
 		if ((gasStation.getMethanePrice() != -1 && gasStation.getMethanePrice() < 0)
 				|| (gasStation.getSuperPlusPrice() != -1 && gasStation.getSuperPlusPrice() < 0)
 				|| (gasStation.getSuperPrice() != -1 && gasStation.getSuperPrice() < 0)
@@ -126,9 +71,25 @@ public class GasStationServiceimpl implements GasStationService {
 				gasStation.setGasPrice(2);
 			if (gasStation.getHasDiesel())
 				gasStation.setDieselPrice(2);
+			
+			g = this.gasStationRepository.save(gasStation);
+			
+		}else {
+			if (gasStation.getHasMethane())
+				gasStation.setMethanePrice(2);
+			if (gasStation.getHasSuperPlus())
+				gasStation.setSuperPlusPrice(2);
+			if (gasStation.getHasSuper())
+				gasStation.setSuperPrice(2);
+			if (gasStation.getHasGas())
+				gasStation.setGasPrice(2);
+			if (gasStation.getHasDiesel())
+				gasStation.setDieselPrice(2);
+			
+			g = this.gasStationRepository.save(gasStation);			
 		}
-		GasStation newGasStation = this.gasStationRepository.save(gasStation);
-		return GasStationConverter.GasStationConvertToGasStationDto(newGasStation);
+		
+		return GasStationConverter.GasStationConvertToGasStationDto(g);
 	}
 
 	@Override
@@ -136,8 +97,8 @@ public class GasStationServiceimpl implements GasStationService {
 		List<GasStation> gasStationList = this.gasStationRepository.findAll();
 	
 		gasStationList.forEach(gs -> {
-			if(gs.getReportTimestamp() != null)
-				gs.setReportDependability(calculateTrust(gs.getUser().getReputation(), gs.getReportTimestamp()));
+			if(gs.getReportTimestamp()!= null)
+				gs.setReportDependability(trustCalculation(gs.getUser().getReputation(), gs.getReportTimestamp()));
 		});
 		
 		return gasStationList.stream().map(gs -> GasStationConverter.GasStationConvertToGasStationDto(gs)).collect(Collectors.toList());
@@ -166,13 +127,24 @@ public class GasStationServiceimpl implements GasStationService {
 			String carsharing) throws InvalidGasTypeException, GPSDataException {
 		if (!checkCoordinates(lat, lon))
 			throw new GPSDataException("coordinates error");
-		if (gasolinetype == null || gasolinetype.equals("null") || gasolinetype.equals(""))
-			throw new InvalidGasTypeException("gasoline is null or empty");
-		System.out.println("mitico!");
-
-		return getByGasolineType(gasolinetype).stream().filter(gs -> gs.getCarSharing().equals(carsharing))
-				.filter(gs -> calculateDistance(lat, lon, gs.getLat(), gs.getLon()))
-				.map(gs -> GasStationConverter.GasStationConvertToGasStationDto(gs)).collect(Collectors.toList());
+		if (gasolinetype.toLowerCase().compareTo("") == 0)
+			throw new InvalidGasTypeException("Invalid gas type");
+		
+		List<GasStationDto> gSbyProx = getGasStationsByProximity(lat, lon);
+		if(!gasolinetype.equals("null") && !gasolinetype.equals("Select gasoline type")) {
+			switch(gasolinetype) {
+			      case "Diesel": gSbyProx = gSbyProx.stream().filter(g -> g.getHasDiesel()).collect(Collectors.toList()); break;
+			      case "Super": gSbyProx = gSbyProx.stream().filter(g -> g.getHasSuper()).collect(Collectors.toList()); break;
+			      case "SuperPlus": gSbyProx = gSbyProx.stream().filter(g -> g.getHasSuperPlus()).collect(Collectors.toList()); break;
+			      case "Gas": gSbyProx = gSbyProx.stream().filter(g -> g.getHasGas()).collect(Collectors.toList()); break;
+			      case "Methane": gSbyProx = gSbyProx.stream().filter(g -> g.getHasMethane()).collect(Collectors.toList()); break;
+			      default: throw new InvalidGasTypeException("Wrong gasoline type.");
+			 }
+			}
+	    if(!carsharing.equals("null")) {
+	    	gSbyProx = gSbyProx.stream().filter(g -> g.getCarSharing().equals(carsharing)).collect(Collectors.toList());
+	    }
+			    return gSbyProx;
 	}
 
 	@Override
@@ -220,31 +192,20 @@ public class GasStationServiceimpl implements GasStationService {
 	}
 
 	
-	/* AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA */
 	@Override
 	public List<GasStationDto> getGasStationByCarSharing(String carSharing) {
-		List<GasStation> gasStationsByCarShare = gasStationRepository.findByCarSharing(carSharing);
-		List<GasStationDto> gDto = new ArrayList<>();
-		for (GasStation g : gasStationsByCarShare) {
-			gDto.add(GasStationConverter.GasStationConvertToGasStationDto(g));
-		}
-		return gDto;
+		return gasStationRepository.findByCarSharing(carSharing).stream().
+				map(gs -> GasStationConverter.GasStationConvertToGasStationDto(gs)).collect(Collectors.toList());
 	}
 	
-	/* AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA */
 	@Override
 	public List<GasStationDto> getGasStationsByProximity(double lat, double lon) throws GPSDataException {
 		if (!checkCoordinates(lat, lon))
 			throw new GPSDataException("coordinates error");
 
-		List<GasStation> gasStationsbyProx = this.gasStationRepository.findAll();
-		List<GasStationDto> gDto = new ArrayList<>();
-		for (GasStation g : gasStationsbyProx) {
-			if (calculateDistance(lat, lon, g.getLat(), g.getLon())) {
-				gDto.add(GasStationConverter.GasStationConvertToGasStationDto(g));
-			}
-		}
-		return gDto;
+		return this.gasStationRepository.findAll().stream()
+					.filter(g -> Math.sqrt(Math.pow((Math.abs(g.getLat()-lat)), 2)+Math.pow((Math.abs(g.getLon()-lon)), 2))<(0.008))
+					.map(gs -> GasStationConverter.GasStationConvertToGasStationDto(gs)).collect(Collectors.toList());
 	}
 
 	public boolean checkCoordinates(double lat, double lon) {
@@ -253,6 +214,31 @@ public class GasStationServiceimpl implements GasStationService {
 		return true;
 	}
 
+	public double trustCalculation(int userRep, String timestamp) {
+		double obsolescence;
+		double trust;
+
+		SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy", Locale.ENGLISH);
+		Date data = null;
+		try {
+			data = sdf.parse(timestamp);
+		} catch(Exception e) {
+			System.out.println(e.getMessage());
+		}
+		Long timestamp_long = data.getTime();		
+		Date today = new Date();
+		Long today_long = today.getTime();
+
+		if (today_long - timestamp_long > 604800000) { // 7 days
+			obsolescence = 0.0;
+		} else {
+			obsolescence = 1 - (today_long - timestamp_long) / 604800000.0;
+		}
+
+		trust = 50 * (userRep + 5) / 10 + 50 * obsolescence;
+		return trust;
+	}
+	
 	public List<GasStation> getByGasolineType(String gasolinetype) throws InvalidGasTypeException {
 		List<GasStation> gasStationList = new ArrayList<GasStation>();
 		if (gasolinetype.toLowerCase().compareTo("") == 0) {
@@ -278,7 +264,7 @@ public class GasStationServiceimpl implements GasStationService {
 		
 		gasStationList.forEach(gs -> {
 			if(gs.getReportTimestamp() != null)
-			gs.setReportDependability(calculateTrust(gs.getUser().getReputation(), gs.getReportTimestamp()));
+			gs.setReportDependability(trustCalculation(gs.getUser().getReputation(), gs.getReportTimestamp()));
 		});
 		
 		return gasStationList;
