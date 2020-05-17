@@ -247,7 +247,7 @@ public class GasStationServiceimpl implements GasStationService {
 		return gDto;
 	}
 
-	private boolean checkCoordinates(double lat, double lon) {
+	public boolean checkCoordinates(double lat, double lon) {
 		if (lat < (double) -90 || lon < (double) -180 || lat > (double) 90 || lon > (double) 180)
 			return false;
 		return true;
