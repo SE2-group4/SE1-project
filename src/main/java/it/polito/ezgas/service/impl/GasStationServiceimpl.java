@@ -56,20 +56,34 @@ public class GasStationServiceimpl implements GasStationService {
 		if (!checkCoordinates(gasStation.getLat(), gasStation.getLon()))
 			throw new GPSDataException("Coordinates error");
 		
-		if (gasStation.getHasMethane())
-			gasStation.setMethanePrice(2);
+		if (gasStation.getHasMethane()) {
+			if(gasStation.getMethanePrice()==-1)
+				gasStation.setMethanePrice(0);
+		}
 		else gasStation.setMethanePrice(-1);
-		if (gasStation.getHasSuperPlus())
-			gasStation.setSuperPlusPrice(2);
+		
+		if (gasStation.getHasSuperPlus()) {
+			if(gasStation.getSuperPlusPrice()==-1)
+			gasStation.setSuperPlusPrice(0);
+		}
 		else gasStation.setSuperPlusPrice(-1);
-		if (gasStation.getHasSuper())
-			gasStation.setSuperPrice(2);
+		
+		if (gasStation.getHasSuper()) {
+			if(gasStation.getSuperPrice()==-1)
+			gasStation.setSuperPrice(0);
+		}
 		else gasStation.setSuperPrice(-1);
-		if (gasStation.getHasGas())
-			gasStation.setGasPrice(2);
+		
+		if (gasStation.getHasGas()) {
+			if(gasStation.getGasPrice()==-1)
+			gasStation.setGasPrice(0);
+		}
 		else gasStation.setGasPrice(-1);
-		if (gasStation.getHasDiesel())
-			gasStation.setDieselPrice(2);
+		
+		if (gasStation.getHasDiesel()) {
+			if(gasStation.getDieselPrice()==-1)
+			gasStation.setDieselPrice(0);
+		}
 		else gasStation.setDieselPrice(-1);
 		
 		
