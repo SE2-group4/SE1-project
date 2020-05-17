@@ -71,7 +71,15 @@ public class GasStationServiceimpl implements GasStationService {
 		if (gasStation.getHasDiesel())
 			gasStation.setDieselPrice(2);
 		else gasStation.setDieselPrice(-1);
-			
+		
+		
+		User u;
+		
+		if(!this.userRepository.findByUserId(gasStation.getReportUser()).isEmpty()) {	
+			u = this.userRepository.findByUserId(gasStation.getReportUser()).get(0);
+			gasStation.setUser(u);
+		}
+		
 		g = this.gasStationRepository.save(gasStation);			
 		return GasStationConverter.GasStationConvertToGasStationDto(g);
 	}
