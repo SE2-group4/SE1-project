@@ -136,7 +136,6 @@ public class GasStationServiceimpl implements GasStationService {
 			throw new GPSDataException("coordinates error");
 		if (gasolinetype.toLowerCase().compareTo("") == 0)
 			throw new InvalidGasTypeException("Invalid gas type");
-		
 		List<GasStationDto> gSbyProx = getGasStationsByProximity(lat, lon);
 		if(!gasolinetype.equals("null") && !gasolinetype.equals("Select gasoline type")) {
 			switch(gasolinetype) {
@@ -209,9 +208,9 @@ public class GasStationServiceimpl implements GasStationService {
 	public List<GasStationDto> getGasStationsByProximity(double lat, double lon) throws GPSDataException {
 		if (!Utility.checkCoordinates(lat, lon))
 			throw new GPSDataException("coordinates error");
-
+		
 		return this.gasStationRepository.findAll().stream()
-					.filter(gs -> Utility.calculateDistanceInMeters(gs.getLat(), lat, gs.getLon(), lon)<1000)
+					.filter(gs -> Utility.calculateDistanceInMeters(gs.getLat(), gs.getLon(), lat, lon)<1000)
 					.map(gs -> GasStationConverter.GasStationConvertToGasStationDto(gs)).collect(Collectors.toList());
 	}
 
