@@ -1,12 +1,13 @@
 package it.polito.ezgas.entity;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class GasStationTest {
+public class GasStationTest {
 	private double delta = 0.001;
 	private GasStation gasStation;
 	private User user;
@@ -21,6 +22,34 @@ class GasStationTest {
 		this.gasStation.setUser(this.user);
 	}
 
+	
+	@Test
+	void constructor__returnGasStation() {
+		GasStation gasStation = new GasStation();
+		assertNotNull(gasStation);
+		gasStation = new GasStation("Red Rocket", "Andale Main Street, 42", true, true, false, false, true,
+				"appreciate", 42.42, 21.21, 1.5, 1.6, -1, -1, 1.3, 1, "2020-05-12 14:22:31", 2.0);
+		assertEquals("Red Rocket", gasStation.getGasStationName());
+		assertEquals("Andale Main Street, 42", gasStation.getGasStationAddress());
+		assertEquals(true, gasStation.getHasDiesel());
+		assertEquals(true, gasStation.getHasSuper());
+		assertEquals(false, gasStation.getHasSuperPlus());
+		assertEquals(false, gasStation.getHasGas());
+		assertEquals(true, gasStation.getHasMethane());
+		assertEquals("appreciate", gasStation.getCarSharing());
+		assertEquals(42.42, gasStation.getLat(), 0.01);
+		assertEquals(21.21, gasStation.getLon(), 0.01);
+		assertEquals(1.5, gasStation.getDieselPrice(), 0.01);
+		assertEquals(1.6, gasStation.getSuperPrice(), 0.01);
+		assertEquals(-1, gasStation.getSuperPlusPrice(), 0.01);
+		assertEquals(-1, gasStation.getGasPrice(), 0.01);
+		assertEquals(1.3, gasStation.getMethanePrice(), 0.01);
+		assertEquals(1 , gasStation.getReportUser().intValue());
+		assertEquals("2020-05-12 14:22:31", gasStation.getReportTimestamp());
+		assertEquals(2.0, gasStation.getReportDependability(), 0.01);
+	}
+	
+	
 	@Test
 	void getGasStationId__returnGasStationId() {
 		assertTrue(this.gasStation.getGasStationId() == 0);

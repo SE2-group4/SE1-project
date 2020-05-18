@@ -21,6 +21,7 @@ import it.polito.ezgas.entity.User;
 import it.polito.ezgas.repository.GasStationRepository;
 import it.polito.ezgas.repository.UserRepository;
 import it.polito.ezgas.service.GasStationService;
+import it.polito.ezgas.utils.Utility;
 
 
 @Service
@@ -53,7 +54,7 @@ public class GasStationServiceimpl implements GasStationService {
 			throw new PriceException("Invalid (negative) price");
 		}
 		
-		if (!checkCoordinates(gasStation.getLat(), gasStation.getLon()))
+		if (!Utility.checkCoordinates(gasStation.getLat(), gasStation.getLon()))
 			throw new GPSDataException("Coordinates error");
 		
 		if (gasStation.getHasMethane()) {
@@ -104,7 +105,7 @@ public class GasStationServiceimpl implements GasStationService {
 	
 		gasStationList.forEach(gs -> {
 			if(gs.getReportTimestamp()!= null)
-				gs.setReportDependability(trustCalculation(gs.getUser().getReputation(), gs.getReportTimestamp()));
+				gs.setReportDependability(Utility.trustCalculation(gs.getUser().getReputation(), gs.getReportTimestamp()));
 		});
 		
 		return gasStationList.stream().map(gs -> GasStationConverter.GasStationConvertToGasStationDto(gs)).collect(Collectors.toList());
@@ -131,7 +132,7 @@ public class GasStationServiceimpl implements GasStationService {
 	@Override
 	public List<GasStationDto> getGasStationsWithCoordinates(double lat, double lon, String gasolinetype,
 			String carsharing) throws InvalidGasTypeException, GPSDataException {
-		if (!checkCoordinates(lat, lon))
+		if (!Utility.checkCoordinates(lat, lon))
 			throw new GPSDataException("coordinates error");
 		if (gasolinetype.toLowerCase().compareTo("") == 0)
 			throw new InvalidGasTypeException("Invalid gas type");
@@ -206,44 +207,14 @@ public class GasStationServiceimpl implements GasStationService {
 	
 	@Override
 	public List<GasStationDto> getGasStationsByProximity(double lat, double lon) throws GPSDataException {
-		if (!checkCoordinates(lat, lon))
+		if (!Utility.checkCoordinates(lat, lon))
 			throw new GPSDataException("coordinates error");
 
 		return this.gasStationRepository.findAll().stream()
-					.filter(g -> Math.sqrt(Math.pow((Math.abs(g.getLat()-lat)), 2)+Math.pow((Math.abs(g.getLon()-lon)), 2))<(0.008))
+					.filter(gs -> Utility.calculateDistanceInMeters(gs.getLat(), lat, gs.getLon(), lon)<1000)
 					.map(gs -> GasStationConverter.GasStationConvertToGasStationDto(gs)).collect(Collectors.toList());
 	}
 
-	public boolean checkCoordinates(double lat, double lon) {
-		if (lat < (double) -90 || lon < (double) -180 || lat > (double) 90 || lon > (double) 180)
-			return false;
-		return true;
-	}
-
-	public double trustCalculation(int userRep, String timestamp) {
-		double obsolescence;
-		double trust;
-
-		SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy", Locale.ENGLISH);
-		Date data = null;
-		try {
-			data = sdf.parse(timestamp);
-		} catch(Exception e) {
-			System.out.println(e.getMessage());
-		}
-		Long timestamp_long = data.getTime();		
-		Date today = new Date();
-		Long today_long = today.getTime();
-
-		if (today_long - timestamp_long > 604800000) { // 7 days
-			obsolescence = 0.0;
-		} else {
-			obsolescence = 1 - (today_long - timestamp_long) / 604800000.0;
-		}
-
-		trust = 50 * (userRep + 5) / 10 + 50 * obsolescence;
-		return trust;
-	}
 	
 	public List<GasStation> getByGasolineType(String gasolinetype) throws InvalidGasTypeException {
 		List<GasStation> gasStationList = new ArrayList<GasStation>();
@@ -270,7 +241,7 @@ public class GasStationServiceimpl implements GasStationService {
 		
 		gasStationList.forEach(gs -> {
 			if(gs.getReportTimestamp() != null)
-			gs.setReportDependability(trustCalculation(gs.getUser().getReputation(), gs.getReportTimestamp()));
+			gs.setReportDependability(Utility.trustCalculation(gs.getUser().getReputation(), gs.getReportTimestamp()));
 		});
 		
 		return gasStationList;
