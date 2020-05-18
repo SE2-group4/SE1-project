@@ -28,7 +28,7 @@ Version:
 
 <!-- START doc structure change -->
 
-### **Class *GasStationServiceImpl* - method *checkCoordinates***
+### **Class *Utility* - method *checkCoordinates***
 **Criteria for method *checkCoordinates*:**
 	
 <!-- input space -->
@@ -73,14 +73,80 @@ Version:
 
 **Combination of predicates**:
 
-| latitude | longitude | Valid / Invalid   | Description of the test case  | JUnit test case    |
+| lat | lon | Valid / Invalid   | Description of the test case  | JUnit test case    |
 |-------|-------|-------|-------|-------|-------| ------- |
-| [min_double, -90) | / | Invalid | checkCoordinates(-90.1, -180.1) -> return false | |
-| [-90, 90]         | [min_double, -180)| Invalid | checkCoordinates( 0, -180.001) -> return false | |
-| [-90, 90]         | [180, 180]        | Valid   | checkCoordinates( 50.2, 41) -> return true | |
-| [-90, 90]         | (180, max_double] | Invalid | checkCoordinates( -89.0, 180.001) -> return false | |
-| (90, max_double]  | / | Invalid | checkCoordinates( 90.1, -10000) -> return false | |
+| [min_double, -90) | [min_double, -180) | Invalid | checkCoordinates(-90.1, -180.1) -> return false | CheckCoordinates.latUnderMinus90_returnFalse() |
+| [min_double, -90) | [-180, 180] | Invalid | checkCoordinates(-90.01, 55) -> return false | CheckCoordinates.latUnderMinus90_returnFalse() |
+| [min_double, -90) | (180, max_double] | Invalid | checkCoordinates(-90.001, 180.1) -> return false | CheckCoordinates.latUnderMinus90_returnFalse() |
+| [-90, 90]         | [min_double, -180)| Invalid | checkCoordinates( 0, -180.001) -> return false |CheckCoordinates.latValidLonUnderMinus180_returnFalse() |
+| [-90, 90]         | [180, 180]        | Valid   | checkCoordinates( 50.2, 41) -> return true | CheckCoordinates.latValidLonValid_returnTrue() |
+| [-90, 90]         | (180, max_double] | Invalid | checkCoordinates( 0, 180.001) -> return false | CheckCoordinates.latValidLonOver180_returnFalse() |
+| (90, max_double]  | [min_double, -180) | Invalid | checkCoordinates( 90.1, -180.01) -> return false | CheckCoordinates.latOver90_returnFalse() |
+| (90, max_double]  | [-180, 180] | Invalid | checkCoordinates( 90.01, 0) -> return false | CheckCoordinates.latOver90_returnFalse() |
+| (90, max_double]  | (180, max_double] | Invalid | checkCoordinates( 90.001, 180.01) -> return false | CheckCoordinates.latOver90_returnFalse() |
 
+### **Class *Utility* - method *calculateDistanceInMeters***
+
+
+
+**Criteria for method *name*:**
+	
+- lat1 (double)
+- lon1 (double)
+- lat2 (double)
+- lon2 (double)
+
+**Predicates for method *name*:**
+
+| Criteria  | Predicate         |
+| --------- | ------------------|
+| lat1, lat2| [min_double, -90) |
+|           | [-90, 90]         |
+|           | (90, max_double]  |
+| lon1, lon2| [min_double, -180)|
+|           | [-180, 180]       |
+|           | (180, max_double] |
+
+**Boundaries**:
+
+| Criteria  | Boundary values |
+| --------  | --------------- |
+| lat1, lat2| min_double      |
+|           | min_double+0.001|
+|           | -90.001         |
+|           | -90             |
+|           | -89.999         |
+|           | 89.999          |
+|           | 90              |
+|           | 90.001          |
+|           | max_double-0-001|
+|           | max_double      |
+| lon1, lon2| min_double      |
+|           | min_double+0.001|
+|           | -180.001        |
+|           | -180            |
+|           | -179.999        |
+|           | 180             |
+|           | 179.999         |
+|           | 180.001         |
+|           | max_double-0-001|
+|           | max_double      |
+
+
+**Combination of predicates**:
+
+
+| lat1 | lon1 | lat2 | lon2 | Valid / Invalid | Description of the test case | JUnit test case |
+|-------|-------|-------|-------|-------|-------|-|-|
+| [min_double, -90) |/|/|/| Invalid | calculateDistanceInMeters(...) -> return -1 |lat1Invalid_returnMinus1()|
+| (90, max_double] |/|/|/| Invalid | calculateDistanceInMeters(...) -> return -1 |lat1Invalid_returnMinus1()|
+|/|[min_double, -180)|/|/| Invalid | calculateDistanceInMeters(...) -> return -1 |lon1Invalid_returnMinus1()|
+|/|(180, max_double]|/|/| Invalid | calculateDistanceInMeters(...) -> return -1 |lon1Invalid_returnMinus1()|
+|/|/| [min_double, -90)|/| Invalid | calculateDistanceInMeters(...) -> return -1 |lat2Invalid_returnMinus1()|
+|/|/| (90, max_double] |/| Invalid | calculateDistanceInMeters(...) -> return -1 |lat2Invalid_returnMinus1()|
+|/|/|/|[min_double, -180)| Invalid | calculateDistanceInMeters(...) -> return -1 |lon2Invalid_returnMinus1()|
+|/|/|/|(180, max_double]| Invalid | calculateDistanceInMeters(...) -> return -1 |lon2Invalid_returnMinus1()|
+|[-90, 90]|[-180, 180]|[-90, 90]|[-180, 180]|Valid| calculateDistanceInMeters(...) -> return value |correctCoordinates_returnDistance() |
 
 ## **Class *User* - all tests**
 
@@ -489,11 +555,10 @@ No boundaries.
 | false | valid             |                               | testSetAdmin_ShouldSetAdmin()     |
 
 
-## **Class *GasStation* - all tests**
+## **Class *GasStation***
 
-### Formal and pratical approach
-
-<!-- END doc structure change -->
+Testing getter, setter of the class gasStation.
+Similar attributes, such as prices and boolean, have been grouped and treated the same way.
 
 ### **Class *GasStation* - Getters for integer ids**
 
@@ -1148,8 +1213,8 @@ No boundaries.
 
 | Unit name | JUnit test case |
 |--|--|
-|||
-|||
+| GasStation | GasStationTest |
+| Utility | UtilityTest |
 ||||
 
 ### Code coverage report
