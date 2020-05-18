@@ -266,6 +266,14 @@ package "it.polito.ezgas.controller" {
     }
 }
 
+package "it.polito.ezgas.utility"{
+    class Utility{
+        + checkCoordinates(lat, lon): Boolean
+        + calculateDistanceInMeters(lat1, lon1, lat2, lon2): Double
+        + trustCalculation(userRep, timestamp): Double
+    }
+}
+
 package "it.polito.ezgas.converter" {
     class UserConverter{
         + userConvertToUserDto(User): UserDto
@@ -374,17 +382,18 @@ package "it.polito.ezgas.entity" {
 
 package "it.polito.ezgas.repository" {
     class GasStationRepository{
-        + findByGasStationId(gasStationId)
-        + findByHasMethaneTrue()
-	    + findByHasDieselTrue()
-	    + findByHasSuperTrue()
-	    + findByHasSuperPlusTrue()
-	    + findByHasGasTrue()
+        + findByGasStationId(gasStationId): List<GasStation>
+        + findByHasMethaneTrueOrderByMethanePriceDesc(): List<GasStation> 
+	    + findByHasDieselTrueOrderByDieselPriceDesc(): List<GasStation>
+	    + findByHasSuperTrueOrderBySuperPriceDesc(): List<GasStation>
+	    + findByHasSuperPlusTrueOrderBySuperPlusPriceDesc():  List<GasStation>
+	    + findByHasGasTrueOrderByGasPriceDesc():  List<GasStation>
+        + findByCarSharing(carSharing): List<GasStation>
     }
 
     class UserRepository{
-        + findByEmailAndPassword(email, password)
-        + findByUserId(user_id);
+        + findByEmailAndPassword(email, password): List<User>
+        + findByUserId(user_id): List<User>
     }
 }
 
@@ -413,6 +422,7 @@ GasStationService --> User
 GasStationService --> GasStation
 GasStationService --> GasStationDto
 GasStationService --> GasStationConverter
+GasStationService --> Utility
 
 ''' UserRepository dependencies '''
 UserRepository --> User
@@ -450,24 +460,24 @@ Only classes and interfaces from the following packages have been considered in 
 
 Others are support classes (or interfaces) and do not perform operations to directly implement functional requirements.
 
-|       | User | GasStation | GeoPoint | PriceList | UserService | GasStationService | UserController | GasStationController | UserRepository | GasStationRepository | PriceListRepository |
-| :-    | :-:  | :-:        | :-:      | :-:       | :-:         | :-:               | :-:            | :-:                  | :-:            | :-:                  | :-: |
-| FR1.1 | x    |            |          |           | x           |                   | x              |                      | x              |                      |     |
-| FR1.2 | x    |            |          |           | x           |                   | x              |                      | x              |                      |     |
-| FR1.3 | x    |            |          |           | x           |                   | x              |                      | x              |                      |     |
-| FR1.4 | x    |            |          |           | x           |                   | x              |                      | x              |                      |     |
-| FR2   | x    |            |          |           | x           |                   | x              |                      |                |                      |     |
-| FR3.1 | x    |            |          |           | x           |                   | x              | x                    |                | x                    | x   |
-| FR3.2 | x    |            |          |           | x           |                   | x              | x                    |                | x                    |     |
-| FR3.3 | x    | x          |          |           | x           | x                 | x              | x                    |                | x                    |     |
-| FR4.1 | x    | x          | x        |           | x           | x                 | x              | x                    |                | x                    |     | 
-| FR4.2 | x    | x          | x        |           | x           | x                 | x              | x                    |                | x                    |     | 
-| FR4.3 | x    | x          | x        | x         | x           | x                 | x              | x                    |                | x                    | x   | 
-| FR4.4 | x    | x          |          | x         | x           | x                 | x              | x                    |                | x                    | x   | 
-| FR4.5 | x    | x          |          | x         | x           | x                 | x              | x                    |                | x                    | x   | 
-| FR5.1 | x    | x          |          | x         | x           | x                 | x              | x                    |                |                      | x   |
-| FR5.2 | x    | x          |          | x         | x           | x                 | x              | x                    |                |                      | x   |
-| FR5.3 | x    | x          |          | x         | x           | x                 | x              | x                    |                |                      | x   | 
+|       | User | GasStation | UserService | GasStationService | UserController | GasStationController | UserRepository | GasStationRepository | PriceListRepository | Utility |
+| :-    | :-:  | :-:        | :-:      | :-:       | :-:         | :-:               | :-:            | :-:                  | :-:            | :-:                  | :-: | :-: |
+| FR1.1 | x    |            | x           |                   | x              |                      | x              |                      |     | |
+| FR1.2 | x    |            | x           |                   | x              |                      | x              |                      |     | |
+| FR1.3 | x    |            | x           |                   | x              |                      | x              |                      |     | |
+| FR1.4 | x    |            | x           |                   | x              |                      | x              |                      |     | |
+| FR2   | x    |            | x           |                   | x              |                      |                |                      |     | |
+| FR3.1 | x    |            | x           |                   | x              | x                    |                | x                    | x   | x|
+| FR3.2 | x    |            | x           |                   | x              | x                    |                | x                    |     | |
+| FR3.3 | x    | x          | x           | x                 | x              | x                    |                | x                    |     | x|
+| FR4.1 | x    | x          | x           | x                 | x              | x                    |                | x                    |     | x |
+| FR4.2 | x    | x          | x           | x                 | x              | x                    |                | x                    |     | x |
+| FR4.3 | x    | x          | x           | x                 | x              | x                    |                | x                    | x   | x |
+| FR4.4 | x    | x          | x           | x                 | x              | x                    |                | x                    | x   | x |
+| FR4.5 | x    | x          | x           | x                 | x              | x                    |                | x                    | x   | x |
+| FR5.1 | x    | x          | x           | x                 | x              | x                    |                |                      | x   | x|
+| FR5.2 | x    | x          | x           | x                 | x              | x                    |                |                      | x   | x |
+| FR5.3 | x    | x          | x           | x                 | x              | x                    |                |                      | x   | x |
 
 # Verification sequence diagrams
 
@@ -524,13 +534,13 @@ participant UserRepository as UR
 participant H2Database as H2
 
 activate UC
-UC -> US: 1: modifyUserName()
+UC -> US: 1: saveUser()
 activate US
 
-US -> UR: 2: modifyUserName()
+US -> UR: 2: saveUser()
 activate UR
 
-UR -> H2: 3: updateUserName()
+UR -> H2: 3: save()
 
 activate H2
 H2 --> UR: 4: return User
@@ -569,7 +579,7 @@ activate US
 US -> UR: 2: deleteUser()
 activate UR
 
-UR -> H2: 3: deleteById()
+UR -> H2: 3: delete()
 
 activate H2
 H2 --> UR: 4: return Boolean
@@ -603,7 +613,7 @@ activate GS
 GS -> GR: 2: saveGasStation()
 activate GR
 
-GR -> H2: 3: saveById()
+GR -> H2: 3: save()
 
 activate H2
 H2 --> GR: 4: return GasStation
@@ -635,13 +645,13 @@ participant GasStationRepository as GR
 participant H2Database as H2
 
 activate GC
-GC -> GS: 1: modifyGasStationName()
+GC -> GS: 1: saveGasStation()
 activate GS
 
-GS -> GR: 2: modifyGasStation()
+GS -> GR: 2: saveGasStation()
 activate GR
 
-GR -> H2: 3: updateGasStation()
+GR -> H2: 3: save()
 
 activate H2
 H2 --> GR: 4: return GasStation
@@ -671,7 +681,6 @@ skinparam shadowing false
 participant GasStationController as GC
 participant GasStationService as GS
 participant GasStationRepository as GR
-participant PriceListRepository as PR
 participant H2Database as H2
 
 activate GC
@@ -681,16 +690,9 @@ activate GS
 GS -> GR: 2: deleteGasStation()
 activate GR
 
-GS -> PR: 2: deleteById()
-activate PR
-
-GR -> H2: 3: deleteById()
+GR -> H2: 3: delete()
 
 activate H2
-PR -> H2: 3: deleteById()
-
-H2 --> PR: 4: return Boolean
-deactivate PR
 
 H2 --> GR: 4: return Boolean
 deactivate H2
@@ -714,30 +716,22 @@ skinparam shadowing false
 participant GasStationController as GC
 participant GasStationService as GS
 participant GasStationRepository as GR
-participant PriceReportRepository as PRR
-participant PriceReport as PR
 participant H2Database as H2
 
 activate GC
 GC -> GS: 1: setGasStationReport()
-deactivate GC
-
 activate GS
-GS -> PRR: 2: savePriceReport()
-activate PRR
-PRR -> H2: 3: save()
+GS -> GR: 2: setReport()
+activate GR
+GR -> H2: 3: save()
 activate H2
-H2 --> PRR: 4: return PriceReport
+H2 --> GR: 4: return GasStation
 deactivate H2
-PRR --> GS: 5: return PriceReport
-deactivate PRR
-GS -> GR: 6: setReport()
-deactivate GS
-activate GR 
-GR -> H2: updateReport()
+GR --> GS: 5: return GasStation
 deactivate GR
-activate H2
-deactivate H2
+GS --> GC: 6: return GasStation
+deactivate GS
+deactivate GC
 
 @enduml
 ```
@@ -751,6 +745,7 @@ skinparam shadowing false
 
 participant GasStationController as GC
 participant GasStationService as GS
+participant Utility as U
 participant GasStationConverter as GCV
 participant GasStationRepository as GR
 participant H2Database as H2
@@ -763,7 +758,7 @@ activate GS
 GS -> GR: 2: getGasStationsByProximity()
 activate GR
 
-GR -> H2: 3: findByProximity()
+GR -> H2: 3: findAll()
 
 activate H2
 H2 --> GR: 4: return List<GasStation>
@@ -772,19 +767,25 @@ deactivate H2
 GR --> GS: 5: return List<GasStation>
 deactivate GR
 
-GS -> GCV: 6: for each(toGasStationDto())
+GS --> U: 6: trustCalculation()
+activate U
+
+U --> GS: 7: return Double
+deactivate U
+
+GS -> GCV: 8: for each(toGasStationDto())
 activate GCV
-GCV --> GS: 7: return GasStationDto
+GCV --> GS: 9: return GasStationDto
 deactivate GCV
 
-GS --> GC: 8: return List<GasStationDto>
+GS --> GC: 10: return List<GasStationDto>
 deactivate GS
 deactivate GC
 @enduml
 ```
 
 ### Use case 9, UC9 - Update trust level of price list
-This use case doesn't have a sequence diagram since the trust level is computed by the getTrustLevel() function in the PriceReportDto and is returned to the Gas station.
+This use case doesn't have a sequence diagram since the trust level is computed by the function tustCalculation() in Utility class each time a gasStation search is done.
 
 ### Use Case 10, UC10 - Evaluate price
 #### Scenario 10.1 - Price is correct (UC.10)
@@ -807,7 +808,7 @@ activate US
 US -> UR: 2: increaseUserReputation()
 activate UR
 
-UR -> H2: 3: updateReputation()
+UR -> H2: 3: save()
 
 activate H2
 H2 --> UR: 4: return User
@@ -817,7 +818,7 @@ deactivate H2
 UR --> US: 5: return User
 deactivate UR
 
-US -> UCV: 6: toUserDto()
+US -> UCV: 6: UserToUserDto()
 activate UCV
 UCV --> US: 7: return UserDto
 deactivate UCV
@@ -848,7 +849,7 @@ activate US
 US -> UR: 2: decreaseUserReputation()
 activate UR
 
-UR -> H2: 3: updateReputation()
+UR -> H2: 3: save()
 
 activate H2
 H2 --> UR: 4: return User
@@ -857,7 +858,7 @@ deactivate H2
 UR --> US: 5: return User
 deactivate UR
 
-US -> UCV: 6: toUserDto()
+US -> UCV: 6: UserToUserDto()
 activate UCV
 UCV --> US: 7: return UserDto
 deactivate UCV
