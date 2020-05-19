@@ -1286,9 +1286,11 @@ Similar attributes, such as prices and boolean, have been grouped and treated th
 
 ### Test cases definition
     
+<!--
     <JUnit test classes must be in src/test/java/it/polito/ezgas>
     <Report here all the created JUnit test cases, and the units/classes under test >
     <For traceability write the class and method name that contains the test case>
+    -->
 
 
 | Unit name     | JUnit test case |
@@ -1299,13 +1301,18 @@ Similar attributes, such as prices and boolean, have been grouped and treated th
 
 ### Code coverage report
 
+<!--
     <Add here the screenshot report of the statement and branch coverage obtained using
     the Eclemma tool. >
 
+    -->
+![coverage](./resources/coverage_eclemma_third_delivery.PNG)
 
 
-<!--
 ### Loop coverage analysis
+
+No loops considered in unit tests.
+<!--
 
     <Identify significant loops in the units and reports the test cases
     developed to cover zero, one or multiple iterations >
