@@ -47,6 +47,9 @@ public class Utility {
 		Long timestamp_long = data.getTime();		
 		Date today = new Date();
 		Long today_long = today.getTime();
+		
+		if(timestamp_long > today_long) // date in the future
+			return 0;
 
 		if (today_long - timestamp_long > 604800000) { // 7 days
 			obsolescence = 0.0;
