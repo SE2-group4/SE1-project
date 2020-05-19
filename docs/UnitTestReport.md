@@ -166,9 +166,9 @@ Version: 1.0
 |           | [-5, 5]           |
 |           | [6, max_int       |
 | timestamp | incorrect         |
-|           | (-inf, today + 7 days)    |
-|           | [today, today + 7 days]   |
-|           | (today + 7 days, inf)     |
+|           | (-inf, today - 7 days)    |
+|           | [today - 7 days, today]   |
+|           | (today, inf)              |
 | trust     | [min_double, -0.0001]     |
 |           | [0, 100]                  |
 |           | [100.0001, max_double]    |
@@ -203,14 +203,14 @@ Version: 1.0
 
 | userRep | timestamp | trust | Valid / Invalid | Description of the test case | JUnit test case |
 |-------|-------|-------|-------|-------|-------|
-| [min_int, -6] | - | - | invalid | returned trust <= 0 | |
-| [6, max_int]  | - | - | invalid | returned trust <= 0 | |
-| [-5, 5]       | incorrect | - | invalid | returned trust <= 0 | |
-| [-5, 5]       | (-inf, today + 7 days) | - | invalid | returned trust <= 0 | |
-| [-5, 5]       | [today, today + 7 days] | = 50 * (userRep +5)/10 + 50 * (1 - (today - timestamp)/7))  | valid   | as defined in the glossary | |
-| [-5, 5]       | [today, today + 7 days] | != 50 * (userRep +5)/10 + 50 * (1 - (today - timestamp)/7)) | invalid |                            | |
-| [-5, 5]       | (today + 7 days, inf)  | = 50 * (userRep +5)/10                      | valid   | as defined in the glossary | |
-| [-5, 5]       | (today + 7 days, inf)  | != 50 * (userRep +5)/10                     | invalid |                            | |
+| [min_int, -6] | - | - | invalid | returned trust = 0 | invalidUserRep_ShouldReturn0() |
+| [6, max_int]  | - | - | invalid | returned trust = 0 | invalidUserRep_ShouldReturn0() |
+| [-5, 5]       | incorrect | - | invalid | returned trust = 0 | invalidTimestamp_ShouldReturn0() |
+| [-5, 5]       | (-inf, today - 7 days)  | = 50 * (userRep +5)/10                      | valid   | as defined in the glossary | timestampLessThen7DaysAgo_ShouldReturnMoreThan0() |
+| [-5, 5]       | (-inf, today - 7 days)  | != 50 * (userRep +5)/10                     | invalid |                            | timestampLessThen7DaysAgo_ShouldReturnMoreThan0() |
+| [-5, 5]       | [today - 7 days, today] | = 50 * (userRep +5)/10 + 50 * (1 - (today - timestamp)/7))  | valid   | as defined in the glossary |  timestampLessEqualThanTodayMoreEqualThen7DaysAgo_ShouldReturnMoreThan0() |
+| [-5, 5]       | [today - 7 days, today | != 50 * (userRep +5)/10 + 50 * (1 - (today - timestamp)/7)) | invalid |                            | timestampMoreThenToday_ShouldReturn0() |
+| [-5, 5]       | (today, inf) | - | invalid | returned trust = 0 | timestampMoreThenToday_ShouldReturn0() |
 
 ## **Class *User* - all tests**
 
