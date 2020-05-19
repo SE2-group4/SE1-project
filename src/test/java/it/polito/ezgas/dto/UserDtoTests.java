@@ -1,4 +1,5 @@
-package it.polito.ezgas.user;
+package it.polito.ezgas.dto;
+
 
 import org.junit.After;
 import org.junit.Before;

@@ -1,12 +1,10 @@
-package it.polito.ezgas.user;
+package it.polito.ezgas.entity;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-
-import it.polito.ezgas.entity.User;
 
 @DataJpaTest
 public class UserTests {

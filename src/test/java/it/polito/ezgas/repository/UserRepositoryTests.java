@@ -1,4 +1,4 @@
-package it.polito.ezgas.user;
+package it.polito.ezgas.repository;
 
 public class UserRepositoryTests {
 

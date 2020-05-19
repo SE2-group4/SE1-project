@@ -1,17 +1,15 @@
-package it.polito.ezgas.user;
+package it.polito.ezgas.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+
+
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -26,7 +24,6 @@ import it.polito.ezgas.repository.UserRepository;
 import it.polito.ezgas.service.UserService;
 import it.polito.ezgas.service.impl.UserServiceImpl;
 
-@RunWith(SpringRunner.class)
 public class UserServiceTests {
 	@TestConfiguration
     static class UserServiceImplTestContextConfiguration {
@@ -53,7 +50,7 @@ public class UserServiceTests {
     private int initSize;
     private List<User> myList;
 	
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		List<UserDto> list = this.service.getAllUsers();
 			
@@ -116,12 +113,12 @@ public class UserServiceTests {
 		
 		UserDto insertedUser1 = this.service.saveUser(user);
 		assertTrue(insertedUser1 != null);
-		assertTrue("Init reputation must be 0!", insertedUser1.getReputation() == 0);
+		assertTrue(insertedUser1.getReputation() == 0, "Init reputation must be 0!");
 		
 		user.setUserId(5);
 		UserDto insertedUser2 = this.service.saveUser(user);
 		assertTrue(insertedUser2 != null);
-		assertTrue("Email must be unique!", insertedUser1.getEmail().compareTo(insertedUser2.getEmail()) != 0);
+		assertTrue(insertedUser1.getEmail().compareTo(insertedUser2.getEmail()) != 0, "Email must be unique!");
 	}
 	
 	@Test
@@ -173,7 +170,7 @@ public class UserServiceTests {
 		} catch (InvalidUserException e) {
 			fail();
 		}
-		assertTrue("User reputation should be less then before!", previousReputation >= user.getReputation());
+		assertTrue(previousReputation >= user.getReputation(), "User reputation should be less then before!");
 	}
 	
 	@Test
@@ -195,7 +192,7 @@ public class UserServiceTests {
 		} catch (InvalidUserException e) {
 			fail();
 		}
-		assertTrue("User reputation should be more then before!", user.getReputation() >= previousReputation);
+		assertTrue(user.getReputation() >= previousReputation, "User reputation should be more then before!");
 	}
 	
 	@Test
@@ -242,7 +239,7 @@ public class UserServiceTests {
 		}
 	}
 	
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 		for(User user : this.myList) {
 			try {
