@@ -91,8 +91,11 @@ public class UtilityTest {
 			assertEquals(314.5, Utility.calculateDistanceInMeters(0.001, -0.001, -0.001, 0.001), 0.1);
 			assertEquals(9923e3, Utility.calculateDistanceInMeters(45, 80, 44, -80), 1e3);
 		}
-		
-		
+	}
+	
+	@Nested
+	@DisplayName("Test for trustCalculation")
+	public class TrustCalculation{
 	}
 	
 
