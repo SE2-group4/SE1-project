@@ -4,8 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import exception.GPSDataException;
-
 public class Utility {
 	
 	public static boolean checkCoordinates(double lat, double lon) {

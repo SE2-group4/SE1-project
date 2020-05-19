@@ -1,10 +1,10 @@
 package it.polito.ezgas.converter;
 
-import static org.junit.Assert.assertTrue;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.*;
 
-import it.polito.ezgas.converter.UserConverter;
 import it.polito.ezgas.dto.UserDto;
 import it.polito.ezgas.entity.User;
 
