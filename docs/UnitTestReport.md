@@ -1,10 +1,10 @@
 # Unit Testing Documentation
 
-Authors:
+Authors: Group 12
 
-Date:
+Date: 19/05/2020
 
-Version:
+Version: 1.0
 
 # Contents
 
@@ -18,6 +18,7 @@ Version:
 
 # Black Box Unit Tests
 
+<!--
     <Define here criteria, predicates and the combination of predicates for each function of each class.
     Define test cases to cover all equivalence classes and boundary conditions.
     In the table, report the description of the black box test case and (traceability) the correspondence with the JUnit test case writing the 
@@ -25,6 +26,7 @@ Version:
     <JUnit test classes must be in src/test/java/it/polito/ezgas   You find here, and you can use,  class EZGasApplicationTests.java that is executed before 
     the set up of all Spring components
     >
+    -->
 
 <!-- START doc structure change -->
 
@@ -148,6 +150,26 @@ Version:
 |/|/|/|(180, max_double]| Invalid | calculateDistanceInMeters(...) -> return -1 |lon2Invalid_returnMinus1()|
 |[-90, 90]|[-180, 180]|[-90, 90]|[-180, 180]|Valid| calculateDistanceInMeters(...) -> return value |correctCoordinates_returnDistance() |
 
+### **Class *Utility* - method *trustCalculation***
+
+**Criteria for method *trustCalculation*:**
+	
+
+**Predicates for method *trustCalculation*:**
+
+| Criteria  | Predicate         |
+| --------- | ------------------|
+
+**Boundaries**:
+
+| Criteria  | Boundary values |
+| --------  | --------------- |
+
+**Combination of predicates**:
+
+|  |  |  |  | Valid / Invalid | Description of the test case | JUnit test case |
+|-------|-------|-------|-------|-------|-------|-|-|
+
 ## **Class *User* - all tests**
 
 ### Formal and pratical approach
@@ -165,7 +187,7 @@ In some cases (eg. userName string format, email string format...) no specific d
 **Criteria for method *getUserId*:**
 	
 <!-- input space -->
- - userId (int), as returned from the method
+ - userId (Integer), as returned from the method
 
 **Predicates for method *getUserId*:**
 
@@ -173,6 +195,7 @@ In some cases (eg. userName string format, email string format...) no specific d
 | -------- | ---------      |
 | userId   | [min_int, 0]   |
 |          | [1, max_int]   |
+|          | null           |
 
 **Boundaries**:
 
@@ -186,20 +209,22 @@ In some cases (eg. userName string format, email string format...) no specific d
 |          | 2               |
 |          | max_int -1      |
 |          | max_int         |
+|          | null            |
 
 **Combination of predicates**:
 
 | userId        | Valid / Invalid   | Description of the test case  | JUnit test case                       |
 |-------|-------|-------|-------|-------|-------|
-| [min_int, 0]  | invalid           | Spring works in this way...   | testGetUserId_ShouldReturnUserId()    |
-| [1, max_int]  | valid             | Spring works in this way...   | testGetUserId_ShouldReturnUserId()    |
+| [min_int, 0]  | invalid           | Spring works in this way      | testGetUserId_ShouldReturnUserId()    |
+| [1, max_int]  | valid             | Spring works in this way      | testGetUserId_ShouldReturnUserId()    |
+| null          | invalid           |                               | testGetUserId_ShouldReturnUserId()    |
 
 ### **Class *User* - method *setUserId***
 
 **Criteria for method *setUserId*:**
 	
 <!-- input space -->
- - userId (int)
+ - userId (Integer)
 
 **Predicates for method *setUserId*:**
 
@@ -207,6 +232,7 @@ In some cases (eg. userName string format, email string format...) no specific d
 | -------- | ---------      |
 | userId   | [min_int, 0]   |
 |          | [1, max_int]   |
+|          | null           |
 
 **Boundaries**:
 
@@ -220,6 +246,7 @@ In some cases (eg. userName string format, email string format...) no specific d
 |          | 2               |
 |          | max_int -1      |
 |          | max_int         |
+|          | null            |
 
 **Combination of predicates**:
 
@@ -227,6 +254,7 @@ In some cases (eg. userName string format, email string format...) no specific d
 |-------|-------|-------|-------|-------|-------|
 | [min_int, 0]  | valid             | omission in requirements      | testSetUserId_ShouldSetUserId()   |
 | [1, max_int]  | valid             | compliant as Spring works     | testSetUserId_ShouldSetUserId()   |
+| null          | invvalid          |                               | testSetUserId_ShouldSetUserId()   |
 
 ### **Class *User* - method *getUserName***
 
@@ -257,7 +285,7 @@ In some cases (eg. userName string format, email string format...) no specific d
 | userName           | Valid / Invalid  | Description of the test case  | JUnit test case                           |
 |-------|-------|-------|-------|-------|-------|
 | "" (empty string)  | invalid          | omission in requirements      | testGetUserName_ShouldReturnUserName()    |
-| null               | invalid          | omission in requirements      | testGetUserName_ShouldReturnUserName()    |
+| null               | invalid          |                               | testGetUserName_ShouldReturnUserName()    |
 | non trimmed string | invalid          | omission in requirements      | testGetUserName_ShouldReturnUserName()    |
 | any other string   | valid            |                               | testGetUserName_ShouldReturnUserName()    |
 
@@ -290,7 +318,7 @@ In some cases (eg. userName string format, email string format...) no specific d
 | userName           | Valid / Invalid  | Description of the test case  | JUnit test case                           |
 |-------|-------|-------|-------|-------|-------|
 | "" (empty string)  | invalid          | omission in requirements      | testSetUserName_ShouldSetUserName()       |
-| null               | invalid          | omission in requirements      | testSetUserName_ShouldSetUserName()       |
+| null               | invalid          |                               | testSetUserName_ShouldSetUserName()       |
 | non trimmed string | invalid          | omission in requirements. userName should be trimmed, as no exception can be thrown | testSetUserName_ShouldSetUserName()       |
 | any other string   | valid            |                               | testSetUserName_ShouldSetUserName()       |
 
@@ -323,7 +351,7 @@ In some cases (eg. userName string format, email string format...) no specific d
 | password           | Valid / Invalid  | Description of the test case  | JUnit test case                           |
 |-------|-------|-------|-------|-------|-------|
 | "" (empty string)  | invalid          | omission in requirements      | testGetPassword_ShouldReturnPassword()    |
-| null               | invalid          | omission in requirements      | testGetPassword_ShouldReturnPassword()    |
+| null               | invalid          |                               | testGetPassword_ShouldReturnPassword()    |
 | non trimmed string | invalid          | omission in requirements      | testGetPassword_ShouldReturnPassword()    |
 | any other string   | valid            |                               | testGetPassword_ShouldReturnPassword()    |
 
@@ -356,7 +384,7 @@ In some cases (eg. userName string format, email string format...) no specific d
 | password           | Valid / Invalid  | Description of the test case  | JUnit test case                           |
 |-------|-------|-------|-------|-------|-------|
 | "" (empty string)  | invalid          | omission in requirements      | testSetPassword_ShouldSetPassword()       |
-| null               | invalid          | omission in requirements      | testSetPassword_ShouldSetPassword()       |
+| null               | invalid          |                               | testSetPassword_ShouldSetPassword()       |
 | non trimmed string | invalid          | omission in requirements      | testSetPassword_ShouldSetPassword()       |
 | any other string   | valid            |                               | testSetPassword_ShouldSetPassword()       |
 
@@ -391,7 +419,7 @@ In some cases (eg. userName string format, email string format...) no specific d
 | password           | Valid / Invalid  | Description of the test case  | JUnit test case                   |
 |-------|-------|-------|-------|-------|-------|
 | "" (empty string)  | invalid          | omission in requirements      | testGetEmail_ShouldReturnEmail()  |
-| null               | invalid          | omission in requirements      | testGetEmail_ShouldReturnEmail()  |
+| null               | invalid          |                               | testGetEmail_ShouldReturnEmail()  |
 | non trimmed string | invalid          | omission in requirements      | testGetEmail_ShouldReturnEmail()  |
 | non email format   | invalid          | omission in requirements      | testGetEmail_ShouldReturnEmail()  |
 | any other string   | valid            |                               | testGetEmail_ShouldReturnEmail()  |
@@ -427,7 +455,7 @@ In some cases (eg. userName string format, email string format...) no specific d
 | password           | Valid / Invalid  | Description of the test case  | JUnit test case                   |
 |-------|-------|-------|-------|-------|-------|
 | "" (empty string)  | invalid          | omission in requirements      | testSetEmail_ShouldSetEmail()     |
-| null               | invalid          | omission in requirements      | testSetEmail_ShouldSetEmail()     |
+| null               | invalid          |                               | testSetEmail_ShouldSetEmail()     |
 | non trimmed string | invalid          | omission in requirements      | testSetEmail_ShouldSetEmail()     |
 | non email format   | invalid          | omission in requirements      | testSetEmail_ShouldSetEmail()     |
 | any other string   | valid            |                               | testSetEmail_ShouldSetEmail()     |
@@ -446,6 +474,8 @@ In some cases (eg. userName string format, email string format...) no specific d
 | reputation    | [min_int, -6] |
 |               | [-5, 5]       |
 |               | [6, max_int]  |
+|               | null          |
+
 
 **Boundaries**:
 
@@ -459,6 +489,7 @@ In some cases (eg. userName string format, email string format...) no specific d
 |          | 6               |
 |          | max_int -1      |
 |          | max_int         |
+|          | null            |
 
 **Combination of predicates**:
 
@@ -467,6 +498,7 @@ In some cases (eg. userName string format, email string format...) no specific d
 | [min_int, -6] | invalid           | as described in the glossary  | testGetUserReputation_ShouldReturnReputation()    |
 | [-5, 5]       | valid             | as described in the glossary  | testGetUserReputation_ShouldReturnReputation()    |
 | [6, max_int]  | invalid           | as described in the glossary  | testGetUserReputation_ShouldReturnReputation()    |
+| null          | invalid           |                               | testGetUserReputation_ShouldReturnReputation()    |
 
 ### **Class *User* - method *setUserReputation***
 
@@ -482,6 +514,8 @@ In some cases (eg. userName string format, email string format...) no specific d
 | reputation    | [min_int, -6] |
 |               | [-5, 5]       |
 |               | [6, max_int]  |
+|               | null          |
+|               | null          |
 
 **Boundaries**:
 
@@ -495,6 +529,7 @@ In some cases (eg. userName string format, email string format...) no specific d
 |          | 6               |
 |          | max_int -1      |
 |          | max_int         |
+|          | null            |
 
 **Combination of predicates**:
 
@@ -503,6 +538,7 @@ In some cases (eg. userName string format, email string format...) no specific d
 | [min_int, -6] | invalid           | reputation should be rounded up to the min accepted value, as no exception can be thrown  | testGetUserReputation_ShouldSetReputation()    |
 | [-5, 5]       | valid             |                                                                                           | testGetUserReputation_ShouldSetReputation()       |
 | [6, max_int]  | invalid           | reputation should be rounded off to the max accepted value, as no exception can be thrown | testGetUserReputation_ShouldSetReputation()    |
+| null          | invalid           |                                                                                           | testGetUserReputation_ShouldSetReputation()    |
 
 ### **Class *User* - method *getAdmin***
 
@@ -516,6 +552,7 @@ In some cases (eg. userName string format, email string format...) no specific d
 | -------- | --------- |
 | admin    | true      |
 |          | false     |
+|          | null      |
 
 **Boundaries**:
 
@@ -527,6 +564,7 @@ No boundaries.
 |-------|-------|-------|-------|-------|-------|
 | true  | valid             |                               | testGetAdmin_ShouldReturnAdmin()  |
 | false | valid             |                               | testGetAdmin_ShouldReturnAdmin()  |
+| null  | invalid             |                             | testGetAdmin_ShouldReturnAdmin()  |
 
 ### **Class *User* - method *setAdmin***
 
@@ -540,8 +578,7 @@ No boundaries.
 | -------- | --------- |
 | admin    | true      |
 |          | false     |
-|          |           |
-|          |           |
+|          | null      |
 
 **Boundaries**:
 
@@ -553,6 +590,7 @@ No boundaries.
 |-------|-------|-------|-------|-------|-------|
 | true  | valid             |                               | testSetAdmin_ShouldSetAdmin()     |
 | false | valid             |                               | testSetAdmin_ShouldSetAdmin()     |
+| null  | invalid           |                               | testSetAdmin_ShouldSetAdmin()     |
 
 
 ## **Class *GasStation***

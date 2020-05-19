@@ -100,46 +100,10 @@ public class UserControllerTests {
 	
 	@Test
 	public void testSaveUser() throws Exception {
-		// UserDto user = new UserDto(4, "Silvana", "worstactress", "silvana.fallisi@agg.it", 5);
-		
-		JSONObject json = new JSONObject();
-		json.put("id", 4);
-		json.put("userName", "Silvana");
-		json.put("password", "worstactress");
-		json.put("email", "silvana.fallisi@agg.it");
-		json.put("reputation", 5);
-		
-		this.mvc.perform(post("/saveuser")
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(json.toString()))
-			.andExpect(status().is2xxSuccessful());
 	}
 	
 	@Test
 	public void testSaveUserError() throws Exception {
-		JSONObject json = new JSONObject();
-		json.put("id", 4);
-		json.put("userName", "Silvana");
-		json.put("password", "worstactress");
-		/* email is missing */
-		json.put("reputation", 5);
-		
-		this.mvc.perform(post("/saveuser")
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(json.toString()))
-			.andExpect(status().is4xxClientError());
-		
-		json = new JSONObject();
-		json.put("id", 4);
-		/* userName is missing */
-		json.put("password", "worstactress");
-		json.put("email", "silvana.fallisi@agg.it");
-		json.put("reputation", 5);
-		
-		this.mvc.perform(post("/saveuser")
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(json.toString()))
-			.andExpect(status().is4xxClientError());
 	}
 	
 	@AfterEach
