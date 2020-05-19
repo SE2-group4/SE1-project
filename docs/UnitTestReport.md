@@ -649,7 +649,7 @@ Similar attributes, such as prices and boolean, have been grouped and treated th
 **Criteria:**
 	
 <!-- input space -->
- - return value (int), as returned from the method
+ - return value (integer), as returned from the method
 
 **Predicates:**
 
@@ -687,7 +687,7 @@ Similar attributes, such as prices and boolean, have been grouped and treated th
 **Criteria:**
 
 <!-- input space -->
- - input (int)
+ - input (integer)
 
 **Predicates:**
 
