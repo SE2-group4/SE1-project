@@ -1292,12 +1292,15 @@ Similar attributes, such as prices and boolean, have been grouped and treated th
     <For traceability write the class and method name that contains the test case>
     -->
 
+The following JUnit test classes (these are nested classes to group test cases referred to a single topic) have been implemented using a mixed white and black approach.
+Into each test class there are many test methods to provide the decision coverage.
+A detailed description of tested parameters and conditions can be found in the [Black Box Unit Tests](#black-box-unit-tests) section.
 
 | Unit name     | JUnit test case |
 |--|--|
-| GasStation    | GasStationTest |
-| Utility       | UtilityTest |
-||||
+| Utility       | CheckCoordinates          |
+|               | CalculateDistanceInMeters |
+|               | TrustCalculation          |
 
 ### Code coverage report
 
@@ -1311,7 +1314,7 @@ Similar attributes, such as prices and boolean, have been grouped and treated th
 
 ### Loop coverage analysis
 
-No loops considered in unit tests.
+No loops in the currently tested code.
 <!--
 
     <Identify significant loops in the units and reports the test cases
