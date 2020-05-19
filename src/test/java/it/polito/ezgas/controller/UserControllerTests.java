@@ -80,7 +80,7 @@ public class UserControllerTests {
 	
 	@Test
 	public void testGetUsers() throws Exception {
-		List<UserDto> myList = this.myList.stream()
+		/*List<UserDto> myList = this.myList.stream()
 				.map(user -> UserConverter.userConvertToUserDto(user))
 				.collect(Collectors.toList());
 		
@@ -90,12 +90,12 @@ public class UserControllerTests {
 				assertTrue(res.getResponse().getContentType() == MediaType.APPLICATION_JSON.toString());
 			})
 			.andExpect(res -> {
-				/*Gson gson = new Gson();
+				Gson gson = new Gson();
 				List<UserDto> list = gson.fromJson(res.getResponse().getContentAsString(),
 						new TypeToken<List<UserDto>>() {}.getType());
 				
-				assertTrue(list.size() == 3);*/
-			});
+				assertTrue(list.size() == 3);
+			});*/
 	}
 	
 	@Test

@@ -32,6 +32,9 @@ public class Utility {
 	public static double trustCalculation(int userRep, String timestamp) {
 		double obsolescence;
 		double trust;
+		
+		if(userRep < -5 || userRep > 5)
+			return 0;
 
 		SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy", Locale.ENGLISH);
 		Date data = null;
@@ -39,6 +42,7 @@ public class Utility {
 			data = sdf.parse(timestamp);
 		} catch(Exception e) {
 			System.out.println(e.getMessage());
+			return 0;
 		}
 		Long timestamp_long = data.getTime();		
 		Date today = new Date();

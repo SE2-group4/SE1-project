@@ -3,11 +3,11 @@ package it.polito.ezgas.utils;
 import static org.junit.Assert.assertFalse;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.Date;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-
-import it.polito.ezgas.utils.Utility;
 
 public class UtilityTest {
 
@@ -96,7 +96,47 @@ public class UtilityTest {
 	@Nested
 	@DisplayName("Test for trustCalculation")
 	public class TrustCalculation{
+		
+		@Test
+		public void invalidUserRep_ShouldReturn0() {
+			Date correctDate = new Date();
+			assertEquals(0, Utility.trustCalculation(-99, correctDate.toString()));
+			assertEquals(0, Utility.trustCalculation(99, correctDate.toString()));
+		}
+		
+		@Test
+		public void invalidTimestamp_ShouldReturn0() {
+			assertEquals(0, Utility.trustCalculation(3, "not a string parseable as a date"));
+		}
+		
+		@Test
+		public void timestampLessEqualThen7Days_ShouldReturnTrust() {
+			Date correctDate = new Date();
+			correctDate.setTime(correctDate.getTime() - (1000 /* ms/s */ * 60 /* s/min */ * 60 /* min/h */ * 24 /* h/day */ * 4)); // 4 days ago
+			int userRep = 3;
+			
+			double exprectedTrust = 50 * ((double)userRep +5) /10 + 50 * (1 - (/* today - 4 days ago = 4 days */ 4.0)/7);
+			
+			double aDayTrust = 50 * ((double)userRep +5) /10 + 50 * (1 - (/* today - 1 day ago = 1 day */ 1.0)/7);
+			double halfOfADayTrust = 50 * ((double)userRep +5) /10 + 50 * (1 - (/* today - 0.5 day ago = 0.5 day */ 0.5)/7);
+			double precision = Math.abs(aDayTrust - halfOfADayTrust); // precision: half of a day
+			assertEquals(exprectedTrust, Utility.trustCalculation(userRep, correctDate.toString()), precision); 
+			
+			// System.out.println(exprectedTrust + " " + Utility.trustCalculation(userRep, correctDate.toString()) + " "+ precision);
+		}
+		
+		@Test
+		public void timestampMoreThen7Days_ShouldReturnTrust() {
+			Date correctDate = new Date();
+			correctDate.setTime(correctDate.getTime() - 1000 /* ms/s */ * 60 /* s/min */ * 60 /* min/h */ * 24 /* h/day */ * 14); // 14 days ago
+			int userRep = 3;
+			double exprectedTrust = 50 * ((double)userRep +5) /10 + 0;
+			
+			double aDayTrust = 50 * ((double)userRep +5) /10 + 50 * (1 - (/* today - 1 day ago = 1 day */ 1.0)/7);
+			double halfOfADayTrust = 50 * ((double)userRep +5) /10 + 50 * (1 - (/* today - 0.5 day ago = 0.5 day */ 0.5)/7);
+			double precision = Math.abs(aDayTrust - halfOfADayTrust); // precision: half of a day
+			assertEquals(exprectedTrust, Utility.trustCalculation(userRep, correctDate.toString()), precision);
+		}
 	}
-	
 
 }
