@@ -153,22 +153,64 @@ Version: 1.0
 ### **Class *Utility* - method *trustCalculation***
 
 **Criteria for method *trustCalculation*:**
-	
+
+- userRep (int)
+- timestamp (String)
+- trust (double)
 
 **Predicates for method *trustCalculation*:**
 
 | Criteria  | Predicate         |
 | --------- | ------------------|
+| userRep   | [min_int, -6]     |
+|           | [-5, 5]           |
+|           | [6, max_int       |
+| timestamp | incorrect         |
+|           | (-inf, today + 7 days)    |
+|           | [today, today + 7 days]   |
+|           | (today + 7 days, inf)     |
+| trust     | [min_double, -0.0001]     |
+|           | [0, 100]                  |
+|           | [100.0001, max_double]    |
 
 **Boundaries**:
 
 | Criteria  | Boundary values |
 | --------  | --------------- |
+| userRep   | min_int         |
+|           | min_int +1      |
+|           | -6              |
+|           | -5              |
+|           | 5               |
+|           | 6               |
+|           | max_int -1      |
+|           | max_int         |
+| timestamp | null            |
+|           | today           |
+|           | today + 7 days  |
+| trust     | min_double            |
+|           | min_double +0.0001    |
+|           | -0.0001               |
+|           | 0                     |
+|           | 0.0001                |
+|           | 99.9999               |
+|           | 100                   |
+|           | 100.0001              |
+|           | max_double -0.0001    |
+|           | max_double            |
 
 **Combination of predicates**:
 
-|  |  |  |  | Valid / Invalid | Description of the test case | JUnit test case |
-|-------|-------|-------|-------|-------|-------|-|-|
+| userRep | timestamp | trust | Valid / Invalid | Description of the test case | JUnit test case |
+|-------|-------|-------|-------|-------|-------|
+| [min_int, -6] | - | - | invalid | returned trust <= 0 | |
+| [6, max_int]  | - | - | invalid | returned trust <= 0 | |
+| [-5, 5]       | incorrect | - | invalid | returned trust <= 0 | |
+| [-5, 5]       | (-inf, today + 7 days) | - | invalid | returned trust <= 0 | |
+| [-5, 5]       | [today, today + 7 days] | = 50 * (userRep +5)/10 + 50 * (1 - (today - timestamp)/7))  | valid   | as defined in the glossary | |
+| [-5, 5]       | [today, today + 7 days] | != 50 * (userRep +5)/10 + 50 * (1 - (today - timestamp)/7)) | invalid |                            | |
+| [-5, 5]       | (today + 7 days, inf)  | = 50 * (userRep +5)/10                      | valid   | as defined in the glossary | |
+| [-5, 5]       | (today + 7 days, inf)  | != 50 * (userRep +5)/10                     | invalid |                            | |
 
 ## **Class *User* - all tests**
 
@@ -1249,10 +1291,10 @@ Similar attributes, such as prices and boolean, have been grouped and treated th
     <For traceability write the class and method name that contains the test case>
 
 
-| Unit name | JUnit test case |
+| Unit name     | JUnit test case |
 |--|--|
-| GasStation | GasStationTest |
-| Utility | UtilityTest |
+| GasStation    | GasStationTest |
+| Utility       | UtilityTest |
 ||||
 
 ### Code coverage report
