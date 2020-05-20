@@ -23,12 +23,16 @@ import it.polito.ezgas.utils.Utility;
 @Service
 public class GasStationServiceimpl implements GasStationService {
 
-	@Autowired
-	GasStationRepository gasStationRepository;
+	private GasStationRepository gasStationRepository;
 
-	@Autowired
-	UserRepository userRepository;
+	private UserRepository userRepository;
 
+	public GasStationServiceimpl(GasStationRepository gasStationRepository, UserRepository userRepository){
+		this.gasStationRepository = gasStationRepository;
+		this.userRepository = userRepository;
+	}
+	
+	
 	@Override
 	public GasStationDto getGasStationById(Integer gasStationId) throws InvalidGasStationException {
 		if (gasStationId < 0) {

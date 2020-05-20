@@ -1,10 +1,13 @@
 package it.polito.ezgas.service;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.aspectj.lang.annotation.Before;
 import org.hamcrest.collection.IsIterableContainingInOrder;
 import org.junit.jupiter.api.AfterAll;
@@ -26,25 +29,22 @@ import it.polito.ezgas.entity.GasStation;
 import it.polito.ezgas.entity.User;
 import it.polito.ezgas.repository.GasStationRepository;
 import it.polito.ezgas.repository.UserRepository;
+import it.polito.ezgas.service.impl.GasStationServiceimpl;
 
 
 
 public class GasStationServiceTest {
 
 	@Autowired
-	GasStationService gasStationService;	
-	
-	@Autowired
-	UserRepository userRepository;
-	/*
-	GasStation gs0;
-	GasStation gs1;
+	static GasStationService gasStationService;	
+
+	static GasStation gs1;
 	GasStation gs2;
 	List<GasStation> gsList;
 	List<GasStationDto> gsDtoList;
-	*/
 	
-	/*
+	
+	
 	boolean compareUserDto(UserDto u1, UserDto u2) {
 		return true;
 	}
@@ -69,23 +69,25 @@ public class GasStationServiceTest {
 				 gs1.getReportUser() == gs2.getReportUser() &&
 				 gs1.getReportTimestamp() == gs2.getReportTimestamp() &&
 				 compareUserDto(gs1.getUserDto(), gs2.getUserDto()));
-	}*/
+	}
 	
+	
+	@BeforeAll
+	static void theFirstAndOnlyOneTrueSetup() {
+		GasStation gs1 = new GasStation("Gas station c", "Address c, 3", false, false, false, true, true, "", 31.5, -1, -1, -1, -1, 1.2, 0.96, 3, null, 0);
+		List<GasStation> gsList = new ArrayList<GasStation>();
+		gsList.add(gs1);
+		GasStationRepository gasStationRepository = mock(GasStationRepository.class);
+		UserRepository userRepository = mock(UserRepository.class);
+		when(gasStationRepository.findByGasStationId(0)).thenReturn(gsList);
+		
+		
+		gasStationService = new GasStationServiceimpl(gasStationRepository, userRepository);
+	}
 	
 	@BeforeEach
 	void setUp() throws Exception {
-		/*
-		gs0 = new GasStation("Gas station a", "Address a, 1", true, true, false, false, true, "", 41.5, 23.7, 1.26, 1.67, -1, -1, 0.99, 1, "07-05-2020 18:47:52", 0);
-		gs1 = new GasStation("Gas station c", "Address c, 3", false, false, false, true, true, "", 31.5, -1, -1, -1, -1, 1.2, 0.96, 3, "07-05-2020 12:45:21", 0);
-		gs2 = new GasStation("Gas station d", "Address d, 4", true, true, false, false, false, "", 11.2, 28.7, 1.23, 1.65, -1, -1, -1, 4, "07-05-2020 15:48:10", 0);
-		
-		gsList.add(gs0);
-		gsList.add(gs1);
-		gsList.add(gs2);
-		gsDtoList.add(GasStationConverter.GasStationConvertToGasStationDto(gs0));
-		gsDtoList.add(GasStationConverter.GasStationConvertToGasStationDto(gs1));
-		gsDtoList.add(GasStationConverter.GasStationConvertToGasStationDto(gs2));
-		*/
+	
 	}	
 	
 	@AfterEach
@@ -94,7 +96,7 @@ public class GasStationServiceTest {
 	}	
 	
 	
-	/*
+	
 	@Nested
 	@DisplayName("Test for getGasStationById")
 	public class GetGasStationById{
@@ -112,13 +114,13 @@ public class GasStationServiceTest {
 		public void existingId_returnCorrespondingGasStationDto()  {
 			try {
 				GasStationDto gasStationDto = gasStationService.getGasStationById(0);
-				assertTrue("Gas station retrieved is not the same that has been inserted", compareGasStationDto(gasStationDto, GasStationConverter.GasStationConvertToGasStationDto(gs0)));
+				assertTrue("Gas station retrieved is not the same that has been inserted", compareGasStationDto(gasStationDto, GasStationConverter.GasStationConvertToGasStationDto(gs1)));
 			} catch (InvalidGasStationException e) {
 				e.printStackTrace();
 				fail("InvalidGasStationException unexpected");
 			}
 		}
-		
+		/*
 		@Test
 		public void nonExistingId_returnNull() {
 			try {
@@ -128,8 +130,8 @@ public class GasStationServiceTest {
 				e.printStackTrace();
 				fail("InvalidGasStationException unexpected");
 			}
-		}
-		
+		}*/
+		/*
 		@Test
 		public void negativeId_InvalidGasStationExceptionThrown() {
 			try {
@@ -138,7 +140,7 @@ public class GasStationServiceTest {
 			} catch (InvalidGasStationException e) {
 				
 			}
-		}
+		}*/
 	}
 	
 	@Nested
@@ -427,5 +429,5 @@ public class GasStationServiceTest {
 	public class GetGasStationByCarSharing{
 		//***** DA COMPLETARE *****
 	}
-	*/
+	
 }
