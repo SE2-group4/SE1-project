@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -38,6 +39,7 @@ public class GasStationServiceTest {
 	@Autowired
 	static GasStationService gasStationService;	
 
+	static User u1;
 	static GasStation gs1;
 	GasStation gs2;
 	List<GasStation> gsList;
@@ -74,12 +76,21 @@ public class GasStationServiceTest {
 	
 	@BeforeAll
 	static void theFirstAndOnlyOneTrueSetup() {
-		GasStation gs1 = new GasStation("Gas station c", "Address c, 3", false, false, false, true, true, "", 31.5, -1, -1, -1, -1, 1.2, 0.96, 3, null, 0);
-		List<GasStation> gsList = new ArrayList<GasStation>();
+		u1 = new User("Aldo", "aldo", "aldo.baglio@agg.it", 3);
+		u1.setUserId(4);
+		u1.setAdmin(false);
+		List uList = new ArrayList<GasStation>();
+		uList.add(u1);		
+		
+		gs1 = new GasStation("Gas station c", "Address c, 3", false, false, false, true, true, "", 31.5, -1, -1, -1, -1, 1.2, 0.96, 3, new Date().toString(), 0);
+		gs1.setUser(u1);
+		List gsList = new ArrayList<GasStation>();
 		gsList.add(gs1);
+		
 		GasStationRepository gasStationRepository = mock(GasStationRepository.class);
 		UserRepository userRepository = mock(UserRepository.class);
-		when(gasStationRepository.findByGasStationId(0)).thenReturn(gsList);
+		when(gasStationRepository.findByGasStationId(any())).thenReturn(gsList);
+		when(userRepository.findByUserId(any())).thenReturn(uList);
 		
 		
 		gasStationService = new GasStationServiceimpl(gasStationRepository, userRepository);
