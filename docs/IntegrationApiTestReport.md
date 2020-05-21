@@ -1,10 +1,10 @@
 # Integration and API Test Documentation
 
-Authors:
+Authors: Group 12
 
-Date:
+Date: 21/05/2020
 
-Version:
+Version: 1.0
 
 # Contents
 
@@ -21,14 +21,86 @@ Version:
 
 
 
-# Dependency graph 
+# Dependency graph
 
      <report the here the dependency graph of the classes in it/polito/Ezgas, using plantuml>
-     
+
+```plantuml
+
+@startuml
+
+left to right direction
+hide circle
+hide members
+
+package "Frontend" {}
+
+Frontend -> Backend
+
+package "Backend" {
+
+package "it.polito.ezgas.controller" {
+    class GasStationController
+
+    class UserController
+}
+
+package "it.polito.ezgas.service" {
+   interface "GasStationService"
+
+   interface "UserService"
+}
+
+package "it.polito.ezgas.repository" {
+    class GasStationRepository
+
+    class UserRepository
+}
+
+package "it.polito.ezgas.utility"{
+    class Utility
+}
+
+package "it.polito.ezgas.converter" {
+    class UserConverter
+
+    class GasStationConverter
+}
+
+package "it.polito.ezgas.dto" {
+    class GasStationDto
+
+    class IdPw
+
+    class LoginDto
+
+    class UserDto
+}
+
+package "it.polito.ezgas.entity" {
+    class GasStation
+
+    class User
+}
+
+
+it.polito.ezgas.controller -> it.polito.ezgas.service
+it.polito.ezgas.service -> it.polito.ezgas.utility
+it.polito.ezgas.service -> it.polito.ezgas.repository
+it.polito.ezgas.service -> it.polito.ezgas.converter
+it.polito.ezgas.repository -> it.polito.ezgas.entity
+it.polito.ezgas.converter -> it.polito.ezgas.dto
+
+}
+
+@enduml
+
+```
+
 # Integration approach
 
     <Write here the integration sequence you adopted, in general terms (top down, bottom up, mixed) and as sequence
-    (ex: step1: class A, step 2: class A+B, step 3: class A+B+C, etc)> 
+    (ex: step1: class A, step 2: class A+B, step 3: class A+B+C, etc)>
     <The last integration step corresponds to API testing at level of Service package>
     <Tests at level of Controller package will be done later>
 
@@ -71,11 +143,11 @@ Version:
 ## Scenario UCx.y
 
 | Scenario |  name |
-| ------------- |:-------------:| 
+| ------------- |:-------------:|
 |  Precondition     |  |
 |  Post condition     |   |
 | Step#        | Description  |
-|  1     |  ... |  
+|  1     |  ... |
 |  2     |  ... |
 
 
@@ -83,20 +155,20 @@ Version:
 # Coverage of Scenarios and FR
 
 
-<Report in the following table the coverage of  scenarios (from official requirements and from above) vs FR. 
+<Report in the following table the coverage of  scenarios (from official requirements and from above) vs FR.
 Report also for each of the scenarios the (one or more) API JUnit tests that cover it. >
 
 
 
 
-| Scenario ID | Functional Requirements covered | JUnit  Test(s) | 
-| ----------- | ------------------------------- | ----------- | 
-|  ..         | FRx                             |             |             
-|  ..         | FRy                             |             |             
-| ...         |                                 |             |             
-| ...         |                                 |             |             
-| ...         |                                 |             |             
-| ...         |                                 |             |             
+| Scenario ID | Functional Requirements covered | JUnit  Test(s) |
+| ----------- | ------------------------------- | ----------- |
+|  ..         | FRx                             |             |
+|  ..         | FRy                             |             |
+| ...         |                                 |             |
+| ...         |                                 |             |
+| ...         |                                 |             |
+| ...         |                                 |             |
 
 
 
@@ -106,7 +178,7 @@ Report also for each of the scenarios the (one or more) API JUnit tests that cov
 <Report in the following table the coverage of the Non Functional Requirements of the application - only those that can be tested with automated testing frameworks.>
 
 
-### 
+###
 
 | Non Functional Requirement | Test name |
 | -------------------------- | --------- |
