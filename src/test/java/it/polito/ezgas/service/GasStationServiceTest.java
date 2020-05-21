@@ -350,14 +350,40 @@ public class GasStationServiceTest {
 	@Nested
 	@DisplayName("Test for getAllGasStations")
 	public class GetAllGasStations {
+		GasStation gs1 = new GasStation();
+		GasStation gs2 = new GasStation();
+		List<GasStation> gsListEmpty = new ArrayList<>();
+		
+		@BeforeEach
+		void setUp2() {
+			gs1 = new GasStation("Gas station c", "Address c, 3", false, false, false, true, true, "", 31.5, -1, -1, -1,
+					-1, 1.2, 0.96, 3, null, 0);
+			gs1.setGasStationId(5);
+			gs2 = new GasStation("Gas station d", "Address d, 4", false, false, false, true, true, "", 31.5, -1, -1, -1,
+					-1, 1.2, 0.96, 3, null, 0);
+			gs2.setGasStationId(1);
+			
+			List<GasStation> gsList = new ArrayList<>();
+			
+			gsList.add(gs1);
+			gsList.add(gs2);
+			
+			when(gasStationRepository.findAll()).thenReturn(gsList);
+		}
+		
 		@Test
 		public void _returnEmptyList() {
-
+			when(gasStationRepository.findAll()).thenReturn(gsListEmpty);
+			assertTrue("List of gas station retrieved is not empty", gsListEmpty.isEmpty());
 		}
-
+		
 		@Test
 		public void _returnGasStationDtoList() {
-
+				List<GasStationDto> gasStationDto = gasStationService.getAllGasStations();
+				assertTrue("Gas station retrieved is not the same that has been inserted",
+						compareGasStationDto(gasStationDto.get(0), GasStationConverter.GasStationConvertToGasStationDto(gs1)));
+				assertTrue("Gas station retrieved is not the same that has been inserted",
+						compareGasStationDto(gasStationDto.get(1), GasStationConverter.GasStationConvertToGasStationDto(gs2)));
 		}
 	}
 
