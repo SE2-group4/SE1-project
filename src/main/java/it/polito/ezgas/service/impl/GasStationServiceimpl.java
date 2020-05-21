@@ -184,7 +184,6 @@ public class GasStationServiceimpl implements GasStationService {
 			gasStationList = getGasStationsWithoutCoordinates(gasolinetype, carsharing);
 		} else if (!carsharing.equals("null")) {
 			gasStationList = getGasStationByCarSharing(carsharing);
-
 		} else if (!gasolinetype.equals("null") && !gasolinetype.equals("Select gasoline type")) {
 			gasStationList = getGasStationsByGasolineType(gasolinetype);
 		} else {
