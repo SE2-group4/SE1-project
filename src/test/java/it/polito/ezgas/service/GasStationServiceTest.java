@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
@@ -25,6 +26,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import exception.GPSDataException;
 import exception.InvalidGasStationException;
+import exception.InvalidGasTypeException;
 import exception.PriceException;
 import it.polito.ezgas.converter.GasStationConverter;
 import it.polito.ezgas.dto.GasStationDto;
@@ -35,99 +37,87 @@ import it.polito.ezgas.repository.GasStationRepository;
 import it.polito.ezgas.repository.UserRepository;
 import it.polito.ezgas.service.impl.GasStationServiceimpl;
 
-
-
 public class GasStationServiceTest {
 
 	@Autowired
-	static GasStationService gasStationService;	
-	
+	static GasStationService gasStationService;
+
 	static GasStationRepository gasStationRepository;
 	static UserRepository userRepository;
-	
+
 	List<GasStation> gasStationList;
 	List<GasStationDto> gasStationDtoList;
 	List<User> userList;
 	List<UserDto> userDtoList;
-	
-	
+
 	boolean compareUserDto(UserDto u1, UserDto u2) {
 		if (u1 == null && u2 == null)
 			return true;
 		return true;
 	}
-	
+
 	boolean compareGasStationDto(GasStationDto gs1, GasStationDto gs2) {
-		return ( gs1.getGasStationId() == gs2.getGasStationId() && 
-				 gs1.getGasStationName().compareTo(gs2.getGasStationName()) == 0 &&
-				 gs1.getGasStationAddress().compareTo(gs2.getGasStationAddress()) == 0 &&
-				 gs1.getHasDiesel() == gs2.getHasDiesel() &&
-				 gs1.getHasSuper() == gs2.getHasSuper() &&
-				 gs1.getHasSuperPlus() == gs2.getHasSuperPlus() &&
-				 gs1.getHasGas() == gs2.getHasGas() &&
-				 gs1.getHasMethane() == gs2.getHasMethane() &&
-				 gs1.getCarSharing() == gs2.getCarSharing() &&
-				 gs1.getLat() == gs2.getLat() &&
-				 gs1.getLon() == gs2.getLon() &&
-				 gs1.getDieselPrice() == gs2.getDieselPrice() &&
-				 gs1.getSuperPrice() == gs2.getSuperPrice() &&
-				 gs1.getSuperPlusPrice() == gs2.getSuperPlusPrice() &&
-				 gs1.getGasPrice() == gs2.getGasPrice() &&
-				 gs1.getMethanePrice() == gs2.getMethanePrice() &&
-				 gs1.getReportUser() == gs2.getReportUser() &&
-				 gs1.getReportTimestamp() == gs2.getReportTimestamp() &&
-				 compareUserDto(gs1.getUserDto(), gs2.getUserDto()));
+		return (gs1.getGasStationId() == gs2.getGasStationId()
+				&& gs1.getGasStationName().compareTo(gs2.getGasStationName()) == 0
+				&& gs1.getGasStationAddress().compareTo(gs2.getGasStationAddress()) == 0
+				&& gs1.getHasDiesel() == gs2.getHasDiesel() && gs1.getHasSuper() == gs2.getHasSuper()
+				&& gs1.getHasSuperPlus() == gs2.getHasSuperPlus() && gs1.getHasGas() == gs2.getHasGas()
+				&& gs1.getHasMethane() == gs2.getHasMethane() && gs1.getCarSharing() == gs2.getCarSharing()
+				&& gs1.getLat() == gs2.getLat() && gs1.getLon() == gs2.getLon()
+				&& gs1.getDieselPrice() == gs2.getDieselPrice() && gs1.getSuperPrice() == gs2.getSuperPrice()
+				&& gs1.getSuperPlusPrice() == gs2.getSuperPlusPrice() && gs1.getGasPrice() == gs2.getGasPrice()
+				&& gs1.getMethanePrice() == gs2.getMethanePrice() && gs1.getReportUser() == gs2.getReportUser()
+				&& gs1.getReportTimestamp() == gs2.getReportTimestamp()
+				&& compareUserDto(gs1.getUserDto(), gs2.getUserDto()));
 	}
-	
-	
+
 	@BeforeAll
 	static void theFirstAndOnlyOneTrueSetup() {
 		gasStationRepository = mock(GasStationRepository.class);
 		userRepository = mock(UserRepository.class);
 		gasStationService = new GasStationServiceimpl(gasStationRepository, userRepository);
 	}
-	
+
 	@BeforeEach
 	void setUp() throws Exception {
-	
-	}	
-	
+
+	}
+
 	@AfterEach
 	void tearDown() throws Exception {
 
-	}	
-	
-	
-	
+	}
+
 	@Nested
 	@DisplayName("Test for getGasStationById")
-	public class GetGasStationById{
+	public class GetGasStationById {
 		GasStation gs1 = new GasStation();
-		
+
 		@BeforeEach
 		void setUp() {
-			gs1 = new GasStation("Gas station c", "Address c, 3", false, false, false, true, true, "", 31.5, -1, -1, -1, -1, 1.2, 0.96, 3, null, 0);
+			gs1 = new GasStation("Gas station c", "Address c, 3", false, false, false, true, true, "", 31.5, -1, -1, -1,
+					-1, 1.2, 0.96, 3, null, 0);
 			gs1.setGasStationId(5);
 			Optional<GasStation> gsOpt = Optional.ofNullable(gs1);
 			Optional<GasStation> gsEmpty = Optional.empty();
-			
+
 			when(gasStationRepository.findByGasStationId(5)).thenReturn(gsOpt);
 			when(gasStationRepository.findByGasStationId(999)).thenReturn(gsEmpty);
 			when(gasStationRepository.findByGasStationId(-1)).thenReturn(gsEmpty);
-			
 		}
-		
+
 		@Test
-		public void existingId_returnCorrespondingGasStationDto()  {
+		public void existingId_returnCorrespondingGasStationDto() {
 			try {
 				GasStationDto gasStationDto = gasStationService.getGasStationById(5);
-				assertTrue("Gas station retrieved is not the same that has been inserted", compareGasStationDto(gasStationDto, GasStationConverter.GasStationConvertToGasStationDto(gs1)));
+				assertTrue("Gas station retrieved is not the same that has been inserted",
+						compareGasStationDto(gasStationDto, GasStationConverter.GasStationConvertToGasStationDto(gs1)));
 			} catch (InvalidGasStationException e) {
 				e.printStackTrace();
 				fail("InvalidGasStationException unexpected");
 			}
 		}
-		
+
 		@Test
 		public void nonExistingId_returnNull() {
 			try {
@@ -138,189 +128,202 @@ public class GasStationServiceTest {
 				fail("InvalidGasStationException unexpected");
 			}
 		}
-		
+
 		@Test
 		public void negativeId_InvalidGasStationExceptionThrown() {
 			try {
 				gasStationService.getGasStationById(-1);
 				fail("Negative id should throw an InvalidGasStationException");
 			} catch (InvalidGasStationException e) {
-				
+
 			}
 		}
 	}
-	
+
 	@Nested
 	@DisplayName("Test for saveGasStation")
-	public class SaveGasStation{
-		
+	public class SaveGasStation {
+
 		@AfterEach
 		void tearDown() throws Exception {
-			//*** ELIMINARE DAL DB LE GASSTATION INSERITE ***
-		}	
-		
+			// *** ELIMINARE DAL DB LE GASSTATION INSERITE ***
+		}
+
 		@Test
 		public void validGasStationDto_returnGasStationDto() {
-			GasStation gs2_1 = new GasStation("Gas station 2_1", "Address 2_1, 2_1", true, true, false, false, true, "", 41.5, 23.7, 1.26, 1.67, -1, -1, 0.99, 1, "07-05-2020 18:47:52", 0);
+			GasStation gs2_1 = new GasStation("Gas station 2_1", "Address 2_1, 2_1", true, true, false, false, true, "",
+					41.5, 23.7, 1.26, 1.67, -1, -1, 0.99, 1, "07-05-2020 18:47:52", 0);
 			try {
-				GasStationDto result = gasStationService.saveGasStation(GasStationConverter.GasStationConvertToGasStationDto(gs2_1));
-				assertTrue("Gas station retrieved is not the same that has been inserted", compareGasStationDto(result, GasStationConverter.GasStationConvertToGasStationDto(gs2_1)));
-				
+				GasStationDto result = gasStationService
+						.saveGasStation(GasStationConverter.GasStationConvertToGasStationDto(gs2_1));
+				assertTrue("Gas station retrieved is not the same that has been inserted",
+						compareGasStationDto(result, GasStationConverter.GasStationConvertToGasStationDto(gs2_1)));
+
 			} catch (PriceException | GPSDataException e) {
 				fail("Exception unexpected");
 			}
 		}
-		
+
 		@Test
 		public void negativeDiesel_PriceExceptionThrown() {
-			GasStation gs2_1 = new GasStation("Gas station 2_1", "Address 2_1, 2_1", true, true, false, false, true, "", 41.5, 23.7, -7, 1.67, -1, -1, 0.99, 1, "07-05-2020 18:47:52", 0);
+			GasStation gs2_1 = new GasStation("Gas station 2_1", "Address 2_1, 2_1", true, true, false, false, true, "",
+					41.5, 23.7, -7, 1.67, -1, -1, 0.99, 1, "07-05-2020 18:47:52", 0);
 			try {
 				gasStationService.saveGasStation(GasStationConverter.GasStationConvertToGasStationDto(gs2_1));
 				fail("PriceException expected, dieselPrice is negative");
 			} catch (PriceException | GPSDataException e) {
-				if(! (e instanceof PriceException)) {
+				if (!(e instanceof PriceException)) {
 					fail("Wrong exception type");
 				}
 			}
 		}
-		
+
 		@Test
 		public void negativeSuper_PriceExceptionThrown() {
-			GasStation gs2_1 = new GasStation("Gas station 2_1", "Address 2_1, 2_1", true, true, false, false, true, "", 41.5, 23.7, 2, -1.67, -1, -1, 0.99, 1, "07-05-2020 18:47:52", 0);
+			GasStation gs2_1 = new GasStation("Gas station 2_1", "Address 2_1, 2_1", true, true, false, false, true, "",
+					41.5, 23.7, 2, -1.67, -1, -1, 0.99, 1, "07-05-2020 18:47:52", 0);
 			try {
 				gasStationService.saveGasStation(GasStationConverter.GasStationConvertToGasStationDto(gs2_1));
 				fail("PriceException expected, superPrice is negative");
 			} catch (PriceException | GPSDataException e) {
-				if(! (e instanceof PriceException)) {
+				if (!(e instanceof PriceException)) {
 					fail("Wrong exception type");
 				}
 			}
 		}
-		
+
 		@Test
 		public void negativeSuperPlusPrice_PriceExceptionThrown() {
-			GasStation gs2_1 = new GasStation("Gas station 2_1", "Address 2_1, 2_1", true, false, false, false, true, "", 41.5, 23.7, 1.2, 1.67, -5, -1, 0.99, 1, "07-05-2020 18:47:52", 0);
+			GasStation gs2_1 = new GasStation("Gas station 2_1", "Address 2_1, 2_1", true, false, false, false, true,
+					"", 41.5, 23.7, 1.2, 1.67, -5, -1, 0.99, 1, "07-05-2020 18:47:52", 0);
 			try {
 				gasStationService.saveGasStation(GasStationConverter.GasStationConvertToGasStationDto(gs2_1));
 				fail("PriceException expected, superPlusPrice is negative");
 			} catch (PriceException | GPSDataException e) {
-				if(! (e instanceof PriceException)) {
+				if (!(e instanceof PriceException)) {
 					fail("Wrong exception type");
 				}
 			}
 		}
-		
+
 		@Test
 		public void negativeGasPrice_PriceExceptionThrown() {
-			GasStation gs2_1 = new GasStation("Gas station 2_1", "Address 2_1, 2_1", true, false, false, false, true, "", 41.5, 23.7, 1.2, 1.67, 5, -21, 0.99, 1, "07-05-2020 18:47:52", 0);
+			GasStation gs2_1 = new GasStation("Gas station 2_1", "Address 2_1, 2_1", true, false, false, false, true,
+					"", 41.5, 23.7, 1.2, 1.67, 5, -21, 0.99, 1, "07-05-2020 18:47:52", 0);
 			try {
 				gasStationService.saveGasStation(GasStationConverter.GasStationConvertToGasStationDto(gs2_1));
 				fail("PriceException expected, superPlusPrice is negative");
 			} catch (PriceException | GPSDataException e) {
-				if(! (e instanceof PriceException)) {
+				if (!(e instanceof PriceException)) {
 					fail("Wrong exception type");
 				}
 			}
 		}
-		
+
 		@Test
 		public void negativeMethanePrice_PriceExceptionThrown() {
-			GasStation gs2_1 = new GasStation("Gas station 2_1", "Address 2_1, 2_1", true, false, false, false, true, "", 41.5, 23.7, 1.2, 1.67, 2, -1, -0.99, 1, "07-05-2020 18:47:52", 0);
+			GasStation gs2_1 = new GasStation("Gas station 2_1", "Address 2_1, 2_1", true, false, false, false, true,
+					"", 41.5, 23.7, 1.2, 1.67, 2, -1, -0.99, 1, "07-05-2020 18:47:52", 0);
 			try {
 				gasStationService.saveGasStation(GasStationConverter.GasStationConvertToGasStationDto(gs2_1));
 				fail("PriceException expected, methanePrice is negative");
 			} catch (PriceException | GPSDataException e) {
-				if(! (e instanceof PriceException)) {
+				if (!(e instanceof PriceException)) {
 					fail("Wrong exception type");
 				}
 			}
 		}
-		
+
 		@Test
 		public void invalidLatitude_GPSDataExceptionThrown() {
-			GasStation gs2_1 = new GasStation("Gas station 2_1", "Address 2_1, 2_1", true, false, false, false, true, "", 180 , 23.7, 1.2, -1, -1, -1, 0.99, 1, "07-05-2020 18:47:52", 0);
-			GasStation gs2_2 = new GasStation("Gas station 2_1", "Address 2_1, 2_1", true, false, false, false, true, "", -180.1, 23.7, 1.2, -1, -1, -1, 0.99, 1, "07-05-2020 18:47:52", 0);
-			
+			GasStation gs2_1 = new GasStation("Gas station 2_1", "Address 2_1, 2_1", true, false, false, false, true,
+					"", 180, 23.7, 1.2, -1, -1, -1, 0.99, 1, "07-05-2020 18:47:52", 0);
+			GasStation gs2_2 = new GasStation("Gas station 2_1", "Address 2_1, 2_1", true, false, false, false, true,
+					"", -180.1, 23.7, 1.2, -1, -1, -1, 0.99, 1, "07-05-2020 18:47:52", 0);
+
 			try {
 				gasStationService.saveGasStation(GasStationConverter.GasStationConvertToGasStationDto(gs2_1));
 				fail("GPSDataException expected, latitude >= 180");
 			} catch (PriceException | GPSDataException e) {
-				if(! (e instanceof GPSDataException)) {
+				if (!(e instanceof GPSDataException)) {
 					fail("Wrong exception type");
 				}
 			}
-			
+
 			try {
 				gasStationService.saveGasStation(GasStationConverter.GasStationConvertToGasStationDto(gs2_2));
 				fail("GPSDataException expected, latitude < -180");
 			} catch (PriceException | GPSDataException e) {
-				if(! (e instanceof GPSDataException)) {
+				if (!(e instanceof GPSDataException)) {
 					fail("Wrong exception type");
 				}
 			}
 		}
-		
+
 		@Test
 		public void invalidLongitude_GPSDataExceptionThrown() {
-			GasStation gs2_1 = new GasStation("Gas station 2_1", "Address 2_1, 2_1", true, false, false, false, true, "", 12 , 180, 1.2, -1, -1, -1, 0.99, 1, "07-05-2020 18:47:52", 0);
-			GasStation gs2_2 = new GasStation("Gas station 2_1", "Address 2_1, 2_1", true, false, false, false, true, "", -33.1, -180.1, 1.2, -1, -1, -1, 0.99, 1, "07-05-2020 18:47:52", 0);
-			
+			GasStation gs2_1 = new GasStation("Gas station 2_1", "Address 2_1, 2_1", true, false, false, false, true,
+					"", 12, 180, 1.2, -1, -1, -1, 0.99, 1, "07-05-2020 18:47:52", 0);
+			GasStation gs2_2 = new GasStation("Gas station 2_1", "Address 2_1, 2_1", true, false, false, false, true,
+					"", -33.1, -180.1, 1.2, -1, -1, -1, 0.99, 1, "07-05-2020 18:47:52", 0);
+
 			try {
 				gasStationService.saveGasStation(GasStationConverter.GasStationConvertToGasStationDto(gs2_1));
 				fail("GPSDataException expected, longitude >= 180");
 			} catch (PriceException | GPSDataException e) {
-				if(! (e instanceof GPSDataException)) {
+				if (!(e instanceof GPSDataException)) {
 					fail("Wrong exception type");
 				}
 			}
-			
+
 			try {
 				gasStationService.saveGasStation(GasStationConverter.GasStationConvertToGasStationDto(gs2_2));
 				fail("GPSDataException expected, longitude < -180");
 			} catch (PriceException | GPSDataException e) {
-				if(! (e instanceof GPSDataException)) {
+				if (!(e instanceof GPSDataException)) {
 					fail("Wrong exception type");
 				}
 			}
 		}
 	}
-	
+
 	@Nested
 	@DisplayName("Test for getAllGasStations")
-	public class GetAllGasStations{
+	public class GetAllGasStations {
 		@Test
 		public void _returnEmptyList() {
-			
+
 		}
+
 		@Test
 		public void _returnGasStationDtoList() {
-			
+
 		}
 	}
-	
+
 	@Nested
 	@DisplayName("Test for deleteGasStation")
-	public class DeleteGasStation{
-		
+	public class DeleteGasStation {
+
 		@BeforeEach
 		void setUp() {
-			//*** INSERIRE g0, g1, g2 ***
+			// *** INSERIRE g0, g1, g2 ***
 		}
-		
+
 		@AfterEach
 		void tearDown() {
-			//*** ELIMINARE g0, g1, g2 ***
+			// *** ELIMINARE g0, g1, g2 ***
 		}
-		
+
 		@Test
-		public void existingId_returnTrue()  {
+		public void existingId_returnTrue() {
 			try {
 				boolean result = gasStationService.deleteGasStation(1);
 				assertTrue("Deleting an existing gas station returned false", result);
 			} catch (InvalidGasStationException e) {
 				fail("InvalidGasStationException unexpected");
 			}
-			
+
 			try {
 				GasStationDto gasStationDto = gasStationService.getGasStationById(1);
 				assertNull("Gas station deleted has been retrieved, should be null", gasStationDto);
@@ -328,7 +331,7 @@ public class GasStationServiceTest {
 				fail("InvalidGasStationException unexpected when trying to retrieve gas station deleted (should return null)");
 			}
 		}
-		
+
 		@Test
 		public void nonExistingId_returnFalse() {
 			try {
@@ -338,136 +341,211 @@ public class GasStationServiceTest {
 				fail("InvalidGasStationException unexpected");
 			}
 		}
-		
+
 		@Test
 		public void negativeId_InvalidGasStationExceptionThrown() {
 			try {
 				boolean result = gasStationService.deleteGasStation(-10);
 				fail("Negative Id should throw an InvalidGasStationException");
 			} catch (InvalidGasStationException e) {
-				
+
 			}
 		}
 	}
-	
+
 	@Nested
 	@DisplayName("Test for getGasStationsByGasolineType")
-	public class GetGasStationsByGasolineType{
-		@Test
-		public void diesel_returnListGasStationDtoSortedByDistance() {
-			
+	public class GetGasStationsByGasolineType {
+		GasStation[] gasStations;
+		List<GasStation> allList;
+		List<GasStation> gasStationFilteredByGasolineType;
+		List<GasStationDto> expectedList;
+		int N = 10;
+
+		@BeforeEach
+		void setUp() {
+			gasStations = new GasStation[N];
+			Random r = new Random();
+
+			for (int i = 1; i < N + 1; i++) {
+				gasStations[i - 1] = new GasStation("gs" + i, "address " + i, i % 1 == 0, i % 2 == 0, i % 3 == 0,
+						i % 4 == 0, i % 5 == 0, "", i, i, i % 1 == 0 ? r.nextDouble() + 1 : -1,
+						i % 2 == 0 ? r.nextDouble() + 1 : -1, i % 3 == 0 ? r.nextDouble() + 1 : -1,
+						i % 4 == 0 ? r.nextDouble() + 1 : -1, i % 5 == 0 ? r.nextDouble() + 1 : -1, 0, null, 0);
+
+				gasStations[i - 1].setGasStationId(i);
+			}
+
+			allList = Arrays.asList(gasStations);
 		}
+
 		@Test
-		public void gasoline_returnListGasStationDtoSortedByDistance() {
-			
+		public void diesel_returnListGasStationDtoSortedByPrice() {
+			List<GasStationDto> returnList = null;
+			gasStationFilteredByGasolineType = new ArrayList<GasStation>();
+			expectedList = new ArrayList<GasStationDto>();
+
+			for (int i = 1; i < N + 1; i++) {
+				if (i % 1 == 0) {
+					gasStationFilteredByGasolineType.add(gasStations[i - 1]);
+					expectedList.add(GasStationConverter.GasStationConvertToGasStationDto(gasStations[i - 1]));
+				}
+			}
+
+			gasStationFilteredByGasolineType.sort((a, b) -> Double.compare(a.getDieselPrice(), b.getDieselPrice()));
+			expectedList.sort((a, b) -> Double.compare(a.getDieselPrice(), b.getDieselPrice()));
+
+			when(gasStationRepository.findByHasDieselTrueOrderByDieselPriceDesc())
+					.thenReturn(gasStationFilteredByGasolineType);
+
+			try {
+				returnList = gasStationService.getGasStationsByGasolineType("Diesel");
+
+			} catch (InvalidGasTypeException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				fail("No exception expected");
+			}
+
+			assertTrue("Wrong number of gasStation returned", expectedList.size() == returnList.size());
+			for (int i = 0; i < expectedList.size(); i++) {
+				if (!compareGasStationDto(expectedList.get(i), returnList.get(i)))
+					fail("Returned wrong list");
+			}
+
 		}
+
 		@Test
-		public void premiumGasoline_returnListGasStationDtoSortedByDistance() {
-			
+		public void gasoline_returnListGasStationDtoSortedByPrice() {
+
 		}
+
 		@Test
-		public void LPG_returnListGasStationDtoSortedByDistance() {
-			
+		public void premiumGasoline_returnListGasStationDtoSortedByPrice() {
+
 		}
+
 		@Test
-		public void methane_returnListGasStationDtoSortedByDistance() {
-			
+		public void LPG_returnListGasStationDtoSortedByPrice() {
+
 		}
+
+		@Test
+		public void methane_returnListGasStationDtoSortedByPrice() {
+
+		}
+
 		@Test
 		public void gasoline_returnEmptyList() {
-			
+
 		}
+
 		@Test
 		public void emptyString_InvalidGasTypeExceptionThrown() {
-			
+
 		}
+
 		@Test
 		public void null_InvalidGasTypeExceptionThrown() {
-			
+
 		}
+
 		@Test
 		public void randomInvalidString_InvalidGasTypeExceptionThrown() {
-			
+
 		}
 	}
-	
-	
+
 	@Nested
 	@DisplayName("Test for getGasStationsByProximity")
-	public class GetGasStationsByProximity{
-		
-		
+	public class GetGasStationsByProximity {
+
 		@Test
 		public void invalidLatValidLon_GPSDataExceptionThrown() {
-			try{
+			try {
 				gasStationService.getGasStationsByProximity(-91, 50);
 				fail("GPSDataException should have been thrown (lat = -91)");
-			}catch(GPSDataException e){}
-			try{
+			} catch (GPSDataException e) {
+			}
+			try {
 				gasStationService.getGasStationsByProximity(91, 50);
 				fail("GPSDataException should have been thrown (lat = 91)");
-			}catch(GPSDataException e){}
+			} catch (GPSDataException e) {
+			}
 		}
-		
+
 		@Test
 		public void validLatInvalidLon_GPSDataExceptionThrown() {
-			try{
+			try {
 				gasStationService.getGasStationsByProximity(0, -181);
 				fail("GPSDataException should have been thrown (lon = -181)");
-			}catch(GPSDataException e){}
-			try{
+			} catch (GPSDataException e) {
+			}
+			try {
 				gasStationService.getGasStationsByProximity(0, 181);
 				fail("GPSDataException should have been thrown (lat = 181)");
-			}catch(GPSDataException e){}
+			} catch (GPSDataException e) {
+			}
 		}
-		
+
 		@Test
 		public void invalidLatInvalidLon_GPSDataExceptionThrown() {
-			try{
+			try {
 				gasStationService.getGasStationsByProximity(-91, -181);
 				fail("GPSDataException should have been thrown (lat = -91, lon = -181)");
-			}catch(GPSDataException e){}
-			try{
+			} catch (GPSDataException e) {
+			}
+			try {
 				gasStationService.getGasStationsByProximity(91, 181);
 				fail("GPSDataException should have been thrown (lat = 91, lon = 181)");
-			}catch(GPSDataException e){}
-			try{
+			} catch (GPSDataException e) {
+			}
+			try {
 				gasStationService.getGasStationsByProximity(-91, 181);
 				fail("GPSDataException should have been thrown (lat = 91, lon = -181)");
-			}catch(GPSDataException e){}
-			try{
+			} catch (GPSDataException e) {
+			}
+			try {
 				gasStationService.getGasStationsByProximity(91, -181);
 				fail("GPSDataException should have been thrown (lat = 91, lon = -181)");
-			}catch(GPSDataException e){}
+			} catch (GPSDataException e) {
+			}
 		}
-		
+
 		@Test
 		public void validLatValidLon_returnListGasStationDtoSortedByDistance() {
-			//***** SET UP *****
+			// ***** SET UP *****
 			GasStation gs1, gs2, gs3, gs4, gs5, gs6;
 			List<GasStation> allList;
 			List<GasStationDto> expectedList;
-			gs1 = new GasStation("Gas station a", "Address a", false, false, false, true, true, "", 0.001, 0.001, 1, -1, -1, 1.2, 0.96, 3, new Date().toString(), 0);
+			gs1 = new GasStation("Gas station a", "Address a", false, false, false, true, true, "", 0.001, 0.001, 1, -1,
+					-1, 1.2, 0.96, 3, new Date().toString(), 0);
 			gs1.setGasStationId(1);
 			gs1.setUser(new User("AAA", "AAA", "aaa@ezgas.com", 2));
-			gs2 = new GasStation("Gas station b", "Address b", false, false, false, true, true, "", 0.002, 0.002, 1, -1, -1, 1.2, 0.96, 3, null, 0);
+			gs2 = new GasStation("Gas station b", "Address b", false, false, false, true, true, "", 0.002, 0.002, 1, -1,
+					-1, 1.2, 0.96, 3, null, 0);
 			gs2.setGasStationId(2);
-			gs3 = new GasStation("Gas station c", "Address c", false, false, false, true, true, "", 0.003, 0.003, 1, -1, -1, 1.2, 0.96, 3, new Date().toString(), 0);
+			gs3 = new GasStation("Gas station c", "Address c", false, false, false, true, true, "", 0.003, 0.003, 1, -1,
+					-1, 1.2, 0.96, 3, new Date().toString(), 0);
 			gs3.setGasStationId(3);
 			gs3.setUser(new User("CCC", "CCC", "ccc@ezgas.com", -1));
-			gs4 = new GasStation("Gas station d", "Address d", false, false, false, true, true, "", 0.004, 0.004, 1, -1, -1, 1.2, 0.96, 3, null, 0);
+			gs4 = new GasStation("Gas station d", "Address d", false, false, false, true, true, "", 0.004, 0.004, 1, -1,
+					-1, 1.2, 0.96, 3, null, 0);
 			gs4.setGasStationId(4);
-			gs5 = new GasStation("Gas station e", "Address e", false, false, false, true, true, "", 0.01, 0.01, 1, -1, -1, 1.2, 0.96, 3, null, 0);
+			gs5 = new GasStation("Gas station e", "Address e", false, false, false, true, true, "", 0.01, 0.01, 1, -1,
+					-1, 1.2, 0.96, 3, null, 0);
 			gs5.setGasStationId(5);
-			gs6 = new GasStation("Gas station f", "Address f", false, false, false, true, true, "", 1, 0, 1, -1, -1, 1.2, 0.96, 3, null, 0);
+			gs6 = new GasStation("Gas station f", "Address f", false, false, false, true, true, "", 1, 0, 1, -1, -1,
+					1.2, 0.96, 3, null, 0);
 			gs6.setGasStationId(6);
-			
+
 			allList = Arrays.asList(gs4, gs3, gs2, gs1, gs5, gs6);
-			expectedList = Arrays.asList(gs1, gs2, gs3, gs4).stream().map(gs -> GasStationConverter.GasStationConvertToGasStationDto(gs)).collect(Collectors.toList());
-			
+			expectedList = Arrays.asList(gs1, gs2, gs3, gs4).stream()
+					.map(gs -> GasStationConverter.GasStationConvertToGasStationDto(gs)).collect(Collectors.toList());
+
 			when(gasStationRepository.findAll()).thenReturn(allList);
-			
-			//***** TEST *****
+
+			// ***** TEST *****
 			List<GasStationDto> returnList = new ArrayList<GasStationDto>();
 			try {
 				returnList = gasStationService.getGasStationsByProximity(0, 0);
@@ -475,20 +553,20 @@ public class GasStationServiceTest {
 				e.printStackTrace();
 				fail("No exception should be thrown");
 			}
-			
+
 			assertTrue("Wrong number of gasStation returned", expectedList.size() == returnList.size());
 			for (int i = 0; i < expectedList.size(); i++) {
 				if (!compareGasStationDto(expectedList.get(i), returnList.get(i)))
 					fail("Returned wrong list");
 			}
 		}
-		
+
 		@Test
 		public void validLatValidLon_returnListEmptyList() {
-			//***** SET UP *****
+			// ***** SET UP *****
 			when(gasStationRepository.findAll()).thenReturn(new ArrayList<GasStation>());
-			
-			//***** TEST *****
+
+			// ***** TEST *****
 			List<GasStationDto> returnList = new ArrayList<GasStationDto>();
 			try {
 				returnList = gasStationService.getGasStationsByProximity(0, 0);
@@ -496,34 +574,159 @@ public class GasStationServiceTest {
 				e.printStackTrace();
 				fail("No exception should be thrown");
 			}
-			
+
 			assertTrue("Wrong number of gasStation returned", returnList.size() == 0);
 		}
-		
+
 	}
-	
-	@Nested
-	@DisplayName("Test for getGasStationsWithCoordinates")
-	public class GetGasStationsWithCoordinates{
-		//***** DA COMPLETARE *****
-	}
-	
+
 	@Nested
 	@DisplayName("Test for getGasStationsWithoutCoordinates")
-	public class GetGasStationsWithoutCoordinates{
-		//***** DA COMPLETARE *****
+	public class GetGasStationsWithoutCoordinates {
+		GasStation[] gasStations;
+		List<GasStation> allList;
+		List<GasStation> gasStationFilteredByGasolineType;
+		List<GasStationDto> expectedList;
+
+		int carA = 3, carB = 5;
+		int diesel = 1, sup = 2, supPlus = 3, gas = 4, methane = 5;
+		int N = 10;
+
+		@BeforeEach
+		void setUp() {
+
+			gasStations = new GasStation[N];
+			Random r = new Random();
+
+			for (int i = 1; i < N + 1; i++) {
+				gasStations[i - 1] = new GasStation("gs" + i, "address " + i, i % diesel == 0, i % sup == 0, i % supPlus == 0,
+						i % gas == 0, i % methane == 0, "", i, i, i % 1 == 0 ? r.nextDouble() + 1 : -1,
+						i % 2 == 0 ? r.nextDouble() + 1 : -1, i % 3 == 0 ? r.nextDouble() + 1 : -1,
+						i % 4 == 0 ? r.nextDouble() + 1 : -1, i % 5 == 0 ? r.nextDouble() + 1 : -1, 0, null, 0);
+				if (i % carA == 0)
+					gasStations[i - 1].setCarSharing("CarA");
+				if (i % carB == 0)
+					gasStations[i - 1].setCarSharing("CarB");
+				gasStations[i - 1].setGasStationId(i);
+			}
+
+			allList = Arrays.asList(gasStations);
+		}
+
+		@Test
+		public void dieselCarcompanyA_returnListGasStationDtoSortedByPrice() {
+			List<GasStationDto> returnList = null;
+			gasStationFilteredByGasolineType = new ArrayList<GasStation>();
+			expectedList = new ArrayList<GasStationDto>();
+
+			for (int i = 1; i < N + 1; i++) {
+				if (i % diesel == 0) {
+					gasStationFilteredByGasolineType.add(gasStations[i - 1]);
+					if (i % carA == 0)
+						expectedList.add(GasStationConverter.GasStationConvertToGasStationDto(gasStations[i - 1]));
+				}
+			}
+
+			gasStationFilteredByGasolineType.sort((a, b) -> Double.compare(a.getDieselPrice(), b.getDieselPrice()));
+			expectedList.sort((a, b) -> Double.compare(a.getDieselPrice(), b.getDieselPrice()));
+
+			when(gasStationRepository.findByHasDieselTrueOrderByDieselPriceDesc())
+					.thenReturn(gasStationFilteredByGasolineType);
+			
+			try {
+				returnList = gasStationService.getGasStationsWithoutCoordinates("Diesel", "CarA");
+
+			} catch (InvalidGasTypeException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				fail("No exception expected");
+			}
+
+			assertTrue("Wrong number of gasStation returned", expectedList.size() == returnList.size());
+			for (int i = 0; i < expectedList.size(); i++) {
+				if (!compareGasStationDto(expectedList.get(i), returnList.get(i)))
+					fail("Returned wrong list");
+			}
+		}
+
+		@Test
+		public void superCarcompanyB_returnListGasStationDtoSortedByPrice() {
+			List<GasStationDto> returnList = null;
+			gasStationFilteredByGasolineType = new ArrayList<GasStation>();
+			expectedList = new ArrayList<GasStationDto>();
+
+			for (int i = 1; i < N + 1; i++) {
+				if (i % sup == 0) {
+					gasStationFilteredByGasolineType.add(gasStations[i - 1]);
+					if (i % carB == 0)
+						expectedList.add(GasStationConverter.GasStationConvertToGasStationDto(gasStations[i - 1]));
+				}
+			}
+
+			gasStationFilteredByGasolineType.sort((a, b) -> Double.compare(a.getDieselPrice(), b.getDieselPrice()));
+			expectedList.sort((a, b) -> Double.compare(a.getDieselPrice(), b.getDieselPrice()));
+
+			when(gasStationRepository.findByHasSuperTrueOrderBySuperPriceDesc())
+					.thenReturn(gasStationFilteredByGasolineType);
+			
+			try {
+				returnList = gasStationService.getGasStationsWithoutCoordinates("Super", "CarB");
+
+			} catch (InvalidGasTypeException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				fail("No exception expected");
+			}
+
+			assertTrue("Wrong number of gasStation returned", expectedList.size() == returnList.size());
+			for (int i = 0; i < expectedList.size(); i++) {
+				if (!compareGasStationDto(expectedList.get(i), returnList.get(i)))
+					fail("Returned wrong list");
+			}
+		}
+
+		@Test
+		public void dieselNonExistingCarCompany_returnEmptyList() {
+			List<GasStationDto> returnList = null;
+			gasStationFilteredByGasolineType = new ArrayList<GasStation>();
+
+			for (int i = 1; i < N + 1; i++) {
+				if (i % diesel == 0) 
+					gasStationFilteredByGasolineType.add(gasStations[i - 1]);
+			}
+
+			gasStationFilteredByGasolineType.sort((a, b) -> Double.compare(a.getDieselPrice(), b.getDieselPrice()));
+
+			when(gasStationRepository.findByHasDieselTrueOrderByDieselPriceDesc())
+					.thenReturn(gasStationFilteredByGasolineType);
+			
+			try {
+				returnList = gasStationService.getGasStationsWithoutCoordinates("Super", "CarC");
+			} catch (InvalidGasTypeException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				fail("No exception expected");
+			}
+			assertTrue("Wrong number of gasStation returned", returnList.isEmpty());
+		}
 	}
-	
+
+	@Nested
+	@DisplayName("Test for getGasStationsWithCoordinates")
+	public class GetGasStationsWithCoordinates {
+		// ***** DA COMPLETARE *****
+	}
+
 	@Nested
 	@DisplayName("Test for setReport")
-	public class SetReport{
-		//***** DA COMPLETARE *****
+	public class SetReport {
+		// ***** DA COMPLETARE *****
 	}
-	
+
 	@Nested
 	@DisplayName("Test for getGasStationByCarSharing")
-	public class GetGasStationByCarSharing{
-		//***** DA COMPLETARE *****
+	public class GetGasStationByCarSharing {
+		// ***** DA COMPLETARE *****
 	}
-	
+
 }
