@@ -4,9 +4,11 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -100,7 +102,6 @@ public class GasStationServiceTest {
 	@Nested
 	@DisplayName("Test for getGasStationById")
 	public class GetGasStationById{
-		User u1 = new User();
 		GasStation gs1 = new GasStation();
 		
 		@BeforeEach
@@ -115,15 +116,9 @@ public class GasStationServiceTest {
 			when(gasStationRepository.findByGasStationId(-1)).thenReturn(gsEmpty);
 			
 		}
-		@AfterEach
-		void tearDown() throws Exception {
-			
-		}	
 		
 		@Test
 		public void existingId_returnCorrespondingGasStationDto()  {
-			
-			
 			try {
 				GasStationDto gasStationDto = gasStationService.getGasStationById(5);
 				assertTrue("Gas station retrieved is not the same that has been inserted", compareGasStationDto(gasStationDto, GasStationConverter.GasStationConvertToGasStationDto(gs1)));
@@ -400,22 +395,111 @@ public class GasStationServiceTest {
 	@Nested
 	@DisplayName("Test for getGasStationsByProximity")
 	public class GetGasStationsByProximity{
+		
+		
 		@Test
 		public void invalidLatValidLon_GPSDataExceptionThrown() {
-			
+			try{
+				gasStationService.getGasStationsByProximity(-91, 50);
+				fail("GPSDataException should have been thrown (lat = -91)");
+			}catch(GPSDataException e){}
+			try{
+				gasStationService.getGasStationsByProximity(91, 50);
+				fail("GPSDataException should have been thrown (lat = 91)");
+			}catch(GPSDataException e){}
 		}
+		
 		@Test
 		public void validLatInvalidLon_GPSDataExceptionThrown() {
-			
+			try{
+				gasStationService.getGasStationsByProximity(0, -181);
+				fail("GPSDataException should have been thrown (lon = -181)");
+			}catch(GPSDataException e){}
+			try{
+				gasStationService.getGasStationsByProximity(0, 181);
+				fail("GPSDataException should have been thrown (lat = 181)");
+			}catch(GPSDataException e){}
 		}
+		
 		@Test
 		public void invalidLatInvalidLon_GPSDataExceptionThrown() {
-			
+			try{
+				gasStationService.getGasStationsByProximity(-91, -181);
+				fail("GPSDataException should have been thrown (lat = -91, lon = -181)");
+			}catch(GPSDataException e){}
+			try{
+				gasStationService.getGasStationsByProximity(91, 181);
+				fail("GPSDataException should have been thrown (lat = 91, lon = 181)");
+			}catch(GPSDataException e){}
+			try{
+				gasStationService.getGasStationsByProximity(-91, 181);
+				fail("GPSDataException should have been thrown (lat = 91, lon = -181)");
+			}catch(GPSDataException e){}
+			try{
+				gasStationService.getGasStationsByProximity(91, -181);
+				fail("GPSDataException should have been thrown (lat = 91, lon = -181)");
+			}catch(GPSDataException e){}
 		}
+		
 		@Test
 		public void validLatValidLon_returnListGasStationDtoSortedByDistance() {
+			//***** SET UP *****
+			GasStation gs1, gs2, gs3, gs4, gs5, gs6;
+			List<GasStation> allList;
+			List<GasStationDto> expectedList;
+			gs1 = new GasStation("Gas station a", "Address a", false, false, false, true, true, "", 0.001, 0.001, 1, -1, -1, 1.2, 0.96, 3, new Date().toString(), 0);
+			gs1.setGasStationId(1);
+			gs1.setUser(new User("AAA", "AAA", "aaa@ezgas.com", 2));
+			gs2 = new GasStation("Gas station b", "Address b", false, false, false, true, true, "", 0.002, 0.002, 1, -1, -1, 1.2, 0.96, 3, null, 0);
+			gs2.setGasStationId(2);
+			gs3 = new GasStation("Gas station c", "Address c", false, false, false, true, true, "", 0.003, 0.003, 1, -1, -1, 1.2, 0.96, 3, new Date().toString(), 0);
+			gs3.setGasStationId(3);
+			gs3.setUser(new User("CCC", "CCC", "ccc@ezgas.com", -1));
+			gs4 = new GasStation("Gas station d", "Address d", false, false, false, true, true, "", 0.004, 0.004, 1, -1, -1, 1.2, 0.96, 3, null, 0);
+			gs4.setGasStationId(4);
+			gs5 = new GasStation("Gas station e", "Address e", false, false, false, true, true, "", 0.01, 0.01, 1, -1, -1, 1.2, 0.96, 3, null, 0);
+			gs5.setGasStationId(5);
+			gs6 = new GasStation("Gas station f", "Address f", false, false, false, true, true, "", 1, 0, 1, -1, -1, 1.2, 0.96, 3, null, 0);
+			gs6.setGasStationId(6);
 			
+			allList = Arrays.asList(gs4, gs3, gs2, gs1, gs5, gs6);
+			expectedList = Arrays.asList(gs1, gs2, gs3, gs4).stream().map(gs -> GasStationConverter.GasStationConvertToGasStationDto(gs)).collect(Collectors.toList());
+			
+			when(gasStationRepository.findAll()).thenReturn(allList);
+			
+			//***** TEST *****
+			List<GasStationDto> returnList = new ArrayList<GasStationDto>();
+			try {
+				returnList = gasStationService.getGasStationsByProximity(0, 0);
+			} catch (GPSDataException e) {
+				e.printStackTrace();
+				fail("No exception should be thrown");
+			}
+			
+			assertTrue("Wrong number of gasStation returned", expectedList.size() == returnList.size());
+			for (int i = 0; i < expectedList.size(); i++) {
+				if (!compareGasStationDto(expectedList.get(i), returnList.get(i)))
+					fail("Returned wrong list");
+			}
 		}
+		
+		@Test
+		public void validLatValidLon_returnListEmptyList() {
+			//***** SET UP *****
+			when(gasStationRepository.findAll()).thenReturn(new ArrayList<GasStation>());
+			
+			//***** TEST *****
+			List<GasStationDto> returnList = new ArrayList<GasStationDto>();
+			try {
+				returnList = gasStationService.getGasStationsByProximity(0, 0);
+			} catch (GPSDataException e) {
+				e.printStackTrace();
+				fail("No exception should be thrown");
+			}
+			
+			assertTrue("Wrong number of gasStation returned", returnList.size() == 0);
+		}
+		
 	}
 	
 	@Nested

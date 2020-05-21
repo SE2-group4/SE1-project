@@ -46,7 +46,7 @@ public class GasStationServiceimpl implements GasStationService {
 			gasStation.setReportDependability(
 					Utility.trustCalculation(gasStation.getUser().getReputation(), gasStation.getReportTimestamp()));
 		}
-		
+
 		return (gasStation != null) ? GasStationConverter.GasStationConvertToGasStationDto(gasStation) : null;
 	}
 
@@ -193,6 +193,9 @@ public class GasStationServiceimpl implements GasStationService {
 
 		return gasStationList.stream()
 				.filter(gs -> Utility.calculateDistanceInMeters(gs.getLat(), gs.getLon(), lat, lon) < 1000)
+				.sorted((gs1, gs2) -> Double.compare(
+						Utility.calculateDistanceInMeters(gs1.getLat(), gs1.getLon(), lat, lon),
+						Utility.calculateDistanceInMeters(gs2.getLat(), gs2.getLon(), lat, lon)))
 				.collect(Collectors.toList());
 	}
 
@@ -216,11 +219,11 @@ public class GasStationServiceimpl implements GasStationService {
 		}
 
 		Optional<GasStation> gasStationOpt = this.gasStationRepository.findByGasStationId(gasStationId);
-		
-		if(!gasStationOpt.isPresent()) {
+
+		if (!gasStationOpt.isPresent()) {
 			throw new InvalidGasStationException("GasStation not present");
 		}
-		
+
 		GasStation gasStation = gasStationOpt.get();
 		User user = userRepository.findByUserId(userId).get(0);
 
@@ -256,6 +259,9 @@ public class GasStationServiceimpl implements GasStationService {
 
 		return this.gasStationRepository.findAll().stream()
 				.filter(gs -> Utility.calculateDistanceInMeters(gs.getLat(), gs.getLon(), lat, lon) < 1000)
+				.sorted((gs1, gs2) -> Double.compare(
+						Utility.calculateDistanceInMeters(gs1.getLat(), gs1.getLon(), lat, lon),
+						Utility.calculateDistanceInMeters(gs2.getLat(), gs2.getLon(), lat, lon)))
 				.map(gs -> GasStationConverter.GasStationConvertToGasStationDto(gs)).collect(Collectors.toList());
 	}
 }
