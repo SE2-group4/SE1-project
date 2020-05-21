@@ -10,31 +10,50 @@ import it.polito.ezgas.entity.User;
 
 public class UserConverterTests {
 	
+	private UserDto userDto;
+	private User user;
+	
 	@Before
 	public void setUp() throws Exception {
-	}
-
-	@Test
-	public void testConversion() {
-		UserDto userDto = new UserDto(1, "Aldo", "buonaquestacadrega", "aldo.baglio@agg.it", -3, true);
-		User user = new User();
+		userDto = new UserDto(1, "Aldo", "buonaquestacadrega", "aldo.baglio@agg.it", -3, true);
+		user = new User();
 		user.setUserId(1);
 		user.setUserName("Aldo");
 		user.setPassword("buonaquestacadrega");
 		user.setEmail("aldo.baglio@agg.it");
 		user.setReputation(-3);
 		user.setAdmin(true);
+	}
+
+	@Test
+	public void testUserConvertToUserDto() {
 		
-		User user2 = UserConverter.userDtoConvertToUser(userDto);
-		assertTrue(userDto.getUserId() == user2.getUserId());
-		
-		UserDto userDto2 = UserConverter.userConvertToUserDto(user);
-		assertTrue(user.getAdmin() == userDto2.getAdmin());
+		UserDto userDto2 = UserConverter.userConvertToUserDto(this.user);
+		assertTrue(this.user.getUserId() == userDto2.getUserId());
+		assertTrue(this.user.getUserName().equals(userDto2.getUserName()));
+		assertTrue(this.user.getPassword().equals(userDto2.getPassword()));
+		assertTrue(this.user.getEmail().equals(userDto2.getEmail()));
+		assertTrue(this.user.getReputation() == userDto2.getReputation());
+		assertTrue(this.user.getAdmin() == userDto2.getAdmin());
+	
 	}
 	
-	@After
+	@Test
+	public void testUserDtoConvertToUser() {
+		
+		User user2 = UserConverter.userDtoConvertToUser(this.userDto);
+		assertTrue(this.userDto.getUserId() == user2.getUserId());
+		assertTrue(this.userDto.getUserName().equals(user2.getUserName()));
+		assertTrue(this.userDto.getPassword().equals(user2.getPassword()));
+		assertTrue(this.userDto.getEmail().equals(user2.getEmail()));
+		assertTrue(this.userDto.getReputation() == user2.getReputation());
+		assertTrue(this.userDto.getAdmin() == user2.getAdmin());
+	
+	}
+	
+	/*@After
 	public void tearDown() throws Exception {
 		
-	}
+	}*/
 
 }
