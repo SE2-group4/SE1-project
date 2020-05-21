@@ -6,6 +6,7 @@ import static org.mockito.Mockito.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -38,16 +39,19 @@ public class GasStationServiceTest {
 
 	@Autowired
 	static GasStationService gasStationService;	
-
-	static User u1;
-	static GasStation gs1;
-	GasStation gs2;
-	List<GasStation> gsList;
-	List<GasStationDto> gsDtoList;
 	
+	static GasStationRepository gasStationRepository;
+	static UserRepository userRepository;
+	
+	List<GasStation> gasStationList;
+	List<GasStationDto> gasStationDtoList;
+	List<User> userList;
+	List<UserDto> userDtoList;
 	
 	
 	boolean compareUserDto(UserDto u1, UserDto u2) {
+		if (u1 == null && u2 == null)
+			return true;
 		return true;
 	}
 	
@@ -76,23 +80,8 @@ public class GasStationServiceTest {
 	
 	@BeforeAll
 	static void theFirstAndOnlyOneTrueSetup() {
-		u1 = new User("Aldo", "aldo", "aldo.baglio@agg.it", 3);
-		u1.setUserId(4);
-		u1.setAdmin(false);
-		List uList = new ArrayList<GasStation>();
-		uList.add(u1);		
-		
-		gs1 = new GasStation("Gas station c", "Address c, 3", false, false, false, true, true, "", 31.5, -1, -1, -1, -1, 1.2, 0.96, 3, new Date().toString(), 0);
-		gs1.setUser(u1);
-		List gsList = new ArrayList<GasStation>();
-		gsList.add(gs1);
-		
-		GasStationRepository gasStationRepository = mock(GasStationRepository.class);
-		UserRepository userRepository = mock(UserRepository.class);
-		when(gasStationRepository.findByGasStationId(any())).thenReturn(gsList);
-		when(userRepository.findByUserId(any())).thenReturn(uList);
-		
-		
+		gasStationRepository = mock(GasStationRepository.class);
+		userRepository = mock(UserRepository.class);
 		gasStationService = new GasStationServiceimpl(gasStationRepository, userRepository);
 	}
 	
@@ -111,27 +100,39 @@ public class GasStationServiceTest {
 	@Nested
 	@DisplayName("Test for getGasStationById")
 	public class GetGasStationById{
+		User u1 = new User();
+		GasStation gs1 = new GasStation();
 		
 		@BeforeEach
 		void setUp() {
-			// SAVE DI gs0, gs1, gs2 
+			gs1 = new GasStation("Gas station c", "Address c, 3", false, false, false, true, true, "", 31.5, -1, -1, -1, -1, 1.2, 0.96, 3, null, 0);
+			gs1.setGasStationId(5);
+			Optional<GasStation> gsOpt = Optional.ofNullable(gs1);
+			Optional<GasStation> gsEmpty = Optional.empty();
+			
+			when(gasStationRepository.findByGasStationId(5)).thenReturn(gsOpt);
+			when(gasStationRepository.findByGasStationId(999)).thenReturn(gsEmpty);
+			when(gasStationRepository.findByGasStationId(-1)).thenReturn(gsEmpty);
+			
 		}
 		@AfterEach
 		void tearDown() throws Exception {
-			//*** DELETE DI gs0, gs1, gs2 
+			
 		}	
 		
 		@Test
 		public void existingId_returnCorrespondingGasStationDto()  {
+			
+			
 			try {
-				GasStationDto gasStationDto = gasStationService.getGasStationById(0);
+				GasStationDto gasStationDto = gasStationService.getGasStationById(5);
 				assertTrue("Gas station retrieved is not the same that has been inserted", compareGasStationDto(gasStationDto, GasStationConverter.GasStationConvertToGasStationDto(gs1)));
 			} catch (InvalidGasStationException e) {
 				e.printStackTrace();
 				fail("InvalidGasStationException unexpected");
 			}
 		}
-		/*
+		
 		@Test
 		public void nonExistingId_returnNull() {
 			try {
@@ -141,17 +142,17 @@ public class GasStationServiceTest {
 				e.printStackTrace();
 				fail("InvalidGasStationException unexpected");
 			}
-		}*/
-		/*
+		}
+		
 		@Test
 		public void negativeId_InvalidGasStationExceptionThrown() {
 			try {
-				gasStationService.getGasStationById(-2);
+				gasStationService.getGasStationById(-1);
 				fail("Negative id should throw an InvalidGasStationException");
 			} catch (InvalidGasStationException e) {
 				
 			}
-		}*/
+		}
 	}
 	
 	@Nested

@@ -3,6 +3,7 @@ package it.polito.ezgas.service.impl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,24 +28,26 @@ public class GasStationServiceimpl implements GasStationService {
 
 	private UserRepository userRepository;
 
-	public GasStationServiceimpl(GasStationRepository gasStationRepository, UserRepository userRepository){
+	public GasStationServiceimpl(GasStationRepository gasStationRepository, UserRepository userRepository) {
 		this.gasStationRepository = gasStationRepository;
 		this.userRepository = userRepository;
 	}
-	
-	
+
 	@Override
 	public GasStationDto getGasStationById(Integer gasStationId) throws InvalidGasStationException {
 		if (gasStationId < 0) {
 			throw new InvalidGasStationException("Invalid (negative) gasStationId");
 		}
-		GasStation gasStation = this.gasStationRepository.findByGasStationId(gasStationId).get(0);
 
-		if (gasStation.getReportTimestamp() != null) {
+		Optional<GasStation> gasStationOpt = this.gasStationRepository.findByGasStationId(gasStationId);
+		GasStation gasStation = gasStationOpt.isPresent() ? gasStationOpt.get() : null;
+
+		if (gasStation != null && gasStation.getReportTimestamp() != null) {
 			gasStation.setReportDependability(
 					Utility.trustCalculation(gasStation.getUser().getReputation(), gasStation.getReportTimestamp()));
 		}
-		return GasStationConverter.GasStationConvertToGasStationDto(gasStation);
+		
+		return (gasStation != null) ? GasStationConverter.GasStationConvertToGasStationDto(gasStation) : null;
 	}
 
 	@Override
@@ -123,7 +126,7 @@ public class GasStationServiceimpl implements GasStationService {
 			throw new InvalidGasStationException("Invalid (negative) gasStationId");
 		}
 		this.gasStationRepository.delete(gasStationId);
-		if (this.gasStationRepository.findByGasStationId(gasStationId).isEmpty()) {
+		if (!this.gasStationRepository.findByGasStationId(gasStationId).isPresent()) {
 			return true;
 		}
 		return false;
@@ -212,7 +215,13 @@ public class GasStationServiceimpl implements GasStationService {
 			throw new InvalidGasStationException("Invalid (negative) gasStationId");
 		}
 
-		GasStation gasStation = gasStationRepository.findByGasStationId(gasStationId).get(0);
+		Optional<GasStation> gasStationOpt = this.gasStationRepository.findByGasStationId(gasStationId);
+		
+		if(!gasStationOpt.isPresent()) {
+			throw new InvalidGasStationException("GasStation not present");
+		}
+		
+		GasStation gasStation = gasStationOpt.get();
 		User user = userRepository.findByUserId(userId).get(0);
 
 		if ((gasStation.getMethanePrice() != -1 && gasStation.getMethanePrice() < 0)
