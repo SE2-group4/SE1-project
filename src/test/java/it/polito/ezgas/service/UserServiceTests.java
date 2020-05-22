@@ -183,64 +183,6 @@ public class UserServiceTests {
 	}
 	
 	
-	
-	@Test
-	public void testDelete() {
-		User user = this.myList.remove(2);
-		
-		try {
-			service.deleteUser(user.getUserId());			
-		} catch (InvalidUserException e) {
-			fail();
-		}
-		List<UserDto> list = service.getAllUsers();
-		
-		assertEquals(list.size(), this.getExpectedSize());
-	}
-	
-	public void testDecreaseReputation() {
-		int id = this.myList.get(1).getUserId();
-		UserDto user = null;
-		int previousReputation;
-		
-		try {
-			user = service.getUserById(id);
-		} catch (InvalidUserException e1) {
-			fail();
-		}
-		
-		previousReputation = user.getReputation();
-		
-		try {
-			service.decreaseUserReputation(id);
-		} catch (InvalidUserException e) {
-			fail();
-		}
-		assertTrue(previousReputation >= user.getReputation(), "User reputation should be less then before!");
-	}
-	
-	@Test
-	public void testIncreaseReputation() {
-		int id = this.myList.get(1).getUserId();
-		UserDto user = null;
-		int previousReputation;
-		
-		try {
-			user = service.getUserById(id);
-		} catch (InvalidUserException e1) {
-			fail();
-		}
-
-		assertTrue(user != null);
-		previousReputation = user.getReputation();		
-		try {
-			service.increaseUserReputation(id);
-		} catch (InvalidUserException e) {
-			fail();
-		}
-		assertTrue(user.getReputation() >= previousReputation, "User reputation should be more then before!");
-	}
-	
 	@Test
 	public void testGetUserException() {
 		try {
@@ -262,7 +204,25 @@ public class UserServiceTests {
 			fail("InvalidUserException expected!");
 		}
 	}
-
+	@Nested
+	@DisplayName("Test for deleteUser")
+	public class DeleteUser{
+		
+		/*@Test
+		public void testDelete() {
+			User user = this.myList.remove(2);
+			
+			try {
+				service.deleteUser(user.getUserId());			
+			} catch (InvalidUserException e) {
+				fail();
+			}
+			List<UserDto> list = service.getAllUsers();
+			
+			assertEquals(list.size(), this.getExpectedSize());
+		}*/
+	}
+	
 	@Nested
 	@DisplayName("Test for getAllUsers")
 	public class GetAllUsers {
@@ -275,7 +235,6 @@ public class UserServiceTests {
 			u1 = new User("Giacomo", "ilnonno", "giacomo.poretti@agg.it", +1);
 			u1.setUserId(1);
 			u1.setAdmin(false);
-			System.out.println(u1.getUserId());
 			u2 = new User("Giovanni", "franco", "giovanni.storti@agg.it", +5);
 			u2.setUserId(2);
 			u2.setAdmin(true);
@@ -298,7 +257,6 @@ public class UserServiceTests {
 		@Test
 		public void _returnUserDtoList() {
 				List<UserDto> userDto = service.getAllUsers();
-				System.out.println(userDto.get(0));
 				assertTrue("User retrieved is not the same that has been inserted",
 						compareUserDto(userDto.get(0), UserConverter.userConvertToUserDto(u1)));
 				assertTrue("User retrieved is not the same that has been inserted",
@@ -321,6 +279,13 @@ public class UserServiceTests {
 			u2 = new User("Giovanni", "franco", "giovanni.storti@agg.it", +1);
 			u2.setUserId(-2);
 			u2.setAdmin(false);		
+		}
+		
+		@Test 
+		public void testMaxValueIncrease() {
+			try {
+				assertEquals(u2.getReputation(), service.increaseUserReputation(u2.getUserId()));
+			} catch(InvalidUserException e) {}
 		}
 		
 		@Test
@@ -371,6 +336,13 @@ public class UserServiceTests {
 			u2.setUserId(2);
 			try {
 				assertEquals((u2.getReputation()-1), service.decreaseUserReputation(u2.getUserId()));
+			} catch(InvalidUserException e) {}
+		}
+		
+		@Test 
+		public void testMinValueDecrease() {
+			try {
+				assertEquals(u2.getReputation(), service.increaseUserReputation(u2.getUserId()));
 			} catch(InvalidUserException e) {}
 		}
 
