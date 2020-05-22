@@ -13,6 +13,7 @@ import it.polito.ezgas.dto.IdPw;
 import it.polito.ezgas.dto.LoginDto;
 import it.polito.ezgas.dto.UserDto;
 import it.polito.ezgas.entity.User;
+import it.polito.ezgas.repository.GasStationRepository;
 import it.polito.ezgas.repository.UserRepository;
 import it.polito.ezgas.service.UserService;
 
@@ -22,8 +23,11 @@ import it.polito.ezgas.service.UserService;
 @Service
 public class UserServiceImpl implements UserService {
 	
-	@Autowired
-	UserRepository userRepository;
+	private UserRepository userRepository;
+	
+	public UserServiceImpl(UserRepository userRepository) {
+		this.userRepository = userRepository;
+	}
 	
 	@Override
 	public UserDto getUserById(Integer userId) throws InvalidUserException {
@@ -88,11 +92,9 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public Integer increaseUserReputation(Integer userId) throws InvalidUserException {
-		// TODO Auto-generated method stub	
 		try {
 			User user = this.userRepository.findByUserId(userId).get(0);
 			if(user.getReputation() < 5 && user.getReputation() >= -5) {
-				System.out.println("Sei un grande!");
 				Integer new_reputation = user.getReputation()+1;
 				user.setReputation(new_reputation);
 				this.userRepository.save(user);
@@ -107,7 +109,6 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public Integer decreaseUserReputation(Integer userId) throws InvalidUserException {
-		// TODO Auto-generated method stub
 		try {
 			User user = this.userRepository.findByUserId(userId).get(0);
 			if(user.getReputation() <= 5 && user.getReputation() > -5) {
