@@ -191,7 +191,7 @@ public class UserServiceTests {
 			} catch (Exception e) {
 				fail();
 			}
-			assertEquals(this.uList.get(0).getUserId(), ud1.getUserId() );
+			assertTrue(compareUserDto(UserConverter.userConvertToUserDto(this.uList.get(0)), ud1));
 		}
 		
 		@Test
