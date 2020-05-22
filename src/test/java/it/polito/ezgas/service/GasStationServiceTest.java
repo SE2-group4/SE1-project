@@ -978,11 +978,15 @@ public class GasStationServiceTest {
 			
 			GasStation g1 = new GasStation("Gas station 2_1", "Address 2_1, 2_1", true, false, false, false, true,
 					"Enjoy", 41.5, 23.7, 1.2, 1.67, 2, -1, -0.99, 1, "07-05-2020 18:47:52", 0);
+			g1.setGasStationId(1);
+			g1.setReportUser(u1.getUserId());
 			g1.setUser(u1);
 			gList1.add(g1);
 			
 			GasStation g2 = new GasStation("Gas station 2_2", "Address 2_2, 2_2", true, false, false, false, true,
 					"Enjoy", 41.5, 23.7, 1.2, 1.67, 2, -1, -0.99, 1, "07-05-2020 18:47:52", 0);
+			g2.setGasStationId(2);
+			g2.setReportUser(u1.getUserId());
 			g2.setUser(u1);
 			gList1.add(g2);
 			
