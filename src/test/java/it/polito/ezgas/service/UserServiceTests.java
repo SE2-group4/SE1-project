@@ -153,7 +153,7 @@ public class UserServiceTests {
 	
 	@Test
 	public void testUniqueUser(){
-		UserDto user = new UserDto(4, "Silvana", "worstactress", "silvana.fallisi@agg.it", 5);
+		UserDto user = new UserDto(4, "Aldo", "aldo", "aldo.baglio@agg.it", 5);
 		
 		UserDto insertedUser1 = service.saveUser(user);
 		assertTrue(insertedUser1 != null);
@@ -165,11 +165,51 @@ public class UserServiceTests {
 		assertTrue(insertedUser1.getEmail().compareTo(insertedUser2.getEmail()) != 0, "Email must be unique!");
 	}
 	
+	@Nested
+	@DisplayName("Test getUserById")
+	public class GetUserById {
+		
+		private List<User> uList; 
+		
+		@BeforeEach
+		void setUp() {
+			this.uList = new ArrayList<User>();
+			
+			User u1 = new User("Aldo", "aldo", "aldo.baglio@agg.it", -2);
+			u1.setUserId(4);
+			u1.setAdmin(false);
+			this.uList.add(u1);
+			
+			when(userRepository.findByUserId(4)).thenReturn(uList);
+		}
+		
+		@Test
+		public void getUser_UserId_ShouldReturnUser() {
+			UserDto ud1 = null;
+			try {
+				ud1 = service.getUserById(4);
+			} catch (Exception e) {
+				fail();
+			}
+			assertEquals(this.uList.get(0).getUserId(), ud1.getUserId() );
+		}
+		
+		@Test
+		public void getUser_NotExistingUserId_ShouldThrowException() {
+			try {
+				service.getUserById(-1);
+				fail();
+			} catch (InvalidUserException e) {}
+			catch(Exception e) {
+				fail();
+			}
+		}	
+	}
+
 	@Test
 	public void testGet() {
 		List<UserDto> list = service.getAllUsers();
 		assertTrue(list != null);
-		assertEquals(this.getExpectedSize(), list.size());
 		
 		User myUser = this.myList.get(0);		
 		UserDto user = null;
@@ -362,8 +402,8 @@ public class UserServiceTests {
 	@DisplayName("Test for decrease reputation")
 	public class DecreaseReputation {
 
-		User u1 = new User();
-		User u2 = new User();
+		User u1;
+		User u2;
 		
 		@BeforeEach
 		void setUp() {
@@ -386,7 +426,7 @@ public class UserServiceTests {
 		@Test 
 		public void testMinValueDecrease() {
 			try {
-				assertEquals(u2.getReputation(), service.increaseUserReputation(u2.getUserId()));
+				assertEquals(u1.getReputation(), service.decreaseUserReputation(u1.getUserId()));
 			} catch(InvalidUserException e) {}
 		}
 
@@ -402,7 +442,7 @@ public class UserServiceTests {
 		public void nonExistingId() {
 			try {
 				UserDto userDto = service.getUserById(999);
-				assertNull("User should be null", userDto);
+				assertNull(userDto, "User should be null");
 			} catch (InvalidUserException e) {}
 		}
 	}
