@@ -995,6 +995,9 @@ public class GasStationServiceTest {
 			List<GasStationDto> res = gasStationService.getGasStationByCarSharing("Enjoy");
 			assertNotNull(res);
 			assertEquals(2, res.size());
+			res = res.stream().sorted((GasStationDto a, GasStationDto b) -> (a.getGasStationId() - b.getGasStationId())).collect(Collectors.toList());
+			for(int i=0; i<res.size(); i++)
+				assertEquals(GasStationConverter.GasStationConvertToGasStationDto(this.gList1.get(i)), res.get(i));
 		}
 		
 		@Test
