@@ -211,13 +211,14 @@ public class GasStationServiceTest {
 
 		@Test
 		public void validGasStationDto_returnGasStationDto() {
-			GasStation gs2_1 = new GasStation("Gas station 2_1", "Address 2_1, 2_1", true, true, false, false, true, "",
-					41.5, 23.7, 1.26, 1.67, -1, -1, 0.99, 1, "07-05-2020 18:47:52", 0);
+			GasStation gs2_1 = new GasStation("Gas station c", "Address 3", false, false, false, false, false, "", 31.5, 35, -1, -1,
+					-1, -1, -1, -1, null, 0.0);
+			GasStationDto result = new GasStationDto();
 			try {
-				GasStationDto result = gasStationService
-						.saveGasStation(GasStationConverter.GasStationConvertToGasStationDto(gs2_1));
+				GasStationDto gDto = GasStationConverter.GasStationConvertToGasStationDto((gs2_1));
+				result = gasStationService.saveGasStation(gDto);
 				assertTrue("Gas station retrieved is not the same that has been inserted",
-						compareGasStationDto(result, GasStationConverter.GasStationConvertToGasStationDto(gs2_1)));
+						compareGasStationDto(result, GasStationConverter.GasStationConvertToGasStationDto((gs2_1))));
 
 			} catch (PriceException | GPSDataException e) {
 				fail("Exception unexpected");
@@ -297,8 +298,8 @@ public class GasStationServiceTest {
 		@Test
 		public void invalidLatitude_GPSDataExceptionThrown() {
 			GasStation gs2_1 = new GasStation("Gas station 2_1", "Address 2_1, 2_1", true, false, false, false, true,
-					"", 180, 23.7, 1.2, -1, -1, -1, 0.99, 1, "07-05-2020 18:47:52", 0);
-			GasStation gs2_2 = new GasStation("Gas station 2_1", "Address 2_1, 2_1", true, false, false, false, true,
+					"", 180.1, 23.7, 1.2, -1, -1, -1, 0.99, 1, "07-05-2020 18:47:52", 0);
+			GasStation gs2_2 = new GasStation("Gas station 2_2", "Address 2_1, 2_1", true, false, false, false, true,
 					"", -180.1, 23.7, 1.2, -1, -1, -1, 0.99, 1, "07-05-2020 18:47:52", 0);
 
 			try {
@@ -323,9 +324,9 @@ public class GasStationServiceTest {
 		@Test
 		public void invalidLongitude_GPSDataExceptionThrown() {
 			GasStation gs2_1 = new GasStation("Gas station 2_1", "Address 2_1, 2_1", true, false, false, false, true,
-					"", 12, 180, 1.2, -1, -1, -1, 0.99, 1, "07-05-2020 18:47:52", 0);
-			GasStation gs2_2 = new GasStation("Gas station 2_1", "Address 2_1, 2_1", true, false, false, false, true,
-					"", -33.1, -180.1, 1.2, -1, -1, -1, 0.99, 1, "07-05-2020 18:47:52", 0);
+					"", 12, 180.1, 1.2, -1, -1, -1, 0.99, 1, "07-05-2020 18:47:52", 0);
+			GasStation gs2_2 = new GasStation("Gas station 2_2", "Address 2_1, 2_1", true, false, false, false, true,
+					"", 33.1, -180.1, 1.2, -1, -1, -1, 0.99, 1, "07-05-2020 18:47:52", 0);
 
 			try {
 				gasStationService.saveGasStation(GasStationConverter.GasStationConvertToGasStationDto(gs2_1));

@@ -208,18 +208,62 @@ public class UserServiceTests {
 	@DisplayName("Test for deleteUser")
 	public class DeleteUser{
 		
-		/*@Test
-		public void testDelete() {
-			User user = this.myList.remove(2);
+		User u1 = new User();
+		User u2 = new User();
+		List<User> uListEmpty = new ArrayList<>();
+		List<User> uList = new ArrayList<>();
+		int size_uList;
+		
+		@BeforeEach
+		void setUp() {
+			u1 = new User("Giacomo", "ilnonno", "giacomo.poretti@agg.it", +1);
+			u1.setUserId(1);
+			u1.setAdmin(false);
+			u2 = new User("Giovanni", "franco", "giovanni.storti@agg.it", +5);
+			u2.setUserId(2);
+			u2.setAdmin(true);
 			
+			uList = new ArrayList<>();
+			
+			uList.add(u1);
+			uList.add(u2);
+			
+			size_uList = uList.size();
+			
+			when(userRepository.findAll()).thenReturn(uList);
+		}
+		
+		@Test
+		public void testDelete() {
+			
+			uList.remove(u1);
+			boolean del = false;
 			try {
-				service.deleteUser(user.getUserId());			
-			} catch (InvalidUserException e) {
-				fail();
-			}
+				del = service.deleteUser(u1.getUserId());			
+			} catch (InvalidUserException e) {}
 			List<UserDto> list = service.getAllUsers();
 			
-			assertEquals(list.size(), this.getExpectedSize());
+			assertEquals(size_uList-1, list.size());
+			assertTrue(del, "User is not deleted.");
+		}
+		
+		
+		/*@Test
+		public void testInvalidUserException() {
+			u2.setUserId(-1);
+			try {
+				service.getUserById(u2.getUserId());
+				fail("Negative id should throw an InvalidGasStationException");
+			} catch (InvalidUserException e) {}
+		}
+		
+		@Test
+		public void nonExistingId() {
+			try {
+				UserDto userDto = service.getUserById(999);
+				assertNull("User should be null", userDto);
+			} catch (InvalidUserException e) {}
+			
 		}*/
 	}
 	
