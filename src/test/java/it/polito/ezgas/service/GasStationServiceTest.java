@@ -2,6 +2,7 @@ package it.polito.ezgas.service;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
+import static org.mockito.AdditionalMatchers.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -958,7 +959,50 @@ public class GasStationServiceTest {
 	@Nested
 	@DisplayName("Test for getGasStationByCarSharing")
 	public class GetGasStationByCarSharing {
-		// ***** DA COMPLETARE *****
+		
+		private List<GasStation> gList1;
+		private List<GasStation> gList2;
+		private List<User> uList;
+		
+		@BeforeEach
+		public void setUp() {
+			this.gList1 = new ArrayList<GasStation>();
+			this.gList2 = new ArrayList<GasStation>();
+			this.uList = new ArrayList<User>();
+			
+			User u1 = new User("Giacomo", "giacomo", "giacomo.poretti@agg.it", 4);
+			u1.setUserId(4);
+			u1.setAdmin(true);
+			uList.add(u1);
+			when(userRepository.findByUserId(4)).thenReturn(uList);
+			
+			GasStation g1 = new GasStation("Gas station 2_1", "Address 2_1, 2_1", true, false, false, false, true,
+					"Enjoy", 41.5, 23.7, 1.2, 1.67, 2, -1, -0.99, 1, "07-05-2020 18:47:52", 0);
+			g1.setUser(u1);
+			gList1.add(g1);
+			
+			GasStation g2 = new GasStation("Gas station 2_2", "Address 2_2, 2_2", true, false, false, false, true,
+					"Enjoy", 41.5, 23.7, 1.2, 1.67, 2, -1, -0.99, 1, "07-05-2020 18:47:52", 0);
+			g2.setUser(u1);
+			gList1.add(g2);
+			
+			when(gasStationRepository.findByCarSharing("Enjoy")).thenReturn(gList1);
+			when(gasStationRepository.findByCarSharing(not(eq("Enjoy")))).thenReturn(gList2);
+		}
+		
+		@Test
+		public void validCarSharing_ShouldReturnGasStationList() {
+			List<GasStationDto> res = gasStationService.getGasStationByCarSharing("Enjoy");
+			assertNotNull(res);
+			assertEquals(2, res.size());
+		}
+		
+		@Test
+		public void wrongCarSharing_ShouldReturnEmptyGasStationList() {
+			List<GasStationDto> res = gasStationService.getGasStationByCarSharing("Not a car sharing service");
+			assertNotNull(res);
+			assertEquals(0, res.size());
+		}
 	}
 
 }
