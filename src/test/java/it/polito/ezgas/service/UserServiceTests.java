@@ -22,6 +22,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 
@@ -132,14 +134,19 @@ public class UserServiceTests {
 			this.ud1 = UserConverter.userConvertToUserDto(this.u1);
 			
 			this.uList = new ArrayList<User>();
-			this.uList.add(this.u1);
-			
-			when(userRepository.findAll()).thenReturn(this.uList);
+			this.uList.add(this.u1);			
 		}
 		
 		@Test
 		public void saveNewUser_ShouldHaveReputationEq0() {
-			when(userRepository.save(Mockito.any(User.class)));
+			when(userRepository.findAll()).thenReturn(new ArrayList<User>()); // user not inserted yet
+			when(userRepository.save(Mockito.any(User.class))).thenAnswer(new Answer<User>() {
+				   public User answer(InvocationOnMock invocation) {
+				     Object[] args = invocation.getArguments();
+				     // Object mock = invocation.getMock();
+				     return (User)args[0];
+				   }
+				}); // return the same user inserted
 			
 			UserDto insertedUser1 = service.saveUser(this.ud1);
 			assertNotNull(insertedUser1);
@@ -148,6 +155,7 @@ public class UserServiceTests {
 		
 		@Test
 		public void saveTwoUser_ShouldNotHaveSameEmail(){
+			when(userRepository.findAll()).thenReturn(this.uList);
 			when(userRepository.save(Mockito.any(User.class))).thenReturn(this.u1);
 			
 			this.u1.setUserId(5);
