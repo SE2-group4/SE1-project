@@ -29,13 +29,10 @@ Version: 1.0
 
 @startuml
 
-left to right direction
 hide circle
 hide members
 
 package "Frontend" {}
-
-Frontend -> Backend
 
 package "Backend" {
 
@@ -83,15 +80,42 @@ package "it.polito.ezgas.entity" {
     class User
 }
 
+GasStationController -> GasStationService
+UserController -> UserService
+GasStationService -> GasStationRepository
+GasStationService -> Utility
+UserService -> UserRepository
+GasStationService -> GasStationConverter
+UserService -> UserConverter
+GasStationConverter -> GasStationDto
+GasStationConverter -> GasStation
+UserConverter -> UserDto
+UserConverter -> User
+GasStationRepository -> GasStation
+UserRepository -> User
+UserService -> LoginDto
+UserService -> IdPw
+GasStationService -> User
+GasStationService -> UserDto
+GasStationConverter -> User
+GasStationConverter -> UserDto
 
-it.polito.ezgas.controller -> it.polito.ezgas.service
-it.polito.ezgas.service -> it.polito.ezgas.utility
-it.polito.ezgas.service -> it.polito.ezgas.repository
-it.polito.ezgas.service -> it.polito.ezgas.converter
-it.polito.ezgas.repository -> it.polito.ezgas.entity
-it.polito.ezgas.converter -> it.polito.ezgas.dto
-
+"it.polito.ezgas.controller" --[hidden]> "it.polito.ezgas.service"
+"it.polito.ezgas.service" --[hidden]> "it.polito.ezgas.repository"
+"it.polito.ezgas.service" --[hidden]> "it.polito.ezgas.converter"
+"it.polito.ezgas.repository" -[hidden]> "it.polito.ezgas.converter"
+"it.polito.ezgas.repository" --[hidden]> "it.polito.ezgas.entity"
+"it.polito.ezgas.repository" --[hidden]> "it.polito.ezgas.dto"
+"it.polito.ezgas.repository" --[hidden]> "it.polito.ezgas.utility"
+"it.polito.ezgas.converter" --[hidden]> "it.polito.ezgas.dto"
+"it.polito.ezgas.converter" --[hidden]> "it.polito.ezgas.entity"
+"it.polito.ezgas.converter" --[hidden]> "it.polito.ezgas.utility"
+"it.polito.ezgas.entity" -[hidden]> "it.polito.ezgas.dto"
+"it.polito.ezgas.dto" -[hidden]> "it.polito.ezgas.utility"
+"it.polito.ezgas.entity" -[hidden]> "it.polito.ezgas.utility"
 }
+
+"Frontend" --> "Backend"
 
 @enduml
 
