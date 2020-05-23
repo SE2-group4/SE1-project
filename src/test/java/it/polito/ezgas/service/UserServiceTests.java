@@ -20,6 +20,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 
@@ -151,20 +152,6 @@ public class UserServiceTests {
 		return(this.initSize + this.myList.size());
 	}
 	
-	@Test
-	public void testUniqueUser(){
-		UserDto user = new UserDto(4, "Aldo", "aldo", "aldo.baglio@agg.it", 5);
-		
-		UserDto insertedUser1 = service.saveUser(user);
-		assertTrue(insertedUser1 != null);
-		assertTrue(insertedUser1.getReputation() == 0, "Init reputation must be 0!");
-		
-		user.setUserId(5);
-		UserDto insertedUser2 = service.saveUser(user);
-		assertTrue(insertedUser2 != null);
-		assertTrue(insertedUser1.getEmail().compareTo(insertedUser2.getEmail()) != 0, "Email must be unique!");
-	}
-	
 	@Nested
 	@DisplayName("Test getUserById")
 	public class GetUserById {
@@ -204,6 +191,42 @@ public class UserServiceTests {
 				fail();
 			}
 		}	
+	}
+	
+	@Nested
+	@DisplayName("Test saveUser")
+	public class SaveUser {
+		User u1;
+		UserDto ud1;
+
+		@BeforeEach
+		public void setUp() {
+			this.u1 = new User("Aldo", "aldo", "aldo.baglio@agg.it", 5);
+			this.u1.setUserId(4);
+			this.u1.setAdmin(false);
+			this.ud1 = UserConverter.userConvertToUserDto(this.u1);
+			
+			when(userRepository.save(Mockito.any(User.class))).thenReturn(this.u1);
+		}
+		
+		@Test
+		public void saveNewUser_ShouldHaveReputationEq0() {
+			UserDto insertedUser1 = service.saveUser(this.ud1);
+			assertNotNull(insertedUser1);
+			assertEquals(0, insertedUser1.getReputation(), "Init reputation must be 0!");
+		}
+		
+		@Test
+		public void saveTwoUser_ShouldNotHaveSameEmail(){			
+			this.u1.setUserId(5);
+			UserDto insertedUser1 = service.saveUser(this.ud1);
+			assertNotNull(insertedUser1);
+			
+			this.u1.setUserId(3);
+			UserDto insertedUser2 = service.saveUser(this.ud1);
+			assertNotNull(insertedUser2);
+			assertNotEquals(insertedUser1.getEmail(), insertedUser2.getEmail(), "Email must be unique!");
+		}
 	}
 
 	@Test
