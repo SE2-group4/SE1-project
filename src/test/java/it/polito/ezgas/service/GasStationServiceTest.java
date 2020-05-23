@@ -965,19 +965,17 @@ public class GasStationServiceTest {
 	public class GetGasStationByCarSharing {
 		
 		private List<GasStation> gList1;
-		private List<GasStation> gList2;
 		private List<User> uList;
 		
 		@BeforeEach
 		public void setUp() {
 			this.gList1 = new ArrayList<GasStation>();
-			this.gList2 = new ArrayList<GasStation>();
 			this.uList = new ArrayList<User>();
 			
 			User u1 = new User("Giacomo", "giacomo", "giacomo.poretti@agg.it", 4);
 			u1.setUserId(4);
 			u1.setAdmin(true);
-			uList.add(u1);
+			this.uList.add(u1);
 			when(userRepository.findByUserId(4)).thenReturn(uList);
 			
 			GasStation g1 = new GasStation("Gas station 2_1", "Address 2_1, 2_1", true, false, false, false, true,
@@ -985,17 +983,18 @@ public class GasStationServiceTest {
 			g1.setGasStationId(1);
 			g1.setReportUser(u1.getUserId());
 			g1.setUser(u1);
-			gList1.add(g1);
+			this.gList1.add(g1);
 			
 			GasStation g2 = new GasStation("Gas station 2_2", "Address 2_2, 2_2", true, false, false, false, true,
 					"Enjoy", 41.5, 23.7, 1.2, 1.67, 2, -1, -0.99, 1, "07-05-2020 18:47:52", 0);
 			g2.setGasStationId(2);
 			g2.setReportUser(u1.getUserId());
 			g2.setUser(u1);
-			gList1.add(g2);
+			this.gList1.add(g2);
 			
-			when(gasStationRepository.findByCarSharing("Enjoy")).thenReturn(gList1);
-			when(gasStationRepository.findByCarSharing(not(eq("Enjoy")))).thenReturn(gList2);
+			when(gasStationRepository.findAll()).thenReturn(gList1);
+			when(userRepository.findByUserId(any())).thenReturn(uList);
+			when(userRepository.findAll()).thenReturn(uList);
 		}
 		
 		@Test
@@ -1004,8 +1003,9 @@ public class GasStationServiceTest {
 			assertNotNull(res);
 			assertEquals(2, res.size());
 			res = res.stream().sorted((GasStationDto a, GasStationDto b) -> (a.getGasStationId() - b.getGasStationId())).collect(Collectors.toList());
-			for(int i=0; i<res.size(); i++)
-				assertEquals(GasStationConverter.GasStationConvertToGasStationDto(this.gList1.get(i)), res.get(i));
+			
+			assertTrue(compareGasStationDto(GasStationConverter.GasStationConvertToGasStationDto(this.gList1.get(0)), res.get(0)));
+			assertTrue(compareGasStationDto(GasStationConverter.GasStationConvertToGasStationDto(this.gList1.get(1)), res.get(1)));
 		}
 		
 		@Test
