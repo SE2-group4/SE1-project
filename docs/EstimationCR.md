@@ -1,10 +1,10 @@
 # CR - Change Request Poll
 
-Authors:
+Authors: Group 12
 
-Date:
+Date: 24/05/2020
 
-Version:
+Version: v1
 
 
 
