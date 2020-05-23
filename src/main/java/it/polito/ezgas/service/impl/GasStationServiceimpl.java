@@ -122,10 +122,14 @@ public class GasStationServiceimpl implements GasStationService {
 
 	@Override
 	public Boolean deleteGasStation(Integer gasStationId) throws InvalidGasStationException {
-		if (gasStationId < 0) {
+		if (gasStationId < 0 || gasStationId == null) {
 			throw new InvalidGasStationException("Invalid (negative) gasStationId");
 		}
-		this.gasStationRepository.delete(gasStationId);
+		try {
+			this.gasStationRepository.delete(gasStationId);
+		} catch (IllegalArgumentException e) {
+			throw new InvalidGasStationException(e.getMessage());
+		}
 		if (!this.gasStationRepository.findByGasStationId(gasStationId).isPresent()) {
 			return true;
 		}
