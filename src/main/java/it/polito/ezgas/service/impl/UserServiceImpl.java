@@ -2,6 +2,7 @@ package it.polito.ezgas.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,7 +46,17 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserDto saveUser(UserDto userDto) {
 		// TODO Auto-generated method stub
-		User user = this.userRepository.save(UserConverter.userDtoConvertToUser(userDto));
+		User newUser = UserConverter.userDtoConvertToUser(userDto);
+		
+		List<User> uList = this.userRepository.findAll().stream().filter(u -> u.getEmail().equals(newUser.getEmail())).collect(Collectors.toList());
+		if(uList.size() != 0) {
+			User oldUser = uList.get(0);
+			newUser.setUserId(oldUser.getUserId());
+		}
+		else	
+			newUser.setReputation(0);
+		
+		User user = this.userRepository.save(newUser);
 		return UserConverter.userConvertToUserDto(user);
 	}
 

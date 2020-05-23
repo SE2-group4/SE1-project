@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -121,6 +122,7 @@ public class UserServiceTests {
 	public class SaveUser {
 		User u1;
 		UserDto ud1;
+		List<User> uList;
 
 		@BeforeEach
 		public void setUp() {
@@ -129,18 +131,25 @@ public class UserServiceTests {
 			this.u1.setAdmin(false);
 			this.ud1 = UserConverter.userConvertToUserDto(this.u1);
 			
-			when(userRepository.save(Mockito.any(User.class))).thenReturn(this.u1);
+			this.uList = new ArrayList<User>();
+			this.uList.add(this.u1);
+			
+			when(userRepository.findAll()).thenReturn(this.uList);
 		}
 		
 		@Test
 		public void saveNewUser_ShouldHaveReputationEq0() {
+			when(userRepository.save(Mockito.any(User.class)));
+			
 			UserDto insertedUser1 = service.saveUser(this.ud1);
 			assertNotNull(insertedUser1);
 			assertEquals(0, insertedUser1.getReputation(), "Init reputation must be 0!");
 		}
 		
 		@Test
-		public void saveTwoUser_ShouldNotHaveSameEmail(){			
+		public void saveTwoUser_ShouldNotHaveSameEmail(){
+			when(userRepository.save(Mockito.any(User.class))).thenReturn(this.u1);
+			
 			this.u1.setUserId(5);
 			UserDto insertedUser1 = service.saveUser(this.ud1);
 			assertNotNull(insertedUser1);
@@ -148,7 +157,9 @@ public class UserServiceTests {
 			this.u1.setUserId(3);
 			UserDto insertedUser2 = service.saveUser(this.ud1);
 			assertNotNull(insertedUser2);
-			assertNotEquals(insertedUser1.getEmail(), insertedUser2.getEmail(), "Email must be unique!");
+			
+			int nUsers = service.getAllUsers().stream().filter(u -> u.getEmail().equals(this.u1.getEmail())).collect(Collectors.toList()).size();
+			assertEquals(1, nUsers, "Email must be unique!");
 		}
 	}
 
