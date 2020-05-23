@@ -247,8 +247,8 @@ public class GasStationServiceimpl implements GasStationService {
 
 	@Override
 	public List<GasStationDto> getGasStationByCarSharing(String carSharing) {
-		return getAllGasStations().stream().filter(gs -> gs.getCarSharing().equals(carSharing))
-				.collect(Collectors.toList());
+		return this.gasStationRepository.findAll().stream().filter(gs -> gs.getCarSharing().equals(carSharing))
+				.map(gs -> GasStationConverter.GasStationConvertToGasStationDto(gs)).collect(Collectors.toList());
 	}
 
 	@Override

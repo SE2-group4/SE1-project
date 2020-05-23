@@ -2,9 +2,9 @@ package it.polito.ezgas.service;
 
 
 
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+//import static org.junit.Assert.assertNull;
+//import static org.junit.Assert.assertTrue;
+//import static org.junit.Assert.fail;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -47,21 +47,12 @@ public class UserServiceTests {
         }
     }
 	
-	/*
-	 * not working...
-	 * 
-	@Autowired
-    private TestEntityManager entityManager;
-    */
     
     @Autowired
     static UserService service;   
     
     static UserRepository userRepository;
-    
-    private int initSize;
-    private List<User> myList;
-	
+    	
     
 	@BeforeAll
 	static void initializeTest() {
@@ -83,74 +74,6 @@ public class UserServiceTests {
 				&& u1.getUserName().compareTo(u2.getUserName()) == 0);
 	}
 	
-	@BeforeEach
-	public void setUp() throws Exception {
-		/*List<UserDto> list = service.getAllUsers();
-			
-		this.initSize = list.size();
-		
-		this.myList = new ArrayList<>();
-		User user;
-
-		user = new User();
-		user.setUserId(1);
-		user.setUserName("Aldo");
-		user.setPassword("buonaquestacadrega");
-		user.setEmail("aldo.baglio@agg.it");
-		user.setReputation(-3);
-		user.setAdmin(false);
-		this.myList.add(user);
-		assertTrue(service.saveUser(UserConverter.userConvertToUserDto(user)) != null);
-		//assertTrue(this.userRepository.save(user) != null);
-		//this.entityManager.persist(user);
-
-		user = new User();
-		user.setUserId(2);
-		user.setUserName("Giovanni");
-		user.setPassword("franco");
-		user.setEmail("giovanni.storti@agg.it");
-		user.setReputation(+5);
-		user.setAdmin(true);
-		this.myList.add(user);
-		assertTrue(userRepository.save(user) != null);
-		//this.entityManager.persist(user);
-
-		user = new User();
-		user.setUserId(3);
-		user.setUserName("Giacomo");
-		user.setPassword("ilnonno");
-		user.setEmail("giacomo.poretti@agg.it");
-		user.setReputation(+1);
-		user.setAdmin(false);
-		this.myList.add(user);
-		assertTrue(userRepository.save(user) != null);
-		//this.entityManager.persist(user);
-		
-		assertEquals(this.getExpectedSize(), userRepository.count());
-		//this.entityManager.flush();
-
-		/*
-		myList.add(new UserDto(1, "Aldo", "buonaquestacadrega", "aldo.baglio@agg.it", -3, false));
-		myList.add(new UserDto(2, "Giovanni", "franco", "giovanni.storti@agg.it", +5, true));
-		myList.add(new UserDto(3, "Giacomo", "ilnonno", "giacomo.poretti@agg.it", +1, false));
-		*/
-	}
-	/*
-	@AfterEach
-	public void tearDown() throws Exception {
-		for(User user : this.myList) {
-			try {
-				service.deleteUser(user.getUserId());
-			} catch(Exception e) {}
-		}
-		this.myList.clear();
-		
-		//this.entityManager.clear();
-	}*/
-	
-	public int getExpectedSize() {
-		return(this.initSize + this.myList.size());
-	}
 	
 	@Nested
 	@DisplayName("Test getUserById")
@@ -229,7 +152,7 @@ public class UserServiceTests {
 		}
 	}
 
-	@Test
+	/*@Test
 	public void testGet() {
 		List<UserDto> list = service.getAllUsers();
 		assertTrue(list != null);
@@ -266,7 +189,9 @@ public class UserServiceTests {
 		catch(Exception e) {
 			fail("InvalidUserException expected!");
 		}
-	}
+	}*/
+	
+	
 	@Nested
 	@DisplayName("Test for deleteUser")
 	public class DeleteUser{
@@ -311,7 +236,7 @@ public class UserServiceTests {
 		}
 		
 		
-		/*@Test
+		@Test
 		public void testInvalidUserException() {
 			u2.setUserId(-1);
 			try {
@@ -324,10 +249,10 @@ public class UserServiceTests {
 		public void nonExistingId() {
 			try {
 				UserDto userDto = service.getUserById(999);
-				assertNull("User should be null", userDto);
+				assertNull(userDto, "User should be null");
 			} catch (InvalidUserException e) {}
 			
-		}*/
+		}
 	}
 	
 	@Nested
@@ -358,16 +283,16 @@ public class UserServiceTests {
 		@Test
 		public void _returnEmptyList() {
 			when(userRepository.findAll()).thenReturn(uListEmpty);
-			assertTrue("List of users retrieved is not empty", uListEmpty.isEmpty());
+			assertTrue(uListEmpty.isEmpty(), "List of users retrieved is not empty");
 		}
 		
 		@Test
 		public void _returnUserDtoList() {
 				List<UserDto> userDto = service.getAllUsers();
-				assertTrue("User retrieved is not the same that has been inserted",
-						compareUserDto(userDto.get(0), UserConverter.userConvertToUserDto(u1)));
-				assertTrue("User retrieved is not the same that has been inserted",
-						compareUserDto(userDto.get(1), UserConverter.userConvertToUserDto(u2)));
+				assertTrue(compareUserDto(userDto.get(0), UserConverter.userConvertToUserDto(u1)), 
+						"User retrieved is not the same that has been inserted");
+				assertTrue(compareUserDto(userDto.get(1), UserConverter.userConvertToUserDto(u2)),
+						"User retrieved is not the same that has been inserted");
 		}
 	}
 	
@@ -377,30 +302,46 @@ public class UserServiceTests {
 		
 		User u1 = new User();
 		User u2 = new User();
+		User u3 = new User();
 		
 		@BeforeEach
 		void setUp() {
 			u1 = new User("Giacomo", "ilnonno", "giacomo.poretti@agg.it", +5);
 			u1.setUserId(1);
 			u1.setAdmin(true);
-			u2 = new User("Giovanni", "franco", "giovanni.storti@agg.it", +1);
+			u2 = new User("Giovanni", "franco", "giovanni2.storti@agg.it", +1);
 			u2.setUserId(-2);
-			u2.setAdmin(false);		
+			u2.setAdmin(false);
+			u3 = new User("Giacomo", "ilnonno", "giacomo3.poretti@agg.it", +2);
+			u3.setUserId(3);
+			u3.setAdmin(true);
+			List<User> uList = new ArrayList<User>();
+			uList.add(u1);
+			List<User> uList2 = new ArrayList<User>();
+			uList2.add(u2);
+			List<User> uList3 = new ArrayList<User>();
+			uList3.add(u3);
+			when(userRepository.findByUserId(u1.getUserId())).thenReturn(uList);
+			when(userRepository.findByUserId(u2.getUserId())).thenReturn(new ArrayList<>());
+			when(userRepository.findByUserId(u3.getUserId())).thenReturn(uList3);
 		}
 		
 		@Test 
 		public void testMaxValueIncrease() {
 			try {
-				assertEquals(u2.getReputation(), service.increaseUserReputation(u2.getUserId()));
-			} catch(InvalidUserException e) {}
+				assertEquals(u1.getReputation(), service.increaseUserReputation(u1.getUserId()));
+			} catch(InvalidUserException e) {
+				fail(e.getMessage());
+			}			
 		}
 		
 		@Test
 		public void testIncrease() {
-			u2.setUserId(2);
 			try {
-				assertEquals((u2.getReputation()+1), service.increaseUserReputation(u2.getUserId()));
-			} catch(InvalidUserException e) {}
+				assertEquals((u3.getReputation()+1), service.increaseUserReputation(u3.getUserId()));
+			} catch(InvalidUserException e) {
+				fail(e.getMessage());
+			}
 		}
 
 		@Test
@@ -408,15 +349,18 @@ public class UserServiceTests {
 			try {
 				service.getUserById(u2.getUserId());
 				fail("Negative id should throw an InvalidGasStationException");
-			} catch (InvalidUserException e) {}
+			} catch (InvalidUserException e) {
+			}
 		}
 		
 		@Test
 		public void nonExistingId() {
 			try {
-				UserDto userDto = service.getUserById(999);
-				assertNull("User should be null", userDto);
-			} catch (InvalidUserException e) {}
+				service.getUserById(999);
+				fail("User should be null");
+			} catch (InvalidUserException e) {
+				
+			}
 			
 		}
 	}
@@ -427,6 +371,7 @@ public class UserServiceTests {
 
 		User u1;
 		User u2;
+		User u3;
 		
 		@BeforeEach
 		void setUp() {
@@ -436,21 +381,37 @@ public class UserServiceTests {
 			u2 = new User("Giovanni", "franco", "giovanni.storti@agg.it", +1);
 			u2.setUserId(-2);
 			u2.setAdmin(false);		
+			u3 = new User("Giacomo", "ilnonno", "giacomo3.poretti@agg.it", +2);
+			u3.setUserId(3);
+			u3.setAdmin(true);
+			List<User> uList = new ArrayList<User>();
+			uList.add(u1);
+			List<User> uList2 = new ArrayList<User>();
+			uList2.add(u2);
+			List<User> uList3 = new ArrayList<User>();
+			uList3.add(u3);
+			when(userRepository.findByUserId(u1.getUserId())).thenReturn(uList);
+			when(userRepository.findByUserId(u2.getUserId())).thenReturn(new ArrayList<>());
+			when(userRepository.findByUserId(u3.getUserId())).thenReturn(uList3);
 		}
 		
 		@Test
 		public void testDecrease() {
 			u2.setUserId(2);
 			try {
-				assertEquals((u2.getReputation()-1), service.decreaseUserReputation(u2.getUserId()));
-			} catch(InvalidUserException e) {}
+				assertEquals((u3.getReputation()-1), service.decreaseUserReputation(u3.getUserId()));
+			} catch(InvalidUserException e) {
+				fail(e.getMessage());
+			}
 		}
 		
 		@Test 
 		public void testMinValueDecrease() {
 			try {
 				assertEquals(u1.getReputation(), service.decreaseUserReputation(u1.getUserId()));
-			} catch(InvalidUserException e) {}
+			} catch(InvalidUserException e) {
+				fail(e.getMessage());
+			}
 		}
 
 		@Test
@@ -458,7 +419,8 @@ public class UserServiceTests {
 			try {
 				service.getUserById(u2.getUserId());
 				fail("Negative id should throw an InvalidGasStationException");
-			} catch (InvalidUserException e) {}
+			} catch (InvalidUserException e) {
+			}
 		}
 		
 		@Test

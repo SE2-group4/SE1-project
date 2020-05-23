@@ -1,7 +1,8 @@
 package it.polito.ezgas.service;
 
-import static org.junit.Assert.*;
+//import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.AdditionalMatchers.*;
 
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.aspectj.lang.annotation.Before;
 import org.hamcrest.collection.IsIterableContainingInOrder;
 import org.junit.jupiter.api.AfterAll;
@@ -159,8 +161,8 @@ public class GasStationServiceTest {
 		public void existingId_returnCorrespondingGasStationDto() {
 			try {
 				GasStationDto gasStationDto = gasStationService.getGasStationById(5);
-				assertTrue("Gas station retrieved is not the same that has been inserted",
-						compareGasStationDto(gasStationDto, GasStationConverter.GasStationConvertToGasStationDto(gs1)));
+				assertTrue(compareGasStationDto(gasStationDto, GasStationConverter.GasStationConvertToGasStationDto(gs1)),
+						"Gas station retrieved is not the same that has been inserted");
 			} catch (InvalidGasStationException e) {
 				e.printStackTrace();
 				fail("InvalidGasStationException unexpected");
@@ -171,7 +173,7 @@ public class GasStationServiceTest {
 		public void nonExistingId_returnNull() {
 			try {
 				GasStationDto gasStationDto = gasStationService.getGasStationById(999);
-				assertNull("Gas station should be null", gasStationDto);
+				assertNull(gasStationDto, "Gas station should be null");
 			} catch (InvalidGasStationException e) {
 				e.printStackTrace();
 				fail("InvalidGasStationException unexpected");
@@ -192,8 +194,8 @@ public class GasStationServiceTest {
 		public void existingId_returnCorrespondingGasStationDtoWithUserAndTimestampInserted() {
 			try {
 				GasStationDto gasStationDto = gasStationService.getGasStationById(6);
-				assertTrue("Gas station retrieved is not the same that has been inserted",
-						compareGasStationDto(gasStationDto, GasStationConverter.GasStationConvertToGasStationDto(gs2)));
+				assertTrue(compareGasStationDto(gasStationDto, GasStationConverter.GasStationConvertToGasStationDto(gs2)),
+						"Gas station retrieved is not the same that has been inserted");
 			} catch (InvalidGasStationException e) {
 				e.printStackTrace();
 				fail("InvalidGasStationException unexpected");
@@ -209,17 +211,19 @@ public class GasStationServiceTest {
 		void tearDown() throws Exception {
 			// *** ELIMINARE DAL DB LE GASSTATION INSERITE ***
 		}
+				
 
 		@Test
 		public void validGasStationDto_returnGasStationDto() {
 			GasStation gs2_1 = new GasStation("Gas station c", "Address 3", false, false, false, false, false, "", 31.5, 35, -1, -1,
 					-1, -1, -1, -1, null, 0.0);
 			GasStationDto result = new GasStationDto();
+			when(gasStationRepository.save(Mockito.any(GasStation.class))).thenReturn(gs2_1);
 			try {
 				GasStationDto gDto = GasStationConverter.GasStationConvertToGasStationDto((gs2_1));
 				result = gasStationService.saveGasStation(gDto);
-				assertTrue("Gas station retrieved is not the same that has been inserted",
-						compareGasStationDto(result, GasStationConverter.GasStationConvertToGasStationDto((gs2_1))));
+				assertTrue(compareGasStationDto(result, GasStationConverter.GasStationConvertToGasStationDto((gs2_1))),
+						"Gas station retrieved is not the same that has been inserted");
 
 			} catch (PriceException | GPSDataException e) {
 				fail("Exception unexpected");
@@ -376,16 +380,16 @@ public class GasStationServiceTest {
 		@Test
 		public void _returnEmptyList() {
 			when(gasStationRepository.findAll()).thenReturn(gsListEmpty);
-			assertTrue("List of gas station retrieved is not empty", gsListEmpty.isEmpty());
+			assertTrue(gsListEmpty.isEmpty(), "List of gas station retrieved is not empty");
 		}
 		
 		@Test
 		public void _returnGasStationDtoList() {
 				List<GasStationDto> gasStationDto = gasStationService.getAllGasStations();
-				assertTrue("Gas station retrieved is not the same that has been inserted",
-						compareGasStationDto(gasStationDto.get(0), GasStationConverter.GasStationConvertToGasStationDto(gs1)));
-				assertTrue("Gas station retrieved is not the same that has been inserted",
-						compareGasStationDto(gasStationDto.get(1), GasStationConverter.GasStationConvertToGasStationDto(gs2)));
+				assertTrue(compareGasStationDto(gasStationDto.get(0), GasStationConverter.GasStationConvertToGasStationDto(gs1)), 
+						"Gas station retrieved is not the same that has been inserted");
+				assertTrue(compareGasStationDto(gasStationDto.get(1), GasStationConverter.GasStationConvertToGasStationDto(gs2)),
+						"Gas station retrieved is not the same that has been inserted");
 		}
 	}
 
@@ -407,14 +411,14 @@ public class GasStationServiceTest {
 		public void existingId_returnTrue() {
 			try {
 				boolean result = gasStationService.deleteGasStation(1);
-				assertTrue("Deleting an existing gas station returned false", result);
+				assertTrue(result, "Deleting an existing gas station returned false");
 			} catch (InvalidGasStationException e) {
 				fail("InvalidGasStationException unexpected");
 			}
 
 			try {
 				GasStationDto gasStationDto = gasStationService.getGasStationById(1);
-				assertNull("Gas station deleted has been retrieved, should be null", gasStationDto);
+				assertNull(gasStationDto, "Gas station deleted has been retrieved, should be null");
 			} catch (InvalidGasStationException e) {
 				fail("InvalidGasStationException unexpected when trying to retrieve gas station deleted (should return null)");
 			}
@@ -424,7 +428,7 @@ public class GasStationServiceTest {
 		public void nonExistingId_returnFalse() {
 			try {
 				boolean result = gasStationService.deleteGasStation(50);
-				assertFalse("Deleting a non existing gas station returned true", result);
+				assertFalse(result, "Deleting a non existing gas station returned true");
 			} catch (InvalidGasStationException e) {
 				fail("InvalidGasStationException unexpected");
 			}
@@ -483,7 +487,7 @@ public class GasStationServiceTest {
 				fail("No exception expected");
 			}
 
-			assertTrue("Wrong number of gasStation returned", expectedList.size() == returnList.size());
+			assertTrue(expectedList.size() == returnList.size(), "Wrong number of gasStation returned");
 			for (int i = 0; i < expectedList.size(); i++) {
 				if (!compareGasStationDto(expectedList.get(i), returnList.get(i)))
 					fail("Returned wrong list");
@@ -630,7 +634,7 @@ public class GasStationServiceTest {
 				fail("No exception should be thrown");
 			}
 
-			assertTrue("Wrong number of gasStation returned", expectedList.size() == returnList.size());
+			assertTrue( expectedList.size() == returnList.size(), "Wrong number of gasStation returned");
 			for (int i = 0; i < expectedList.size(); i++) {
 				if (!compareGasStationDto(expectedList.get(i), returnList.get(i)))
 					fail("Returned wrong list");
@@ -651,7 +655,7 @@ public class GasStationServiceTest {
 				fail("No exception should be thrown");
 			}
 
-			assertTrue("Wrong number of gasStation returned", returnList.size() == 0);
+			assertTrue(returnList.size() == 0, "Wrong number of gasStation returned");
 		}
 
 	}
@@ -699,7 +703,7 @@ public class GasStationServiceTest {
 				fail("No exception expected");
 			}
 
-			assertTrue("Wrong number of gasStation returned", expectedList.size() == returnList.size());
+			assertTrue(expectedList.size() == returnList.size(), "Wrong number of gasStation returned");
 			for (int i = 0; i < expectedList.size(); i++) {
 				if (!compareGasStationDto(expectedList.get(i), returnList.get(i)))
 					fail("Returned wrong list");
@@ -735,7 +739,7 @@ public class GasStationServiceTest {
 				fail("No exception expected");
 			}
 
-			assertTrue("Wrong number of gasStation returned", expectedList.size() == returnList.size());
+			assertTrue(expectedList.size() == returnList.size(), "Wrong number of gasStation returned");
 			for (int i = 0; i < expectedList.size(); i++) {
 				if (!compareGasStationDto(expectedList.get(i), returnList.get(i)))
 					fail("Returned wrong list");
@@ -764,7 +768,7 @@ public class GasStationServiceTest {
 				e.printStackTrace();
 				fail("No exception expected");
 			}
-			assertTrue("Wrong number of gasStation returned", returnList.isEmpty());
+			assertTrue(returnList.isEmpty(), "Wrong number of gasStation returned");
 		}
 	}
 
@@ -843,8 +847,8 @@ public class GasStationServiceTest {
 			}
 
 			assertTrue(
-					"Wrong number of gasStation returned:" + returnList.size() + " instead of " + expectedList.size(),
-					expectedList.size() == returnList.size());
+					expectedList.size() == returnList.size(),
+					"Wrong number of gasStation returned:" + returnList.size() + " instead of " + expectedList.size());
 			for (int i = 0; i < expectedList.size(); i++) {
 				if (!compareGasStationDto(expectedList.get(i), returnList.get(i)))
 					fail("Returned wrong list");
@@ -873,8 +877,8 @@ public class GasStationServiceTest {
 			}
 
 			assertTrue(
-					"Wrong number of gasStation returned:" + returnList.size() + " instead of " + expectedList.size(),
-					expectedList.size() == returnList.size());
+					expectedList.size() == returnList.size(),
+					"Wrong number of gasStation returned:" + returnList.size() + " instead of " + expectedList.size());
 			for (int i = 0; i < expectedList.size(); i++) {
 				if (!compareGasStationDto(expectedList.get(i), returnList.get(i)))
 					fail("Returned wrong list");
@@ -904,8 +908,8 @@ public class GasStationServiceTest {
 			}
 
 			assertTrue(
-					"Wrong number of gasStation returned:" + returnList.size() + " instead of " + expectedList.size(),
-					expectedList.size() == returnList.size());
+					expectedList.size() == returnList.size(),
+					"Wrong number of gasStation returned:" + returnList.size() + " instead of " + expectedList.size());
 			for (int i = 0; i < expectedList.size(); i++) {
 				if (!compareGasStationDto(expectedList.get(i), returnList.get(i)))
 					fail("Returned wrong list");
@@ -939,8 +943,8 @@ public class GasStationServiceTest {
 			}
 
 			assertTrue(
-					"Wrong number of gasStation returned:" + returnList.size() + " instead of " + expectedList.size(),
-					expectedList.size() == returnList.size());
+					expectedList.size() == returnList.size(),
+					"Wrong number of gasStation returned:" + returnList.size() + " instead of " + expectedList.size());
 			
 			for (int i = 0; i < expectedList.size(); i++) {
 				if (!compareGasStationDto(expectedList.get(i), returnList.get(i)))

@@ -1,9 +1,11 @@
 package it.polito.ezgas.converter;
 
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.*;
+import org.junit.jupiter.api.*;
+
+//import org.junit.*;
 
 import it.polito.ezgas.dto.UserDto;
 import it.polito.ezgas.entity.User;
@@ -13,7 +15,7 @@ public class UserConverterTests {
 	private UserDto userDto;
 	private User user;
 	
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		userDto = new UserDto(1, "Aldo", "buonaquestacadrega", "aldo.baglio@agg.it", -3, true);
 		user = new User();
