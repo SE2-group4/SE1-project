@@ -354,6 +354,7 @@ public class UserServiceTests {
 
 			initializeTest(); // re-create all mocks
 			when(userRepository.findByUserId(u1.getUserId())).thenReturn(uList);
+			when(userRepository.findByEmailAndPassword(this.u1.getEmail(), this.u1.getPassword())).thenReturn(this.uList);
 		}
 		
 		@Test
@@ -378,6 +379,7 @@ public class UserServiceTests {
 			}
 		}
 		
+		@Test
 		public void correctIdPw_ShouldReturnLogin() {
 			IdPw credentials = new IdPw(this.u1.getEmail(), this.u1.getPassword());
 			LoginDto res = null;
