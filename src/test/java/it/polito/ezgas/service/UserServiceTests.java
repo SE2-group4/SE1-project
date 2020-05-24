@@ -421,6 +421,12 @@ public class UserServiceTests {
 			when(userRepository.findByUserId(u1.getUserId())).thenReturn(uList);
 			when(userRepository.findByUserId(u2.getUserId())).thenReturn(new ArrayList<>());
 			when(userRepository.findByUserId(u3.getUserId())).thenReturn(uList3);
+			when(userRepository.save(Mockito.any(User.class))).thenAnswer(new Answer<User>() {
+				@Override
+				public User answer(InvocationOnMock invocation) throws Throwable {
+					return (User) (invocation.getArguments()[0]);
+				}				
+			});
 		}
 		
 		@Test 
@@ -453,8 +459,8 @@ public class UserServiceTests {
 		@Test
 		public void nonExistingId() {
 			try {
-				service.getUserById(999);
-				fail("User should be null");
+				UserDto ud1 = service.getUserById(999);
+				assertNull(ud1, "User should be null");
 			} catch (InvalidUserException e) {
 				
 			}
@@ -492,6 +498,12 @@ public class UserServiceTests {
 			when(userRepository.findByUserId(u1.getUserId())).thenReturn(uList);
 			when(userRepository.findByUserId(u2.getUserId())).thenReturn(new ArrayList<>());
 			when(userRepository.findByUserId(u3.getUserId())).thenReturn(uList3);
+			when(userRepository.save(Mockito.any(User.class))).thenAnswer(new Answer<User>() {
+				@Override
+				public User answer(InvocationOnMock invocation) throws Throwable {
+					return (User) (invocation.getArguments()[0]);
+				}				
+			});
 		}
 		
 		@Test
