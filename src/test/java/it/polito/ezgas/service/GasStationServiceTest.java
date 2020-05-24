@@ -137,6 +137,7 @@ public class GasStationServiceTest {
 		GasStation gs1 = new GasStation();
 		GasStation gs2 = new GasStation();
 		User u = new User();
+		
 		@BeforeEach
 		void setUp() {
 			gs1 = new GasStation("Gas station c", "Address c, 3", false, false, false, true, true, "", 31.5, -1, -1, -1,
@@ -153,6 +154,7 @@ public class GasStationServiceTest {
 			Optional<GasStation> gs2Opt = Optional.ofNullable(gs2);
 			Optional<GasStation> gsEmpty = Optional.empty();
 			
+			initializeTest(); // re-create all mocks 			
 			when(gasStationRepository.findByGasStationId(5)).thenReturn(gs1Opt);
 			when(gasStationRepository.findByGasStationId(6)).thenReturn(gs2Opt);
 			when(gasStationRepository.findByGasStationId(999)).thenReturn(gsEmpty);
@@ -220,6 +222,8 @@ public class GasStationServiceTest {
 			GasStation gs2_1 = new GasStation("Gas station c", "Address 3", false, false, false, false, false, "", 31.5, 35, -1, -1,
 					-1, -1, -1, -1, null, 0.0);
 			GasStationDto result = new GasStationDto();
+
+			initializeTest(); // re-create all mocks
 			when(gasStationRepository.save(Mockito.any(GasStation.class))).thenReturn(gs2_1);
 			try {
 				GasStationDto gDto = GasStationConverter.GasStationConvertToGasStationDto((gs2_1));
@@ -375,7 +379,8 @@ public class GasStationServiceTest {
 			
 			gsList.add(gs1);
 			gsList.add(gs2);
-			
+
+			initializeTest(); // re-create all mocks
 			when(gasStationRepository.findAll()).thenReturn(gsList);
 		}
 		
@@ -405,7 +410,8 @@ public class GasStationServiceTest {
 			this.g1 = new GasStation("Gas station c", "Address c, 3", false, false, false, true, true, "", 31.5, -1, -1, -1,
 					-1, 1.2, 0.96, 3, null, 0);
 			this.g1.setGasStationId(1);
-			
+
+			initializeTest(); // re-create all mocks
 			when(gasStationRepository.findByGasStationId(anyInt())).thenAnswer(new Answer<Optional<GasStation>>() {
 				public Optional<GasStation> answer(InvocationOnMock invocation) throws IllegalArgumentException {
 				     Object[] args = invocation.getArguments();
@@ -745,6 +751,7 @@ public class GasStationServiceTest {
 			gasStationFilteredByGasolineType.sort((a, b) -> Double.compare(a.getDieselPrice(), b.getDieselPrice()));
 			expectedList.sort((a, b) -> Double.compare(a.getDieselPrice(), b.getDieselPrice()));
 
+			initializeTest(); // re-create all mocks
 			when(gasStationRepository.findByHasSuperTrueOrderBySuperPriceDesc())
 					.thenReturn(gasStationFilteredByGasolineType);
 
@@ -776,6 +783,7 @@ public class GasStationServiceTest {
 
 			gasStationFilteredByGasolineType.sort((a, b) -> Double.compare(a.getDieselPrice(), b.getDieselPrice()));
 
+			initializeTest(); // re-create all mocks
 			when(gasStationRepository.findByHasDieselTrueOrderByDieselPriceDesc())
 					.thenReturn(gasStationFilteredByGasolineType);
 
@@ -989,6 +997,8 @@ public class GasStationServiceTest {
 		public void setUp() {
 			this.gList1 = new ArrayList<GasStation>();
 			this.uList = new ArrayList<User>();
+			
+			initializeTest(); // re-create all mocks
 			
 			User u1 = new User("Giacomo", "giacomo", "giacomo.poretti@agg.it", 4);
 			u1.setUserId(4);
