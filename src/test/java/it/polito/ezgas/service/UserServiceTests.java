@@ -93,6 +93,7 @@ public class UserServiceTests {
 			u1.setAdmin(false);
 			this.uList.add(u1);
 			
+			initializeTest(); // re-create all mocks
 			when(userRepository.findByUserId(4)).thenReturn(uList);
 		}
 		
@@ -135,6 +136,8 @@ public class UserServiceTests {
 			
 			this.uList = new ArrayList<User>();
 			this.uList.add(this.u1);			
+			
+			initializeTest(); // re-create all mocks
 		}
 		
 		@Test
@@ -236,7 +239,8 @@ public class UserServiceTests {
 			uList.add(u2);
 			
 			size_uList = uList.size();
-			
+
+			initializeTest(); // re-create all mocks
 			when(userRepository.findAll()).thenReturn(uList);
 		}
 		
@@ -295,7 +299,8 @@ public class UserServiceTests {
 			
 			uList.add(u1);
 			uList.add(u2);
-			
+
+			initializeTest(); // re-create all mocks
 			when(userRepository.findAll()).thenReturn(uList);
 		}
 		
@@ -313,6 +318,12 @@ public class UserServiceTests {
 				assertTrue(compareUserDto(userDto.get(1), UserConverter.userConvertToUserDto(u2)),
 						"User retrieved is not the same that has been inserted");
 		}
+	}
+	
+	@Nested
+	@DisplayName ("Test for login")
+	public class Login {
+		
 	}
 	
 	@Nested
@@ -340,6 +351,8 @@ public class UserServiceTests {
 			uList2.add(u2);
 			List<User> uList3 = new ArrayList<User>();
 			uList3.add(u3);
+
+			initializeTest(); // re-create all mocks
 			when(userRepository.findByUserId(u1.getUserId())).thenReturn(uList);
 			when(userRepository.findByUserId(u2.getUserId())).thenReturn(new ArrayList<>());
 			when(userRepository.findByUserId(u3.getUserId())).thenReturn(uList3);
@@ -409,6 +422,8 @@ public class UserServiceTests {
 			uList2.add(u2);
 			List<User> uList3 = new ArrayList<User>();
 			uList3.add(u3);
+
+			initializeTest(); // re-create all mocks
 			when(userRepository.findByUserId(u1.getUserId())).thenReturn(uList);
 			when(userRepository.findByUserId(u2.getUserId())).thenReturn(new ArrayList<>());
 			when(userRepository.findByUserId(u3.getUserId())).thenReturn(uList3);
