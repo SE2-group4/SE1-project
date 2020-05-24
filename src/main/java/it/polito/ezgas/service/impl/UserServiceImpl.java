@@ -57,6 +57,11 @@ public class UserServiceImpl implements UserService {
 				.collect(Collectors.toList());
 		if (uList.size() != 0) {
 			User oldUser = uList.get(0);
+			
+			if(oldUser.getUserId() != newUser.getUserId()) // if the user already exists => I try to insert a new user, with different id but same email
+				return UserConverter.userConvertToUserDto(oldUser); // operation not allowed
+			
+			// else: its an update
 			newUser.setUserId(oldUser.getUserId());
 		} else
 			newUser.setReputation(0);
@@ -118,7 +123,7 @@ public class UserServiceImpl implements UserService {
 		if (user.getReputation() < 5 && user.getReputation() >= -5) {
 			Integer new_reputation = user.getReputation() + 1;
 			user.setReputation(new_reputation);
-			user = this.userRepository.save(user);
+			user = this.userRepository.save(user);			
 			return user.getReputation();
 		} else {
 			return 5;
