@@ -5,6 +5,7 @@ import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.AdditionalMatchers.*;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -32,6 +33,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import exception.GPSDataException;
 import exception.InvalidGasStationException;
 import exception.InvalidGasTypeException;
+import exception.InvalidUserException;
 import exception.PriceException;
 import it.polito.ezgas.converter.GasStationConverter;
 import it.polito.ezgas.dto.GasStationDto;
@@ -1130,7 +1132,149 @@ public class GasStationServiceTest {
 	@Nested
 	@DisplayName("Test for setReport")
 	public class SetReport {
-		// ***** DA COMPLETARE *****
+		GasStation g1;
+		User u1;
+		List<GasStation> gList;
+		List<User> uList;
+		
+		@BeforeEach
+		public void setUp() {
+
+			this.u1 = new User("Giacomo", "giacomo", "giacomo.poretti@agg.it", 4);
+			this.u1.setUserId(4);
+			
+			this.g1 = new GasStation("Gas station 2_1", "Address 2_1, 2_1", true, true, true, true, true,
+					"Enjoy", 41.5, 23.7, 1.2, 1.67, 2, 2, -0.99, 1, "07-05-2020 18:47:52", 0);
+			this.g1.setGasStationId(1);
+			this.g1.setReportUser(this.u1.getUserId());
+			this.g1.setUser(this.u1);
+			
+			this.uList = new ArrayList<User>();
+			this.uList.add(this.u1);
+			
+			initializeTest(); // re-create mocks
+			when(gasStationRepository.save(any(GasStation.class))).thenAnswer(new Answer<GasStation>() {
+				public GasStation answer(InvocationOnMock invocation) {
+				     Object[] args = invocation.getArguments();
+					return (GasStation) (args[0]);
+				}
+			});
+			when(gasStationRepository.findByGasStationId(anyInt())).thenAnswer(new Answer<Optional<GasStation>>() {
+				@Override
+				public Optional<GasStation> answer(InvocationOnMock invocation) throws IllegalArgumentException {
+					Integer param = (Integer) invocation.getArguments()[0];
+					
+					//  if(param == g1.getGasStationId()) // it doesn't work... I hate Integer - int problems...
+					if(param.equals(g1.getGasStationId()))
+						return Optional.of(g1);
+					if(param < 0)
+						throw new IllegalArgumentException();
+					else
+						return Optional.empty();
+				}				
+			});
+			when(userRepository.findByUserId(anyInt())).thenAnswer(new Answer<List<User>>() {
+				@Override
+				public List<User> answer(InvocationOnMock invocation) throws IllegalArgumentException {
+					Integer param = (Integer) invocation.getArguments()[0];
+					
+					if(param == u1.getUserId())
+						return uList;
+					if(param < 0)
+						throw new IllegalArgumentException();
+					else
+						return new ArrayList<User>();
+				}				
+			});
+		}
+		
+		@Test
+		public void invalidUserId_ShouldThrowException() {
+			try {
+				gasStationService.setReport(this.g1.getGasStationId(), 1, 1, 1, 1, 1, new Integer(-84));
+				fail();
+			} catch (InvalidGasStationException e) {
+				fail();
+			} catch (PriceException e) {
+				fail();
+			} catch (InvalidUserException e) {
+				// good!
+			}		
+		}
+		
+		@Test
+		public void invalidGasStationId_ShouldThrowException() {
+			try {
+				gasStationService.setReport(new Integer(-84), 1, 1, 1, 1, 1, this.u1.getUserId());
+				fail();
+			} catch (InvalidGasStationException e) {
+				// good!
+			} catch (PriceException e) {
+				fail();
+			} catch (InvalidUserException e) {
+				fail();
+			}
+		}
+		
+		@Test
+		public void notExistingUser_ShouldThrowException() {
+			try {
+				gasStationService.setReport(this.g1.getGasStationId(), 1, 1, 1, 1, 1, new Integer(999));
+				fail();
+			} catch (InvalidGasStationException e) {
+				e.printStackTrace();
+				fail();
+			} catch (PriceException e) {
+				e.printStackTrace();
+				fail();
+			} catch (InvalidUserException e) {
+				// good!
+			}
+		}
+		
+		@Test
+		public void notExistingGasStation_ShouldThrowException() {	
+			try {
+				gasStationService.setReport(new Integer(999), 1, 1, 1, 1, 1, this.u1.getUserId());
+				fail();
+			} catch (InvalidGasStationException e) {
+				// good!
+			} catch (PriceException e) {
+				fail();
+			} catch (InvalidUserException e) {
+				fail();
+			}
+			
+		}
+		
+		@Test
+		public void invalidGasTypePrice_ShouldThrowException() {
+			try {
+				gasStationService.setReport(this.g1.getGasStationId(), 1, 1, -44.0, 1, 1, this.u1.getUserId());
+				fail();
+			} catch (InvalidGasStationException e) {
+				e.printStackTrace();
+				fail();
+			} catch (PriceException e) {
+				// good!
+			} catch (InvalidUserException e) {
+				e.printStackTrace();
+				fail();
+			}
+		}
+		
+		@Test
+		public void correctParams_ShouldSetNewReport() {
+			try {
+				gasStationService.setReport(this.g1.getGasStationId(), 1, 1, 1, 1, 1, this.u1.getUserId());
+			} catch (InvalidGasStationException e) {
+				fail();
+			} catch (PriceException e) {
+				fail();
+			} catch (InvalidUserException e) {
+				fail();
+			}		
+		}		
 	}
 
 	@Nested
