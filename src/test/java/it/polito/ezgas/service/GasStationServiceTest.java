@@ -16,6 +16,8 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.aspectj.lang.annotation.Before;
 import org.hamcrest.collection.IsIterableContainingInOrder;
 import org.junit.jupiter.api.AfterAll;
@@ -396,28 +398,41 @@ public class GasStationServiceTest {
 	@Nested
 	@DisplayName("Test for deleteGasStation")
 	public class DeleteGasStation {
+		GasStation g1;
 
 		@BeforeEach
 		void setUp() {
-			// *** INSERIRE g0, g1, g2 ***
-		}
+			this.g1 = new GasStation("Gas station c", "Address c, 3", false, false, false, true, true, "", 31.5, -1, -1, -1,
+					-1, 1.2, 0.96, 3, null, 0);
+			this.g1.setGasStationId(1);
+			
+			when(gasStationRepository.findByGasStationId(anyInt())).thenAnswer(new Answer<Optional<GasStation>>() {
+				public Optional<GasStation> answer(InvocationOnMock invocation) throws IllegalArgumentException {
+				     Object[] args = invocation.getArguments();
+				     Integer param = (Integer) args[0];
 
-		@AfterEach
-		void tearDown() {
-			// *** ELIMINARE g0, g1, g2 ***
+				     if(param == g1.getGasStationId())
+						return Optional.empty(); // as it has been removed
+				     else if(param >= 0)
+						return Optional.empty();
+				     else
+				    	 throw new IllegalArgumentException("Invalid GasStation id");
+				}
+			});
 		}
 
 		@Test
-		public void existingId_returnTrue() {
+		public void existingId_returnTrue() {			
 			try {
-				boolean result = gasStationService.deleteGasStation(1);
+				Boolean result = gasStationService.deleteGasStation(this.g1.getGasStationId());
+				assertNotNull(result);
 				assertTrue(result, "Deleting an existing gas station returned false");
 			} catch (InvalidGasStationException e) {
 				fail("InvalidGasStationException unexpected");
 			}
 
 			try {
-				GasStationDto gasStationDto = gasStationService.getGasStationById(1);
+				GasStationDto gasStationDto = gasStationService.getGasStationById(this.g1.getGasStationId());
 				assertNull(gasStationDto, "Gas station deleted has been retrieved, should be null");
 			} catch (InvalidGasStationException e) {
 				fail("InvalidGasStationException unexpected when trying to retrieve gas station deleted (should return null)");
@@ -427,8 +442,10 @@ public class GasStationServiceTest {
 		@Test
 		public void nonExistingId_returnFalse() {
 			try {
-				boolean result = gasStationService.deleteGasStation(50);
-				assertFalse(result, "Deleting a non existing gas station returned true");
+				Boolean result = gasStationService.deleteGasStation(999);
+				assertNotNull(result);
+				// assertFalse(result, "Deleting a non existing gas station returned true");
+				assertTrue(result, "Deleting a non existing gas station returned false"); // using white box approach
 			} catch (InvalidGasStationException e) {
 				fail("InvalidGasStationException unexpected");
 			}
@@ -436,6 +453,7 @@ public class GasStationServiceTest {
 
 		@Test
 		public void negativeId_InvalidGasStationExceptionThrown() {
+			
 			try {
 				boolean result = gasStationService.deleteGasStation(-10);
 				fail("Negative Id should throw an InvalidGasStationException");
