@@ -30,10 +30,13 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 
 import exception.InvalidGasStationException;
+import exception.InvalidLoginDataException;
 import exception.InvalidUserException;
 import it.polito.ezgas.converter.GasStationConverter;
 import it.polito.ezgas.converter.UserConverter;
 import it.polito.ezgas.dto.GasStationDto;
+import it.polito.ezgas.dto.IdPw;
+import it.polito.ezgas.dto.LoginDto;
 import it.polito.ezgas.dto.UserDto;
 import it.polito.ezgas.entity.GasStation;
 import it.polito.ezgas.entity.User;
@@ -75,6 +78,20 @@ public class UserServiceTests {
 				&& u1.getReputation() == u2.getReputation()
 				&& u1.getUserId() == u2.getUserId()
 				&& u1.getUserName().compareTo(u2.getUserName()) == 0);
+	}
+	
+	boolean compareLoginDto(User u1, LoginDto l1) {
+		if (u1 == null && l1 == null)
+			return true;
+		if (u1 == null || l1 == null)
+			return false;
+		
+		return (u1.getAdmin() == l1.getAdmin() 
+				&& u1.getEmail().compareTo(l1.getEmail()) == 0
+				// && u1.getPassword().compareTo(l1.getPassword()) == 0
+				&& u1.getReputation() == l1.getReputation()
+				&& u1.getUserId() == l1.getUserId()
+				&& u1.getUserName().compareTo(l1.getUserName()) == 0);
 	}
 	
 	
@@ -323,7 +340,55 @@ public class UserServiceTests {
 	@Nested
 	@DisplayName ("Test for login")
 	public class Login {
+		User u1;
+		List<User> uList;
 		
+		@BeforeEach
+		public void setUp() {
+			this.uList = new ArrayList<User>();
+			
+			this.u1 = new User("Giovanni", "gvnn", "giovanni.storti@agg.it", +1);
+			this.u1.setUserId(3);
+			this.u1.setAdmin(true);
+			this.uList.add(this.u1);
+
+			initializeTest(); // re-create all mocks
+			when(userRepository.findByUserId(u1.getUserId())).thenReturn(uList);
+		}
+		
+		@Test
+		public void invalidEmail_ShouldThrowException() {
+			IdPw credentials = new IdPw("invalid email", this.u1.getPassword());
+			try {
+				service.login(credentials);
+				fail();
+			} catch (InvalidLoginDataException e) {
+				// good!
+			}
+		}
+		
+		@Test
+		public void invalidPassword_ShouldThrowException() {
+			IdPw credentials = new IdPw(this.u1.getEmail(), "invalid email");
+			try {
+				service.login(credentials);
+				fail();
+			} catch (InvalidLoginDataException e) {
+				// good!
+			}
+		}
+		
+		public void correctIdPw_ShouldReturnLogin() {
+			IdPw credentials = new IdPw(this.u1.getEmail(), this.u1.getPassword());
+			LoginDto res = null;
+			try {
+				res = service.login(credentials);
+			} catch (InvalidLoginDataException e) {
+				fail();
+			}
+			
+			assertTrue(compareLoginDto(this.u1, res));			
+		}
 	}
 	
 	@Nested
