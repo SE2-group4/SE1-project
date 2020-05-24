@@ -10,8 +10,11 @@ import it.polito.ezgas.service.*;
 import it.polito.ezgas.utils.*;
 
 @RunWith(JUnitPlatform.class)
-@SelectClasses({ GasStationTest.class, UserTests.class, UtilityTest.class,
-	GasStationServiceTest.class, GasStationConverterTest.class, UserConverterTests.class, UserServiceTests.class })
+@SelectClasses({
+	EZGasApplicationTests.class,
+	GasStationTest.class, UserTests.class, UtilityTest.class,
+	GasStationServiceTest.class, UserServiceTests.class,
+	GasStationConverterTest.class, UserConverterTests.class})
 public class TestSuite {
 
 }
