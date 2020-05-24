@@ -23,22 +23,27 @@ import it.polito.ezgas.service.UserService;
  */
 @Service
 public class UserServiceImpl implements UserService {
-	
+
 	private UserRepository userRepository;
-	
+
 	public UserServiceImpl(UserRepository userRepository) {
 		this.userRepository = userRepository;
 	}
-	
+
 	@Override
 	public UserDto getUserById(Integer userId) throws InvalidUserException {
 		// TODO Auto-generated method stub
-		User user;
-		try {
-			user = this.userRepository.findByUserId(userId).get(0);
-			return UserConverter.userConvertToUserDto(user);
+		if (userId < 0) {
+			throw new InvalidUserException("Invalid (negative) userId");
 		}
-		catch(Exception e) {
+
+		List<User> userList;
+		try {
+			userList = this.userRepository.findByUserId(userId);
+			if (userList.size() > 0)
+				return UserConverter.userConvertToUserDto(userList.get(0));
+			return null;
+		} catch (Exception e) {
 			throw new InvalidUserException(e.getMessage());
 		}
 	}
@@ -47,15 +52,15 @@ public class UserServiceImpl implements UserService {
 	public UserDto saveUser(UserDto userDto) {
 		// TODO Auto-generated method stub
 		User newUser = UserConverter.userDtoConvertToUser(userDto);
-		
-		List<User> uList = this.userRepository.findAll().stream().filter(u -> u.getEmail().equals(newUser.getEmail())).collect(Collectors.toList());
-		if(uList.size() != 0) {
+
+		List<User> uList = this.userRepository.findAll().stream().filter(u -> u.getEmail().equals(newUser.getEmail()))
+				.collect(Collectors.toList());
+		if (uList.size() != 0) {
 			User oldUser = uList.get(0);
 			newUser.setUserId(oldUser.getUserId());
-		}
-		else	
+		} else
 			newUser.setReputation(0);
-		
+
 		User user = this.userRepository.save(newUser);
 		return UserConverter.userConvertToUserDto(user);
 	}
@@ -65,7 +70,7 @@ public class UserServiceImpl implements UserService {
 		// TODO Auto-generated method stub
 		List<User> users = this.userRepository.findAll();
 		List<UserDto> users_dto = new ArrayList<>();
-		for(int i = 0; i < users.size(); i++) {
+		for (int i = 0; i < users.size(); i++) {
 			users_dto.add(UserConverter.userConvertToUserDto(users.get(i)));
 		}
 		return users_dto;
@@ -78,8 +83,7 @@ public class UserServiceImpl implements UserService {
 		try {
 			this.userRepository.delete(userId);
 			isDeleted = true;
-		}
-		catch(Exception e) {
+		} catch (Exception e) {
 			isDeleted = false;
 			throw new InvalidUserException(e.getMessage());
 		}
@@ -92,10 +96,10 @@ public class UserServiceImpl implements UserService {
 		try {
 			// TODO Auto-generated method stub
 			User user = this.userRepository.findByEmailAndPassword(credentials.getUser(), credentials.getPw()).get(0);
-			userLogin = new LoginDto(user.getUserId(), user.getUserName(), user.getPassword(), user.getEmail(), user.getReputation());
+			userLogin = new LoginDto(user.getUserId(), user.getUserName(), user.getPassword(), user.getEmail(),
+					user.getReputation());
 			userLogin.setAdmin(user.getAdmin());
-		}
-		catch(Exception e) {
+		} catch (Exception e) {
 			throw new InvalidLoginDataException(e.getMessage());
 		}
 		return userLogin;
@@ -103,35 +107,43 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public Integer increaseUserReputation(Integer userId) throws InvalidUserException {
-		try {
-			User user = this.userRepository.findByUserId(userId).get(0);
-			if(user.getReputation() < 5 && user.getReputation() >= -5) {
-				Integer new_reputation = user.getReputation()+1;
-				user.setReputation(new_reputation);
-				this.userRepository.save(user);
-				return new_reputation;
-			} else {
-				return 5;
-			}
-		} catch(Exception e) {
-			throw new InvalidUserException("Invalid (negative) userId");
+		List<User> userList;
+		User user;
+
+		userList = this.userRepository.findByUserId(userId);
+		if (userList.size() == 0)
+			throw new InvalidUserException("No user with userId " + userId + " registered");
+
+		user = userList.get(0);
+		if (user.getReputation() < 5 && user.getReputation() >= -5) {
+			Integer new_reputation = user.getReputation() + 1;
+			user.setReputation(new_reputation);
+			user = this.userRepository.save(user);
+			return user.getReputation();
+		} else {
+			return 5;
 		}
 	}
 
 	@Override
 	public Integer decreaseUserReputation(Integer userId) throws InvalidUserException {
-		try {
-			User user = this.userRepository.findByUserId(userId).get(0);
-			if(user.getReputation() <= 5 && user.getReputation() > -5) {
-				Integer new_reputation = user.getReputation()-1;
-				user.setReputation(new_reputation);
-				this.userRepository.save(user);
-				return new_reputation;
-			} else {
-				return -5;
-			}
-		} catch(Exception e) {
-			throw new InvalidUserException("Invalid (negative) userId");
+		List<User> userList;
+		User user;
+
+		userList = this.userRepository.findByUserId(userId);
+		if (userList.size() == 0)
+			throw new InvalidUserException("No user with userId " + userId + " registered");
+
+		user = userList.get(0);
+		
+		if (user.getReputation() <= 5 && user.getReputation() > -5) {
+			Integer new_reputation = user.getReputation() - 1;
+			user.setReputation(new_reputation);
+			user = this.userRepository.save(user);
+			return user.getReputation();
+		} else {
+			return -5;
 		}
+
 	}
 }
