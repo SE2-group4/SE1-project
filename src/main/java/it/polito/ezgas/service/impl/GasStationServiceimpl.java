@@ -214,10 +214,10 @@ public class GasStationServiceimpl implements GasStationService {
 			double gasPrice, double methanePrice, Integer userId)
 			throws InvalidGasStationException, PriceException, InvalidUserException {
 
-		if (userId < 0) {
+		if (userId == null || userId < 0) {
 			throw new InvalidUserException("Invalid (negative) userId");
 		}
-		if (gasStationId < 0) {
+		if (gasStationId == null || gasStationId < 0) {
 			throw new InvalidGasStationException("Invalid (negative) gasStationId");
 		}
 
@@ -228,13 +228,26 @@ public class GasStationServiceimpl implements GasStationService {
 		}
 
 		GasStation gasStation = gasStationOpt.get();
-		User user = userRepository.findByUserId(userId).get(0);
+		List<User> uList = userRepository.findByUserId(userId);
+		if(uList.size() != 1)
+			throw new InvalidUserException("User not present");
+		User user = uList.get(0);
 
+		/*
 		if ((gasStation.getMethanePrice() != -1 && gasStation.getMethanePrice() < 0)
 				|| (gasStation.getSuperPlusPrice() != -1 && gasStation.getSuperPlusPrice() < 0)
 				|| (gasStation.getSuperPrice() != -1 && gasStation.getSuperPrice() < 0)
 				|| (gasStation.getGasPrice() != -1 && gasStation.getGasPrice() < 0)
 				|| (gasStation.getDieselPrice() != -1 && gasStation.getDieselPrice() < 0)) {
+			throw new PriceException("Invalid (negative) price");
+		}
+		*/
+		
+		if ((gasStation.getMethanePrice() != -1 && methanePrice < 0)
+				|| (gasStation.getSuperPlusPrice() != -1 && superPlusPrice < 0)
+				|| (gasStation.getSuperPrice() != -1 && superPrice < 0)
+				|| (gasStation.getGasPrice() != -1 && gasPrice < 0)
+				|| (gasStation.getDieselPrice() != -1 && dieselPrice < 0)) {
 			throw new PriceException("Invalid (negative) price");
 		}
 
