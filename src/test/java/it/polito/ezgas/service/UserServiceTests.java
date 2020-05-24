@@ -370,7 +370,11 @@ public class UserServiceTests {
 		
 		@Test
 		public void invalidPassword_ShouldThrowException() {
-			IdPw credentials = new IdPw(this.u1.getEmail(), "invalid email");
+			// IdPw credentials = new IdPw(this.u1.getEmail(), "invalid email");
+			IdPw credentials = new IdPw();
+			credentials.setUser(this.u1.getEmail());
+			credentials.setPw("invalid email");
+			
 			try {
 				service.login(credentials);
 				fail();
