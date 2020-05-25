@@ -299,20 +299,186 @@ stepN:  GasStationServiceTest.java + UserServiceTest.java
 
 # Scenarios
 
+## Scenario UC1.1
 
-<If needed, define here additional scenarios for the application. Scenarios should be named
- referring the UC they detail>
+| Scenario | Create User Account Fail | Technique | Coverage |
+| -------- |:-------------------:|:---------:|:--------:|
+|  Precondition     | Account U already exists |
+|  Post condition   | No new account is added to the system |
+| Step#             | Description  | Test created from Requirements | 100% |
+|  1     |  User goes to the signup page |
+|  2     |  User inserts his/her wanted credentials (Username, Email, Password) in the designated blank fields  |
+|  3     |  User receives an error since a user with that email is already present in the database  |
 
-## Scenario UCx.y
+## Scenario UC1.2
 
-| Scenario |  name |
-| ------------- |:-------------:|
-|  Precondition     |  |
-|  Post condition     |   |
-| Step#        | Description  |
-|  1     |  ... |
-|  2     |  ... |
+| Scenario | Create User Account Reputation Check | Technique | Coverage |
+| -------- |:-------------------:|:---------:|:--------:|
+|  Precondition     | Account U doesn't exist |
+|  Post condition   | A new user with reputation 0 is added to the system |
+| Step#             | Description  | Test created from Requirements | 100% |
+|  1     |  User goes to the signup page |
+|  2     |  User inserts his/her wanted credentials (Username, Email, Password) in the designated blank fields  |
+|  3     |  A new User is created and inserted in the database with reputation 0  |
 
+## Scenario UC1.3
+
+| Scenario | List all Users Fail | Technique | Coverage |
+| -------- |:-------------------:|:---------:|:--------:|
+|  Precondition     | Multiple user accounts are in the database |
+|  Post condition   | No user is retrieved |
+| Step#             | Description  | Test created from Requirements | 100% |
+|  1     | Admin logs in |
+|  2     | Admin tries to list all the users present in the database |
+|  3     | Admin receives an empty list instead of a full one |
+
+## Scenario UC1.4
+
+| Scenario | User ID not existing | Technique | Coverage |
+| -------- |:-------------------:|:---------:|:--------:|
+|  Precondition     | User to search is not in the database |
+|  Post condition   | |
+| Step#             | Description  | Test created for code coverage | 90.9% |
+|  1     | Admin logs in |
+|  2     | Admin tries to search for a user which is not in the database |
+|  3     | An InvalidUserException is lauched |
+
+## Scenario UC1.5
+
+| Scenario | Invalid User Id | Technique | Coverage |
+| -------- |:-------------------:|:---------:|:--------:|
+|  Precondition     | User to search is not in the database |
+|  Post condition   | |
+| Step#             | Description  | Test created from Requirements | 41.2% |
+|  1     | Admin logs in |
+|  2     | Admin tries to search for a user which is not in the database and inserts a nevative id (not valid) |
+|  3     | An InvalidUserException is lauched |
+
+## Scenario UC4.1
+
+| Scenario | NegativeGastypePrice test | Technique | Coverage |
+| -------- |:-------------------:|:---------:|:--------:|
+|  Precondition     | Specific GasStation is present in the database  |
+|  Post condition   | No changes are done|
+| Step#             | Description  | Test created from Requirements | 70% |
+|  1     | Admin logs in |
+|  2     | Admin tries to modify a price for a gas station inserting a negative price (not valid) |
+|  3     | A PriceException is raised |
+
+## Scenario UC4.2
+
+| Scenario | Invalid latitude or longitude test | Technique | Coverage |
+| -------- |:-------------------:|:---------:|:--------:|
+|  Precondition     | User to search is not in the database |
+|  Post condition   | |
+| Step#             | Description  | Test created from Requirements | 69.6% |
+|  1     | Admin logs in |
+|  2     | Admin tries to create a new gas station inserting invalid latitude (<-90° or >90°) or an invalid longitude (<-180° or >180°) |
+|  3     | A GPSDataException is raised |
+
+## Scenario UC4.3
+
+| Scenario | Invalid GasStationID | Technique | Coverage |
+| -------- |:-------------------:|:---------:|:--------:|
+|  Precondition     | Gas Station is not in the database |
+|  Post condition   | |
+| Step#             | Description  | Test created from Requirements | 18.2% |
+|  1     | Admin logs in |
+|  2     | Admin tries to search for a gas station having a negative id |
+|  3     | An InvalidGasStationException is raised |
+
+## Scenario UC4.4
+
+| Scenario | getAllGasStation fail | Technique | Coverage |
+| -------- |:-------------------:|:---------:|:--------:|
+|  Precondition     | Multiple Gas Stations are in the database |
+|  Post condition   | |
+| Step#             | Description  | Test created for code coverage | 100% |
+|  1     | Admin logs in |
+|  2     | Admin tries to get the list of all gas stations present in the database |
+|  3     | An error returns only an empty list |
+
+## Scenario UC6.1
+
+| Scenario | Non existing GasStationID | Technique | Coverage |
+| -------- |:-------------------:|:---------:|:--------:|
+|  Precondition     | Gas Station is not in the database |
+|  Post condition   | |
+| Step#             | Description  | Test created from Requirements | 76.5% |
+|  1     | Admin logs in |
+|  2     | Admin tries to search for a gas station with an ID which is not in the database |
+|  3     | An InvalidGasStationException is raised |
+
+## Scenario UC6.2
+
+| Scenario | Non existing GasStationID | Technique | Coverage |
+| -------- |:-------------------:|:---------:|:--------:|
+|  Precondition     | Gas Station is not in the database |
+|  Post condition   | |
+| Step#             | Description  | Test created from Requirements | 76.5% |
+|  1     | Admin logs in |
+|  2     | Admin tries to search for a gas station with an ID which is not in the database |
+|  3     | An InvalidGasStationException is raised |
+
+## Scenario UC7.1
+
+| Scenario | Report PriceExeption | Technique | Coverage |
+| -------- |:-------------------:|:---------:|:--------:|
+|  Precondition     | Gas Station is in the database |
+|  Post condition   | |
+| Step#             | Description  | Test created from Requirements | 10% |
+|  1     | Admin logs in |
+|  2     | Admin searches for a gas station, and tries to insert a negative new price |
+|  3     | An PriceException is raised |
+
+## Scenario UC8.1
+
+This scenario is a grouping of multiple tests covering the same area: the return of an empty list instead of the list of gas stations that we were searching. This is why we have a list of different coverages for tests.
+
+| Scenario | Search fail | Technique | Coverage |
+| -------- |:-------------------:|:---------:|:--------:|
+|  Precondition     | Gas Station(s) is(are) not in the database |
+|  Post condition   | |
+| Step#             | Description  | Test created for code coverage | |
+|a|getGasStationsByProximity||78.8%|
+|b|getGasStationsWithoutCoordinates||89.8%|
+|c|getGasStationsByGasolineType||83.3%|
+|d|getGasStationsByCarSharing||100%|
+||||
+|  1     | Admin logs in |
+|  2     | Admin tries to search for a gas station with a certain characteristic (latitude and longitude, gasoline type, car sharing|
+|  3     | An empty list is returned because there was an error |
+
+## Scenario UC8.2
+
+| Scenario | InvalidGasTypeException | Technique | Coverage |
+| -------- |:-------------------:|:---------:|:--------:|
+|  Precondition     | Gas Station is not in the database |
+|  Post condition   | |
+| Step#             | Description  | Test created from Requirements | 23.8% |
+|  1     | Admin logs in |
+|  2     | Admin tries to search for a gas station with a specific gas type (null, empty string or invalid string) |
+|  3     | An InvalidGasTypeException is raised |
+
+## Scenario UC7.2
+
+| Scenario | IncreaseReputation MaxValue | Technique | Coverage |
+| -------- |:-------------------:|:---------:|:--------:|
+|  Precondition     | User2 has inserted a price list into a gas station and has already a reputation of 5|
+|  Post condition   | No change in reputation|
+| Step#             | Description  | Test created from Requirements | 68.8% |
+|  1     | User1 searches for a gas station and evaluates the price list with a positive mark (prices are correct)|
+|  2     | The user2 reputation is increased, but since it's already 5 it will stay at maximum still|
+
+## Scenario UC7.3
+
+| Scenario | DecreaseReputation MinValue | Technique | Coverage |
+| -------- |:-------------------:|:---------:|:--------:|
+|  Precondition     | User2 has inserted a price list into a gas station and has a reputation of -5|
+|  Post condition   | No change in reputation|
+| Step#             | Description  | Test created from Requirements | 68.8% |
+|  1     | User1 searches for a gas station and evaluates the price list with a negative mark (prices are wrong) |
+|  2     | The user2 reputation is decreased, but since it's already -5 it will stay at minimum still|
 
 
 # Coverage of Scenarios and FR
