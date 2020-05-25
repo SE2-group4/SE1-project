@@ -79,15 +79,19 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public Boolean deleteUser(Integer userId) throws InvalidUserException {
 		// TODO Auto-generated method stub
-		boolean isDeleted = false;
+		if(userId < 0)
+			throw new InvalidUserException("Invalid userId (less than 0)");
+		List<User> users;
+		
 		try {
 			this.userRepository.delete(userId);
-			isDeleted = true;
+			users = this.userRepository.findByUserId(userId);
+			if(users.size() > 0)
+				return false;
+			return true;
 		} catch (Exception e) {
-			isDeleted = false;
 			throw new InvalidUserException(e.getMessage());
 		}
-		return isDeleted;
 	}
 
 	@Override

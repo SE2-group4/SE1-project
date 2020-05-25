@@ -258,6 +258,7 @@ public class UserServiceTests {
 			size_uList = uList.size();
 
 			initializeTest(); // re-create all mocks
+			when(userRepository.findByUserId(u1.getUserId())).thenReturn(new ArrayList<User>());
 			when(userRepository.findAll()).thenReturn(uList);
 		}
 		
@@ -280,7 +281,7 @@ public class UserServiceTests {
 		public void testInvalidUserException() {
 			u2.setUserId(-1);
 			try {
-				service.getUserById(u2.getUserId());
+				service.deleteUser(u2.getUserId());
 				fail("Negative id should throw an InvalidGasStationException");
 			} catch (InvalidUserException e) {}
 		}
@@ -288,8 +289,7 @@ public class UserServiceTests {
 		@Test
 		public void nonExistingId() {
 			try {
-				UserDto userDto = service.getUserById(999);
-				assertNull(userDto, "User should be null");
+				service.deleteUser(999);
 			} catch (InvalidUserException e) {}
 			
 		}
@@ -421,6 +421,7 @@ public class UserServiceTests {
 			when(userRepository.findByUserId(u1.getUserId())).thenReturn(uList);
 			when(userRepository.findByUserId(u2.getUserId())).thenReturn(new ArrayList<>());
 			when(userRepository.findByUserId(u3.getUserId())).thenReturn(uList3);
+			when(userRepository.findByUserId(999)).thenReturn(new ArrayList<User>());
 		}
 		
 		@Test 
@@ -444,7 +445,7 @@ public class UserServiceTests {
 		@Test
 		public void testInvalidUserException() {
 			try {
-				service.getUserById(u2.getUserId());
+				service.increaseUserReputation(u2.getUserId());
 				fail("Negative id should throw an InvalidGasStationException");
 			} catch (InvalidUserException e) {
 			}
@@ -453,8 +454,8 @@ public class UserServiceTests {
 		@Test
 		public void nonExistingId() {
 			try {
-				service.getUserById(999);
-				fail("User should be null");
+				service.increaseUserReputation(999);
+				fail("Non existing id should throw an InvalidGasStationException");
 			} catch (InvalidUserException e) {
 				
 			}
@@ -516,7 +517,7 @@ public class UserServiceTests {
 		@Test
 		public void testInvalidUserException() {
 			try {
-				service.getUserById(u2.getUserId());
+				service.decreaseUserReputation(u2.getUserId());
 				fail("Negative id should throw an InvalidGasStationException");
 			} catch (InvalidUserException e) {
 			}
@@ -525,8 +526,8 @@ public class UserServiceTests {
 		@Test
 		public void nonExistingId() {
 			try {
-				UserDto userDto = service.getUserById(999);
-				assertNull(userDto, "User should be null");
+				service.decreaseUserReputation(999);
+				fail("Non existing id should throw an InvalidGasStationException");
 			} catch (InvalidUserException e) {}
 		}
 	}
