@@ -33,19 +33,16 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserDto getUserById(Integer userId) throws InvalidUserException {
 		// TODO Auto-generated method stub
-		if (userId < 0) {
+		if (userId < 0 || userId == null) {
 			throw new InvalidUserException("Invalid (negative) userId");
 		}
 
 		List<User> userList;
-		try {
-			userList = this.userRepository.findByUserId(userId);
-			if (userList.size() > 0)
-				return UserConverter.userConvertToUserDto(userList.get(0));
-			return null;
-		} catch (Exception e) {
-			throw new InvalidUserException(e.getMessage());
-		}
+		userList = this.userRepository.findByUserId(userId);
+		if (userList.size() > 0)
+			return UserConverter.userConvertToUserDto(userList.get(0));
+		return null;
+		
 	}
 
 	@Override

@@ -211,24 +211,38 @@ public class GasStationServiceTest {
 	@Nested
 	@DisplayName("Test for saveGasStation")
 	public class SaveGasStation {
-
-		@AfterEach
-		void tearDown() throws Exception {
-			// *** ELIMINARE DAL DB LE GASSTATION INSERITE ***
+		
+		@BeforeEach
+		void setUp() {
+			when(gasStationRepository.save(any(GasStation.class))).thenAnswer(new Answer<GasStation>() {
+				public GasStation answer(InvocationOnMock invocation) {
+					Object[] args = invocation.getArguments();
+					return (GasStation) (args[0]);
+				}
+			});
 		}
+		
 
 		@Test
 		public void validGasStationDto_returnGasStationDto() {
-			GasStation gs2_1 = new GasStation("Gas station c", "Address 3", false, false, false, false, false, "", 31.5,
+			GasStation gs1 = new GasStation("Gas station c", "Address 3", true, true, true, true, true, "", 31.5,
 					35, -1, -1, -1, -1, -1, -1, null, 0.0);
+			GasStationDto gs1DtoExpected = new GasStationDto(1, "Gas station c", "Address 3", true, true, true, true, true, "", 31.5,
+					35, 0, 0, 0, 0, 0, -1, null, 0.0) ;
+			GasStation gs2 = new GasStation("Gas station c", "Address 3", false, false, false, false, false, "", 31.5,
+					35, -1, -1, -1, -1, -1, -1, null, 0.0);
+			GasStationDto gs2DtoExpected = new GasStationDto(2, "Gas station c", "Address 3", false, false, false, false, false, "", 31.5,
+					35, -1, -1, -1, -1, -1, -1, null, 0.0) ;
+			gs1.setGasStationId(1);
+			gs2.setGasStationId(2);
 			GasStationDto result = new GasStationDto();
 
-			initializeTest(); // re-create all mocks
-			when(gasStationRepository.save(Mockito.any(GasStation.class))).thenReturn(gs2_1);
 			try {
-				GasStationDto gDto = GasStationConverter.GasStationConvertToGasStationDto((gs2_1));
-				result = gasStationService.saveGasStation(gDto);
-				assertTrue(compareGasStationDto(result, GasStationConverter.GasStationConvertToGasStationDto((gs2_1))),
+				result = gasStationService.saveGasStation( GasStationConverter.GasStationConvertToGasStationDto(gs1));
+				assertTrue(compareGasStationDto(result, gs1DtoExpected),
+						"Gas station retrieved is not the same that has been inserted");
+				result = gasStationService.saveGasStation(GasStationConverter.GasStationConvertToGasStationDto(gs2));
+				assertTrue(compareGasStationDto(result, gs2DtoExpected),
 						"Gas station retrieved is not the same that has been inserted");
 
 			} catch (PriceException | GPSDataException e) {
@@ -237,11 +251,33 @@ public class GasStationServiceTest {
 		}
 
 		@Test
+		public void validGasStationDto_updateAndReturnGasStationDto() {
+			GasStation gs = new GasStation("Gas station c", "Address 3", true, true, true, true, true, "", 31.5,
+					35, 5, 4, 3, 2, 1, 1, new Date().toString(), 0.0);
+			User u = new User("user", "password", "user@mail.com", 1);
+			gs.setGasStationId(1);
+			u.setUserId(1);
+			gs.setUser(u);
+			when(userRepository.findByUserId(1)).thenReturn(new ArrayList<User>(Arrays.asList(u)));
+			GasStationDto result = new GasStationDto();
+			
+			try {
+				GasStationDto gDto = GasStationConverter.GasStationConvertToGasStationDto((gs));
+				result = gasStationService.saveGasStation(gDto);
+				assertTrue(compareGasStationDto(result, GasStationConverter.GasStationConvertToGasStationDto(gs)),
+						"Gas station retrieved is not the same that has been inserted");
+
+			} catch (PriceException | GPSDataException e) {
+				fail("Exception unexpected");
+			}
+		}
+		
+		@Test
 		public void negativeDiesel_PriceExceptionThrown() {
-			GasStation gs2_1 = new GasStation("Gas station 2_1", "Address 2_1, 2_1", true, true, false, false, true, "",
+			GasStation gs = new GasStation("Gas station 2_1", "Address 2_1, 2_1", true, true, false, false, true, "",
 					41.5, 23.7, -7, 1.67, -1, -1, 0.99, 1, "07-05-2020 18:47:52", 0);
 			try {
-				gasStationService.saveGasStation(GasStationConverter.GasStationConvertToGasStationDto(gs2_1));
+				gasStationService.saveGasStation(GasStationConverter.GasStationConvertToGasStationDto(gs));
 				fail("PriceException expected, dieselPrice is negative");
 			} catch (PriceException | GPSDataException e) {
 				if (!(e instanceof PriceException)) {
@@ -266,10 +302,10 @@ public class GasStationServiceTest {
 
 		@Test
 		public void negativeSuperPlusPrice_PriceExceptionThrown() {
-			GasStation gs2_1 = new GasStation("Gas station 2_1", "Address 2_1, 2_1", true, false, false, false, true,
-					"", 41.5, 23.7, 1.2, 1.67, -5, -1, 0.99, 1, "07-05-2020 18:47:52", 0);
+			GasStation gs = new GasStation("Gas station 2_1", "Address 2_1, 2_1", true, false, true, false, true,
+					"", 41.5, 23.7, 1.2, -1, -5, -1, 0.99, 1, "07-05-2020 18:47:52", 0);
 			try {
-				gasStationService.saveGasStation(GasStationConverter.GasStationConvertToGasStationDto(gs2_1));
+				gasStationService.saveGasStation(GasStationConverter.GasStationConvertToGasStationDto(gs));
 				fail("PriceException expected, superPlusPrice is negative");
 			} catch (PriceException | GPSDataException e) {
 				if (!(e instanceof PriceException)) {
@@ -280,10 +316,10 @@ public class GasStationServiceTest {
 
 		@Test
 		public void negativeGasPrice_PriceExceptionThrown() {
-			GasStation gs2_1 = new GasStation("Gas station 2_1", "Address 2_1, 2_1", true, false, false, false, true,
-					"", 41.5, 23.7, 1.2, 1.67, 5, -21, 0.99, 1, "07-05-2020 18:47:52", 0);
+			GasStation gs = new GasStation("Gas station 2_1", "Address 2_1, 2_1", true, false, false, true, false,
+					"", 41.5, 23.7, 1.2, 1.67, 5, -21, -1, 1, "07-05-2020 18:47:52", 0);
 			try {
-				gasStationService.saveGasStation(GasStationConverter.GasStationConvertToGasStationDto(gs2_1));
+				gasStationService.saveGasStation(GasStationConverter.GasStationConvertToGasStationDto(gs));
 				fail("PriceException expected, superPlusPrice is negative");
 			} catch (PriceException | GPSDataException e) {
 				if (!(e instanceof PriceException)) {
@@ -294,10 +330,10 @@ public class GasStationServiceTest {
 
 		@Test
 		public void negativeMethanePrice_PriceExceptionThrown() {
-			GasStation gs2_1 = new GasStation("Gas station 2_1", "Address 2_1, 2_1", true, false, false, false, true,
+			GasStation gs = new GasStation("Gas station 2_1", "Address 2_1, 2_1", true, false, false, false, true,
 					"", 41.5, 23.7, 1.2, 1.67, 2, -1, -0.99, 1, "07-05-2020 18:47:52", 0);
 			try {
-				gasStationService.saveGasStation(GasStationConverter.GasStationConvertToGasStationDto(gs2_1));
+				gasStationService.saveGasStation(GasStationConverter.GasStationConvertToGasStationDto(gs));
 				fail("PriceException expected, methanePrice is negative");
 			} catch (PriceException | GPSDataException e) {
 				if (!(e instanceof PriceException)) {

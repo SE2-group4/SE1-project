@@ -95,11 +95,9 @@ public class GasStationServiceimpl implements GasStationService {
 		} else
 			gasStation.setDieselPrice(-1);
 
-		User u;
-
-		if (!this.userRepository.findByUserId(gasStation.getReportUser()).isEmpty()) {
-			u = this.userRepository.findByUserId(gasStation.getReportUser()).get(0);
-			gasStation.setUser(u);
+		List<User> userList = this.userRepository.findByUserId(gasStation.getReportUser());
+		if (!userList.isEmpty()) {
+			gasStation.setUser(userList.get(0));
 		}
 
 		g = this.gasStationRepository.save(gasStation);
@@ -125,15 +123,10 @@ public class GasStationServiceimpl implements GasStationService {
 		if (gasStationId < 0 || gasStationId == null) {
 			throw new InvalidGasStationException("Invalid (negative) gasStationId");
 		}
-		try {
-			this.gasStationRepository.delete(gasStationId);
-		} catch (IllegalArgumentException e) {
-			throw new InvalidGasStationException(e.getMessage());
-		}
-		if (!this.gasStationRepository.findByGasStationId(gasStationId).isPresent()) {
-			return true;
-		}
-		return false;
+		
+		this.gasStationRepository.delete(gasStationId);
+			
+		return !(this.gasStationRepository.findByGasStationId(gasStationId).isPresent());
 	}
 
 	@Override
