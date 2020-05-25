@@ -688,7 +688,7 @@ public class GasStationServiceTest {
 				fail("InvalidGasTypeException expected, null argument");
 			} catch (InvalidGasTypeException e) {
 			}
-			
+
 			try {
 				returnList = gasStationService.getGasStationsByGasolineType("null");
 				fail("InvalidGasTypeException expected, \"null\" argument");
@@ -1127,58 +1127,58 @@ public class GasStationServiceTest {
 		User u1;
 		List<GasStation> gList;
 		List<User> uList;
-		
+
 		@BeforeEach
 		public void setUp() {
 
 			this.u1 = new User("Giacomo", "giacomo", "giacomo.poretti@agg.it", 4);
 			this.u1.setUserId(4);
-			
-			this.g1 = new GasStation("Gas station 2_1", "Address 2_1, 2_1", true, true, true, true, true,
-					"Enjoy", 41.5, 23.7, 1.2, 1.67, 2, 2, -0.99, 1, "07-05-2020 18:47:52", 0);
+
+			this.g1 = new GasStation("Gas station 2_1", "Address 2_1, 2_1", true, true, true, true, true, "Enjoy", 41.5,
+					23.7, 1.2, 1.67, 2, 2, 2, 1, "07-05-2020 18:47:52", 0);
 			this.g1.setGasStationId(1);
 			this.g1.setReportUser(this.u1.getUserId());
 			this.g1.setUser(this.u1);
-			
+
 			this.uList = new ArrayList<User>();
 			this.uList.add(this.u1);
-			
+
 			initializeTest(); // re-create mocks
 			when(gasStationRepository.save(any(GasStation.class))).thenAnswer(new Answer<GasStation>() {
 				public GasStation answer(InvocationOnMock invocation) {
-				     Object[] args = invocation.getArguments();
-					return (GasStation) (args[0]);
+					Object[] args = invocation.getArguments();
+					GasStation gs = (GasStation) (args[0]);
+					if(gs.getGasStationId().equals(g1.getGasStationId()))
+						g1 = gs;
+					return g1;
 				}
 			});
 			when(gasStationRepository.findByGasStationId(anyInt())).thenAnswer(new Answer<Optional<GasStation>>() {
 				@Override
 				public Optional<GasStation> answer(InvocationOnMock invocation) throws IllegalArgumentException {
 					Integer param = (Integer) invocation.getArguments()[0];
-					
-					//  if(param == g1.getGasStationId()) // it doesn't work... I hate Integer - int problems...
-					if(param.equals(g1.getGasStationId()))
+
+					// if(param == g1.getGasStationId()) // it doesn't work... I hate Integer - int
+					// problems...
+					if (param.equals(g1.getGasStationId()))
 						return Optional.of(g1);
-					if(param < 0)
-						throw new IllegalArgumentException();
 					else
 						return Optional.empty();
-				}				
+				}
 			});
 			when(userRepository.findByUserId(anyInt())).thenAnswer(new Answer<List<User>>() {
 				@Override
 				public List<User> answer(InvocationOnMock invocation) throws IllegalArgumentException {
 					Integer param = (Integer) invocation.getArguments()[0];
-					
-					if(param == u1.getUserId())
+
+					if (param == u1.getUserId())
 						return uList;
-					if(param < 0)
-						throw new IllegalArgumentException();
 					else
 						return new ArrayList<User>();
-				}				
+				}
 			});
 		}
-		
+
 		@Test
 		public void invalidUserId_ShouldThrowException() {
 			try {
@@ -1190,9 +1190,9 @@ public class GasStationServiceTest {
 				fail();
 			} catch (InvalidUserException e) {
 				// good!
-			}		
+			}
 		}
-		
+
 		@Test
 		public void invalidGasStationId_ShouldThrowException() {
 			try {
@@ -1206,7 +1206,7 @@ public class GasStationServiceTest {
 				fail();
 			}
 		}
-		
+
 		@Test
 		public void notExistingUser_ShouldThrowException() {
 			try {
@@ -1222,9 +1222,9 @@ public class GasStationServiceTest {
 				// good!
 			}
 		}
-		
+
 		@Test
-		public void notExistingGasStation_ShouldThrowException() {	
+		public void notExistingGasStation_ShouldThrowException() {
 			try {
 				gasStationService.setReport(new Integer(999), 1, 1, 1, 1, 1, this.u1.getUserId());
 				fail();
@@ -1235,37 +1235,69 @@ public class GasStationServiceTest {
 			} catch (InvalidUserException e) {
 				fail();
 			}
-			
+
 		}
-		
+
 		@Test
 		public void invalidGasTypePrice_ShouldThrowException() {
 			try {
-				gasStationService.setReport(this.g1.getGasStationId(), 1, 1, -44.0, 1, 1, this.u1.getUserId());
-				fail();
+				try {
+					gasStationService.setReport(this.g1.getGasStationId(), -1, 1, 1, 1, 1, this.u1.getUserId());
+					fail();
+				} catch (PriceException e) {
+					// good!
+				}
+				
+				try {
+					gasStationService.setReport(this.g1.getGasStationId(), 1, -10, 1, 1, 1, this.u1.getUserId());
+					fail();
+				} catch (PriceException e) {
+					// good!
+				}
+				
+				try {
+					gasStationService.setReport(this.g1.getGasStationId(), 1, 1, -10000, 1, 1, this.u1.getUserId());
+					fail();
+				} catch (PriceException e) {
+					// good!
+				}
+				
+				try {
+					gasStationService.setReport(this.g1.getGasStationId(), 1, 1, 1, -0.1, 1, this.u1.getUserId());
+					fail();
+				} catch (PriceException e) {
+					// good!
+				}
+				
+				try {
+					gasStationService.setReport(this.g1.getGasStationId(), 1, 1, 1, 1, -0.0001, this.u1.getUserId());
+					fail();
+				} catch (PriceException e) {
+					// good!
+				}
 			} catch (InvalidGasStationException e) {
-				e.printStackTrace();
 				fail();
-			} catch (PriceException e) {
-				// good!
 			} catch (InvalidUserException e) {
-				e.printStackTrace();
 				fail();
 			}
+
 		}
-		
+
 		@Test
 		public void correctParams_ShouldSetNewReport() {
 			try {
-				gasStationService.setReport(this.g1.getGasStationId(), 1, 1, 1, 1, 1, this.u1.getUserId());
+				gasStationService.setReport(this.g1.getGasStationId(), 2, 2, 2, 2, 2, this.u1.getUserId());
+				GasStationDto gs = gasStationService.getGasStationById(g1.getGasStationId());
+				assertTrue(compareGasStationDto(gs, GasStationConverter.GasStationConvertToGasStationDto(g1)), "Gas station has not been modified");
+				
 			} catch (InvalidGasStationException e) {
 				fail();
 			} catch (PriceException e) {
 				fail();
 			} catch (InvalidUserException e) {
 				fail();
-			}		
-		}		
+			}
+		}
 	}
 
 	@Nested

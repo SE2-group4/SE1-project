@@ -46,7 +46,7 @@ public class GasStationServiceimpl implements GasStationService {
 			gasStation.setReportDependability(
 					Utility.trustCalculation(gasStation.getUser().getReputation(), gasStation.getReportTimestamp()));
 		}
-
+		
 		return (gasStation != null) ? GasStationConverter.GasStationConvertToGasStationDto(gasStation) : null;
 	}
 
@@ -243,18 +243,23 @@ public class GasStationServiceimpl implements GasStationService {
 		}
 		*/
 		
-		if ((gasStation.getMethanePrice() != -1 && methanePrice < 0)
-				|| (gasStation.getSuperPlusPrice() != -1 && superPlusPrice < 0)
-				|| (gasStation.getSuperPrice() != -1 && superPrice < 0)
-				|| (gasStation.getGasPrice() != -1 && gasPrice < 0)
-				|| (gasStation.getDieselPrice() != -1 && dieselPrice < 0)) {
+		if ((gasStation.getHasMethane() && methanePrice < 0)
+				|| (gasStation.getHasSuperPlus() && superPlusPrice < 0)
+				|| (gasStation.getHasSuper() && superPrice < 0)
+				|| (gasStation.getHasGas() && gasPrice < 0)
+				|| (gasStation.getHasDiesel() && dieselPrice < 0)) {
 			throw new PriceException("Invalid (negative) price");
 		}
 
-		gasStation.setDieselPrice(dieselPrice);
-		gasStation.setSuperPrice(superPrice);
-		gasStation.setSuperPlusPrice(superPlusPrice);
+		if (gasStation.getHasDiesel())
+			gasStation.setDieselPrice(dieselPrice);
+		if (gasStation.getHasSuper())
+			gasStation.setSuperPrice(superPrice);
+		if (gasStation.getHasSuperPlus())
+			gasStation.setSuperPlusPrice(superPlusPrice);
+		if (gasStation.getHasGas())
 		gasStation.setGasPrice(gasPrice);
+		if (gasStation.getHasMethane())
 		gasStation.setMethanePrice(methanePrice);
 		gasStation.setUser(user);
 		gasStation.setReportUser(userId);

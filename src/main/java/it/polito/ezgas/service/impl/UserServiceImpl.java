@@ -57,10 +57,11 @@ public class UserServiceImpl implements UserService {
 				.collect(Collectors.toList());
 		if (uList.size() != 0) {
 			User oldUser = uList.get(0);
-			
-			if(oldUser.getUserId() != newUser.getUserId()) // if the user already exists => I try to insert a new user, with different id but same email
+
+			if (oldUser.getUserId() != newUser.getUserId()) // if the user already exists => I try to insert a new user,
+															// with different id but same email
 				return UserConverter.userConvertToUserDto(oldUser); // operation not allowed
-			
+
 			// else: its an update
 			newUser.setUserId(oldUser.getUserId());
 		} else
@@ -84,19 +85,15 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public Boolean deleteUser(Integer userId) throws InvalidUserException {
 		// TODO Auto-generated method stub
-		if(userId < 0)
+		if (userId < 0)
 			throw new InvalidUserException("Invalid userId (less than 0)");
 		List<User> users;
-		
-		try {
-			this.userRepository.delete(userId);
-			users = this.userRepository.findByUserId(userId);
-			if(users.size() > 0)
-				return false;
-			return true;
-		} catch (Exception e) {
-			throw new InvalidUserException(e.getMessage());
-		}
+
+		this.userRepository.delete(userId);
+		users = this.userRepository.findByUserId(userId);
+		if (users.size() > 0)
+			return false;
+		return true;
 	}
 
 	@Override
@@ -127,7 +124,7 @@ public class UserServiceImpl implements UserService {
 		if (user.getReputation() < 5 && user.getReputation() >= -5) {
 			Integer new_reputation = user.getReputation() + 1;
 			user.setReputation(new_reputation);
-			user = this.userRepository.save(user);			
+			user = this.userRepository.save(user);
 			return user.getReputation();
 		} else {
 			return 5;
@@ -144,7 +141,7 @@ public class UserServiceImpl implements UserService {
 			throw new InvalidUserException("No user with userId " + userId + " registered");
 
 		user = userList.get(0);
-		
+
 		if (user.getReputation() <= 5 && user.getReputation() > -5) {
 			Integer new_reputation = user.getReputation() - 1;
 			user.setReputation(new_reputation);
