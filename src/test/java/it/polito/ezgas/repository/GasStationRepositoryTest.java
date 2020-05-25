@@ -66,7 +66,67 @@ public class GasStationRepositoryTest {
 	}
 
 	@Test
-    public void testFindByHasMethaneTrueOrderByMethanePriceDesc() {
+    public void testFindByHasMethaneTrueOrderByMethanePriceAsc() {
+		
+		GasStation gs;
+		GasStation gs2;
+		
+		gasStation = new GasStation("Q8", "Via Calcio Lombardy Italy", true, true, true, true, true, "Car2Go", 45.4955025, 9.8530837, 1.0, 1.0, 1.0, 1.0, 1.0, -1, null, 0);
+		gasStation2 = new GasStation("Esso", "Via Filatoio Calcio Lombardy Italy", true, true, true, true, true, "Enjoy", 45.4955025, 9.8530837, 1.5, 1.5, 1.5, 1.5, 1.5, -1, null, 0);
+		
+		gsList.add(gasStation);
+		gsList.add(gasStation2);	
+		
+		gasStationRepository.save(gasStation);
+		gasStationRepository.save(gasStation2);
+		
+        List<GasStation> gsList2 = gasStationRepository.findByHasMethaneTrueOrderByMethanePriceAsc();  
+        
+        gs = gsList2.get(0);
+        gs2 = gsList2.get(1);
+        
+        assertNotNull(gs);
+        assertEquals(gs.getGasStationId(), gasStation.getGasStationId());
+        assertEquals(gs.getGasStationName(), gasStation.getGasStationName());
+        assertEquals(gs.getGasStationAddress(), gasStation.getGasStationAddress());
+        assertEquals(gs.getHasDiesel(), gasStation.getHasDiesel());
+        assertEquals(gs.getHasGas(), gasStation.getHasGas());
+        assertEquals(gs.getHasMethane(), gasStation.getHasMethane());
+        assertEquals(gs.getHasSuper(), gasStation.getHasSuper());
+        assertEquals(gs.getHasSuperPlus(), gasStation.getHasSuperPlus());
+        assertEquals(gs.getCarSharing(), gasStation.getCarSharing());
+        assertEquals(gs.getDieselPrice(), gasStation.getDieselPrice());
+        assertEquals(gs.getGasPrice(), gasStation.getGasPrice());
+        assertEquals(gs.getMethanePrice(), gasStation.getMethanePrice());
+        assertEquals(gs.getSuperPrice(), gasStation.getSuperPrice());
+        assertEquals(gs.getSuperPlusPrice(), gasStation.getSuperPlusPrice());
+        assertEquals(gs.getLat(), gasStation.getLat());
+        assertEquals(gs.getLon(), gasStation.getLon());
+        assertNotNull(gs2);
+        assertEquals(gs2.getGasStationId(), gasStation2.getGasStationId());
+        assertEquals(gs2.getGasStationName(), gasStation2.getGasStationName());
+        assertEquals(gs2.getGasStationAddress(), gasStation2.getGasStationAddress());
+        assertEquals(gs2.getHasDiesel(), gasStation2.getHasDiesel());
+        assertEquals(gs2.getHasGas(), gasStation2.getHasGas());
+        assertEquals(gs2.getHasMethane(), gasStation2.getHasMethane());
+        assertEquals(gs2.getHasSuper(), gasStation2.getHasSuper());
+        assertEquals(gs2.getHasSuperPlus(), gasStation2.getHasSuperPlus());
+        assertEquals(gs2.getCarSharing(), gasStation2.getCarSharing());
+        assertEquals(gs2.getDieselPrice(), gasStation2.getDieselPrice());
+        assertEquals(gs2.getGasPrice(), gasStation2.getGasPrice());
+        assertEquals(gs2.getMethanePrice(), gasStation2.getMethanePrice());
+        assertEquals(gs2.getSuperPrice(), gasStation2.getSuperPrice());
+        assertEquals(gs2.getSuperPlusPrice(), gasStation2.getSuperPlusPrice());
+        assertEquals(gs2.getLat(), gasStation2.getLat());
+        assertEquals(gs2.getLon(), gasStation2.getLon());
+        
+        gasStationRepository.delete(gasStation);
+		gasStationRepository.delete(gasStation2);
+
+	}
+	
+	@Test
+    public void testFindByHasDieselTrueOrderByDieselPriceAsc() {
 		
 		GasStation gs;
 		GasStation gs2;
@@ -79,11 +139,196 @@ public class GasStationRepositoryTest {
 		
 		gasStationRepository.save(gasStation);
 		gasStationRepository.save(gasStation2);
-		
-        List<GasStation> gsList2 = gasStationRepository.findByHasMethaneTrueOrderByMethanePriceDesc();  
+	
+        List<GasStation> gsList2 = gasStationRepository.findByHasDieselTrueOrderByDieselPriceAsc();
         
         gs = gsList2.get(0);
         gs2 = gsList2.get(1);
+        
+        assertNotNull(gs);
+        assertEquals(gs.getGasStationId(), gasStation.getGasStationId());
+        assertEquals(gs.getGasStationName(), gasStation.getGasStationName());
+        assertEquals(gs.getGasStationAddress(), gasStation.getGasStationAddress());
+        assertEquals(gs.getHasDiesel(), gasStation.getHasDiesel());
+        assertEquals(gs.getHasGas(), gasStation.getHasGas());
+        assertEquals(gs.getHasMethane(), gasStation.getHasMethane());
+        assertEquals(gs.getHasSuper(), gasStation.getHasSuper());
+        assertEquals(gs.getHasSuperPlus(), gasStation.getHasSuperPlus());
+        assertEquals(gs.getCarSharing(), gasStation.getCarSharing());
+        assertEquals(gs.getDieselPrice(), gasStation.getDieselPrice());
+        assertEquals(gs.getGasPrice(), gasStation.getGasPrice());
+        assertEquals(gs.getMethanePrice(), gasStation.getMethanePrice());
+        assertEquals(gs.getSuperPrice(), gasStation.getSuperPrice());
+        assertEquals(gs.getSuperPlusPrice(), gasStation.getSuperPlusPrice());
+        assertEquals(gs.getLat(), gasStation.getLat());
+        assertEquals(gs.getLon(), gasStation.getLon());
+        assertNotNull(gs2);
+        assertEquals(gs2.getGasStationId(), gasStation2.getGasStationId());
+        assertEquals(gs2.getGasStationName(), gasStation2.getGasStationName());
+        assertEquals(gs2.getGasStationAddress(), gasStation2.getGasStationAddress());
+        assertEquals(gs2.getHasDiesel(), gasStation2.getHasDiesel());
+        assertEquals(gs2.getHasGas(), gasStation2.getHasGas());
+        assertEquals(gs2.getHasMethane(), gasStation2.getHasMethane());
+        assertEquals(gs2.getHasSuper(), gasStation2.getHasSuper());
+        assertEquals(gs2.getHasSuperPlus(), gasStation2.getHasSuperPlus());
+        assertEquals(gs2.getCarSharing(), gasStation2.getCarSharing());
+        assertEquals(gs2.getDieselPrice(), gasStation2.getDieselPrice());
+        assertEquals(gs2.getGasPrice(), gasStation2.getGasPrice());
+        assertEquals(gs2.getMethanePrice(), gasStation2.getMethanePrice());
+        assertEquals(gs2.getSuperPrice(), gasStation2.getSuperPrice());
+        assertEquals(gs2.getSuperPlusPrice(), gasStation2.getSuperPlusPrice());
+        assertEquals(gs2.getLat(), gasStation2.getLat());
+        assertEquals(gs2.getLon(), gasStation2.getLon());
+        
+        gasStationRepository.delete(gasStation);
+		gasStationRepository.delete(gasStation2);
+
+	}
+	
+	@Test
+    public void testFindByHasSuperTrueOrderBySuperPriceAsc() {
+		
+		GasStation gs;
+		GasStation gs2;
+		
+		gasStation = new GasStation("Q8", 			 "Via Calcio Lombardy Italy", true, true, true, true, true, "Car2Go", 45.4955025, 9.8530837, 1.0, 1.2, 1.9, 1.1, 1.4, -1, null, 0);
+		gasStation2 = new GasStation("Esso", "Via Filatoio Calcio Lombardy Italy", true, true, true, true, true, "Enjoy", 45.4955025, 9.8530837, 1.0, 1.5, 1.5, 1.7, 1.3, -1, null, 0);
+		
+		gsList.add(gasStation);
+		gsList.add(gasStation2);	
+		
+		gasStationRepository.save(gasStation);
+		gasStationRepository.save(gasStation2);
+		
+        List<GasStation> gsList2 = gasStationRepository.findByHasSuperTrueOrderBySuperPriceAsc();
+        
+        gs = gsList2.get(0);
+        gs2 = gsList2.get(1);
+        
+        assertNotNull(gs);
+        assertEquals(gs.getGasStationId(), gasStation.getGasStationId());
+        assertEquals(gs.getGasStationName(), gasStation.getGasStationName());
+        assertEquals(gs.getGasStationAddress(), gasStation.getGasStationAddress());
+        assertEquals(gs.getHasDiesel(), gasStation.getHasDiesel());
+        assertEquals(gs.getHasGas(), gasStation.getHasGas());
+        assertEquals(gs.getHasMethane(), gasStation.getHasMethane());
+        assertEquals(gs.getHasSuper(), gasStation.getHasSuper());
+        assertEquals(gs.getHasSuperPlus(), gasStation.getHasSuperPlus());
+        assertEquals(gs.getCarSharing(), gasStation.getCarSharing());
+        assertEquals(gs.getDieselPrice(), gasStation.getDieselPrice());
+        assertEquals(gs.getGasPrice(), gasStation.getGasPrice());
+        assertEquals(gs.getMethanePrice(), gasStation.getMethanePrice());
+        assertEquals(gs.getSuperPrice(), gasStation.getSuperPrice());
+        assertEquals(gs.getSuperPlusPrice(), gasStation.getSuperPlusPrice());
+        assertEquals(gs.getLat(), gasStation.getLat());
+        assertEquals(gs.getLon(), gasStation.getLon());
+        assertNotNull(gs2);
+        assertEquals(gs2.getGasStationId(), gasStation2.getGasStationId());
+        assertEquals(gs2.getGasStationName(), gasStation2.getGasStationName());
+        assertEquals(gs2.getGasStationAddress(), gasStation2.getGasStationAddress());
+        assertEquals(gs2.getHasDiesel(), gasStation2.getHasDiesel());
+        assertEquals(gs2.getHasGas(), gasStation2.getHasGas());
+        assertEquals(gs2.getHasMethane(), gasStation2.getHasMethane());
+        assertEquals(gs2.getHasSuper(), gasStation2.getHasSuper());
+        assertEquals(gs2.getHasSuperPlus(), gasStation2.getHasSuperPlus());
+        assertEquals(gs2.getCarSharing(), gasStation2.getCarSharing());
+        assertEquals(gs2.getDieselPrice(), gasStation2.getDieselPrice());
+        assertEquals(gs2.getGasPrice(), gasStation2.getGasPrice());
+        assertEquals(gs2.getMethanePrice(), gasStation2.getMethanePrice());
+        assertEquals(gs2.getSuperPrice(), gasStation2.getSuperPrice());
+        assertEquals(gs2.getSuperPlusPrice(), gasStation2.getSuperPlusPrice());
+        assertEquals(gs2.getLat(), gasStation2.getLat());
+        assertEquals(gs2.getLon(), gasStation2.getLon());
+        
+        gasStationRepository.delete(gasStation);
+		gasStationRepository.delete(gasStation2);
+
+	}
+
+	@Test
+    public void testFindByHasSuperPlusTrueOrderBySuperPlusPriceAsc() {
+		
+		GasStation gs;
+		GasStation gs2;
+		
+		gasStation = new GasStation("Q8", "Via Calcio Lombardy Italy", true, true, true, true, true, "Car2Go", 45.4955025, 9.8530837, 1.0, 1.0, 1.0, 1.0, 1.0, -1, null, 0);
+		gasStation2 = new GasStation("Esso", "Via Filatoio Calcio Lombardy Italy", true, true, true, true, true, "Enjoy", 45.4955025, 9.8530837, 1.5, 1.5, 1.5, 1.5, 1.5, -1, null, 0);
+		
+		gsList.add(gasStation);
+		gsList.add(gasStation2);	
+		
+		gasStationRepository.save(gasStation);
+		gasStationRepository.save(gasStation2);
+		
+        List<GasStation> gsList2 = gasStationRepository.findByHasSuperPlusTrueOrderBySuperPlusPriceAsc();
+        
+        gs = gsList2.get(0);
+        gs2 = gsList2.get(1);
+        
+        assertNotNull(gs);
+        assertEquals(gs.getGasStationId(), gasStation.getGasStationId());
+        assertEquals(gs.getGasStationName(), gasStation.getGasStationName());
+        assertEquals(gs.getGasStationAddress(), gasStation.getGasStationAddress());
+        assertEquals(gs.getHasDiesel(), gasStation.getHasDiesel());
+        assertEquals(gs.getHasGas(), gasStation.getHasGas());
+        assertEquals(gs.getHasMethane(), gasStation.getHasMethane());
+        assertEquals(gs.getHasSuper(), gasStation.getHasSuper());
+        assertEquals(gs.getHasSuperPlus(), gasStation.getHasSuperPlus());
+        assertEquals(gs.getCarSharing(), gasStation.getCarSharing());
+        assertEquals(gs.getDieselPrice(), gasStation.getDieselPrice());
+        assertEquals(gs.getGasPrice(), gasStation.getGasPrice());
+        assertEquals(gs.getMethanePrice(), gasStation.getMethanePrice());
+        assertEquals(gs.getSuperPrice(), gasStation.getSuperPrice());
+        assertEquals(gs.getSuperPlusPrice(), gasStation.getSuperPlusPrice());
+        assertEquals(gs.getLat(), gasStation.getLat());
+        assertEquals(gs.getLon(), gasStation.getLon());
+        assertNotNull(gs2);
+        assertEquals(gs2.getGasStationId(), gasStation2.getGasStationId());
+        assertEquals(gs2.getGasStationName(), gasStation2.getGasStationName());
+        assertEquals(gs2.getGasStationAddress(), gasStation2.getGasStationAddress());
+        assertEquals(gs2.getHasDiesel(), gasStation2.getHasDiesel());
+        assertEquals(gs2.getHasGas(), gasStation2.getHasGas());
+        assertEquals(gs2.getHasMethane(), gasStation2.getHasMethane());
+        assertEquals(gs2.getHasSuper(), gasStation2.getHasSuper());
+        assertEquals(gs2.getHasSuperPlus(), gasStation2.getHasSuperPlus());
+        assertEquals(gs2.getCarSharing(), gasStation2.getCarSharing());
+        assertEquals(gs2.getDieselPrice(), gasStation2.getDieselPrice());
+        assertEquals(gs2.getGasPrice(), gasStation2.getGasPrice());
+        assertEquals(gs2.getMethanePrice(), gasStation2.getMethanePrice());
+        assertEquals(gs2.getSuperPrice(), gasStation2.getSuperPrice());
+        assertEquals(gs2.getSuperPlusPrice(), gasStation2.getSuperPlusPrice());
+        assertEquals(gs2.getLat(), gasStation2.getLat());
+        assertEquals(gs2.getLon(), gasStation2.getLon());
+        
+        gasStationRepository.delete(gasStation);
+		gasStationRepository.delete(gasStation2);
+
+	}
+	
+	@Test
+    public void testFindByHasGasTrueOrderByGasPriceAsc() {
+		
+		GasStation gs;
+		GasStation gs2;
+		gasStation = new GasStation("Q8", "Via Calcio Lombardy Italy", true, true, true, true, true, "Car2Go",
+									45.4955025, 9.8530837, 1.0, 1.0, 1.0, 1.0, 1.0, -1, null, 0);
+		gasStation2 = new GasStation("Esso", "Via Filatoio Calcio Lombardy Italy", true, true, true, true, true, "Enjoy",
+									45.4955025, 9.8530837, 1.5, 1.5, 1.5, 1.5, 1.5, -1, null, 0);
+		
+		gsList.add(gasStation);
+		gsList.add(gasStation2);	
+		
+		gasStationRepository.save(gasStation);
+		gasStationRepository.save(gasStation2);
+		
+		System.out.println(gasStation.getGasStationId());
+		
+		
+        List<GasStation> gsList2 = gasStationRepository.findByHasGasTrueOrderByGasPriceAsc();
+        
+        gs = gsList2.get(0);
+        gs2 = gsList2.get(1);
+        System.out.println(gsList2);
         
         assertNotNull(gs);
         assertEquals(gs.getGasStationId(), gasStation.getGasStationId());
@@ -163,248 +408,4 @@ public class GasStationRepositoryTest {
 
 	}
 	
-	@Test
-    public void testFindByHasDieselTrueOrderByDieselPriceDesc() {
-		
-		GasStation gs;
-		GasStation gs2;
-		
-		gasStation = new GasStation("Q8", "Via Calcio Lombardy Italy", true, true, true, true, true, "Car2Go", 45.4955025, 9.8530837, 1.0, 1.2, 1.9, 1.1, 1.4, -1, null, 0);
-		gasStation2 = new GasStation("Esso", "Via Filatoio Calcio Lombardy Italy", true, true, true, true, true, "Enjoy", 45.4955025, 9.8530837, 1.0, 1.5, 1.5, 1.7, 1.3, -1, null, 0);
-		
-		gsList.add(gasStation);
-		gsList.add(gasStation2);	
-		
-		gasStationRepository.save(gasStation);
-		gasStationRepository.save(gasStation2);
-	
-        List<GasStation> gsList2 = gasStationRepository.findByHasDieselTrueOrderByDieselPriceDesc();
-        
-        gs = gsList2.get(0);
-        gs2 = gsList2.get(1);
-        
-        assertNotNull(gs);
-        assertEquals(gs.getGasStationId(), gasStation.getGasStationId());
-        assertEquals(gs.getGasStationName(), gasStation.getGasStationName());
-        assertEquals(gs.getGasStationAddress(), gasStation.getGasStationAddress());
-        assertEquals(gs.getHasDiesel(), gasStation.getHasDiesel());
-        assertEquals(gs.getHasGas(), gasStation.getHasGas());
-        assertEquals(gs.getHasMethane(), gasStation.getHasMethane());
-        assertEquals(gs.getHasSuper(), gasStation.getHasSuper());
-        assertEquals(gs.getHasSuperPlus(), gasStation.getHasSuperPlus());
-        assertEquals(gs.getCarSharing(), gasStation.getCarSharing());
-        assertEquals(gs.getDieselPrice(), gasStation.getDieselPrice());
-        assertEquals(gs.getGasPrice(), gasStation.getGasPrice());
-        assertEquals(gs.getMethanePrice(), gasStation.getMethanePrice());
-        assertEquals(gs.getSuperPrice(), gasStation.getSuperPrice());
-        assertEquals(gs.getSuperPlusPrice(), gasStation.getSuperPlusPrice());
-        assertEquals(gs.getLat(), gasStation.getLat());
-        assertEquals(gs.getLon(), gasStation.getLon());
-        assertNotNull(gs2);
-        assertEquals(gs2.getGasStationId(), gasStation2.getGasStationId());
-        assertEquals(gs2.getGasStationName(), gasStation2.getGasStationName());
-        assertEquals(gs2.getGasStationAddress(), gasStation2.getGasStationAddress());
-        assertEquals(gs2.getHasDiesel(), gasStation2.getHasDiesel());
-        assertEquals(gs2.getHasGas(), gasStation2.getHasGas());
-        assertEquals(gs2.getHasMethane(), gasStation2.getHasMethane());
-        assertEquals(gs2.getHasSuper(), gasStation2.getHasSuper());
-        assertEquals(gs2.getHasSuperPlus(), gasStation2.getHasSuperPlus());
-        assertEquals(gs2.getCarSharing(), gasStation2.getCarSharing());
-        assertEquals(gs2.getDieselPrice(), gasStation2.getDieselPrice());
-        assertEquals(gs2.getGasPrice(), gasStation2.getGasPrice());
-        assertEquals(gs2.getMethanePrice(), gasStation2.getMethanePrice());
-        assertEquals(gs2.getSuperPrice(), gasStation2.getSuperPrice());
-        assertEquals(gs2.getSuperPlusPrice(), gasStation2.getSuperPlusPrice());
-        assertEquals(gs2.getLat(), gasStation2.getLat());
-        assertEquals(gs2.getLon(), gasStation2.getLon());
-        
-        gasStationRepository.delete(gasStation);
-		gasStationRepository.delete(gasStation2);
-
-	}
-	
-	@Test
-    public void testFindByHasSuperTrueOrderBySuperPriceDesc() {
-		
-		GasStation gs;
-		GasStation gs2;
-		
-		gasStation = new GasStation("Q8", "Via Calcio Lombardy Italy", true, true, true, true, true, "Car2Go", 45.4955025, 9.8530837, 1.0, 1.2, 1.9, 1.1, 1.4, -1, null, 0);
-		gasStation2 = new GasStation("Esso", "Via Filatoio Calcio Lombardy Italy", true, true, true, true, true, "Enjoy", 45.4955025, 9.8530837, 1.0, 1.5, 1.5, 1.7, 1.3, -1, null, 0);
-		
-		gsList.add(gasStation);
-		gsList.add(gasStation2);	
-		
-		gasStationRepository.save(gasStation);
-		gasStationRepository.save(gasStation2);
-		
-		System.out.println(gsList.get(0).getGasStationId());
-		System.out.println(gsList.get(1).getGasStationId());
-		
-        List<GasStation> gsList2 = gasStationRepository.findByHasSuperTrueOrderBySuperPriceDesc();
-        
-        System.out.println(gsList2.get(0).getGasStationId());
-		System.out.println(gsList2.get(1).getGasStationId());
-        
-        gs = gsList2.get(0);
-        gs2 = gsList2.get(1);
-        
-        assertNotNull(gs);
-        assertEquals(gs.getGasStationId(), gasStation.getGasStationId());
-        assertEquals(gs.getGasStationName(), gasStation.getGasStationName());
-        assertEquals(gs.getGasStationAddress(), gasStation.getGasStationAddress());
-        assertEquals(gs.getHasDiesel(), gasStation.getHasDiesel());
-        assertEquals(gs.getHasGas(), gasStation.getHasGas());
-        assertEquals(gs.getHasMethane(), gasStation.getHasMethane());
-        assertEquals(gs.getHasSuper(), gasStation.getHasSuper());
-        assertEquals(gs.getHasSuperPlus(), gasStation.getHasSuperPlus());
-        assertEquals(gs.getCarSharing(), gasStation.getCarSharing());
-        assertEquals(gs.getDieselPrice(), gasStation.getDieselPrice());
-        assertEquals(gs.getGasPrice(), gasStation.getGasPrice());
-        assertEquals(gs.getMethanePrice(), gasStation.getMethanePrice());
-        assertEquals(gs.getSuperPrice(), gasStation.getSuperPrice());
-        assertEquals(gs.getSuperPlusPrice(), gasStation.getSuperPlusPrice());
-        assertEquals(gs.getLat(), gasStation.getLat());
-        assertEquals(gs.getLon(), gasStation.getLon());
-        assertNotNull(gs2);
-        assertEquals(gs2.getGasStationId(), gasStation2.getGasStationId());
-        assertEquals(gs2.getGasStationName(), gasStation2.getGasStationName());
-        assertEquals(gs2.getGasStationAddress(), gasStation2.getGasStationAddress());
-        assertEquals(gs2.getHasDiesel(), gasStation2.getHasDiesel());
-        assertEquals(gs2.getHasGas(), gasStation2.getHasGas());
-        assertEquals(gs2.getHasMethane(), gasStation2.getHasMethane());
-        assertEquals(gs2.getHasSuper(), gasStation2.getHasSuper());
-        assertEquals(gs2.getHasSuperPlus(), gasStation2.getHasSuperPlus());
-        assertEquals(gs2.getCarSharing(), gasStation2.getCarSharing());
-        assertEquals(gs2.getDieselPrice(), gasStation2.getDieselPrice());
-        assertEquals(gs2.getGasPrice(), gasStation2.getGasPrice());
-        assertEquals(gs2.getMethanePrice(), gasStation2.getMethanePrice());
-        assertEquals(gs2.getSuperPrice(), gasStation2.getSuperPrice());
-        assertEquals(gs2.getSuperPlusPrice(), gasStation2.getSuperPlusPrice());
-        assertEquals(gs2.getLat(), gasStation2.getLat());
-        assertEquals(gs2.getLon(), gasStation2.getLon());
-        
-        gasStationRepository.delete(gasStation);
-		gasStationRepository.delete(gasStation2);
-
-	}
-
-	@Test
-    public void testFindByHasSuperPlusTrueOrderBySuperPlusPriceDesc() {
-		
-		GasStation gs;
-		GasStation gs2;
-		
-		gasStation = new GasStation("Q8", "Via Calcio Lombardy Italy", true, true, true, true, true, "Car2Go", 45.4955025, 9.8530837, 1.0, 1.2, 1.9, 1.1, 1.4, -1, null, 0);
-		gasStation2 = new GasStation("Esso", "Via Filatoio Calcio Lombardy Italy", true, true, true, true, true, "Enjoy", 45.4955025, 9.8530837, 1.0, 1.5, 1.5, 1.7, 1.3, -1, null, 0);
-		
-		gsList.add(gasStation);
-		gsList.add(gasStation2);	
-		
-		gasStationRepository.save(gasStation);
-		gasStationRepository.save(gasStation2);
-		
-        List<GasStation> gsList2 = gasStationRepository.findByHasSuperPlusTrueOrderBySuperPlusPriceDesc();
-        
-        gs = gsList2.get(0);
-        gs2 = gsList2.get(1);
-        
-        assertNotNull(gs);
-        assertEquals(gs.getGasStationId(), gasStation.getGasStationId());
-        assertEquals(gs.getGasStationName(), gasStation.getGasStationName());
-        assertEquals(gs.getGasStationAddress(), gasStation.getGasStationAddress());
-        assertEquals(gs.getHasDiesel(), gasStation.getHasDiesel());
-        assertEquals(gs.getHasGas(), gasStation.getHasGas());
-        assertEquals(gs.getHasMethane(), gasStation.getHasMethane());
-        assertEquals(gs.getHasSuper(), gasStation.getHasSuper());
-        assertEquals(gs.getHasSuperPlus(), gasStation.getHasSuperPlus());
-        assertEquals(gs.getCarSharing(), gasStation.getCarSharing());
-        assertEquals(gs.getDieselPrice(), gasStation.getDieselPrice());
-        assertEquals(gs.getGasPrice(), gasStation.getGasPrice());
-        assertEquals(gs.getMethanePrice(), gasStation.getMethanePrice());
-        assertEquals(gs.getSuperPrice(), gasStation.getSuperPrice());
-        assertEquals(gs.getSuperPlusPrice(), gasStation.getSuperPlusPrice());
-        assertEquals(gs.getLat(), gasStation.getLat());
-        assertEquals(gs.getLon(), gasStation.getLon());
-        assertNotNull(gs2);
-        assertEquals(gs2.getGasStationId(), gasStation2.getGasStationId());
-        assertEquals(gs2.getGasStationName(), gasStation2.getGasStationName());
-        assertEquals(gs2.getGasStationAddress(), gasStation2.getGasStationAddress());
-        assertEquals(gs2.getHasDiesel(), gasStation2.getHasDiesel());
-        assertEquals(gs2.getHasGas(), gasStation2.getHasGas());
-        assertEquals(gs2.getHasMethane(), gasStation2.getHasMethane());
-        assertEquals(gs2.getHasSuper(), gasStation2.getHasSuper());
-        assertEquals(gs2.getHasSuperPlus(), gasStation2.getHasSuperPlus());
-        assertEquals(gs2.getCarSharing(), gasStation2.getCarSharing());
-        assertEquals(gs2.getDieselPrice(), gasStation2.getDieselPrice());
-        assertEquals(gs2.getGasPrice(), gasStation2.getGasPrice());
-        assertEquals(gs2.getMethanePrice(), gasStation2.getMethanePrice());
-        assertEquals(gs2.getSuperPrice(), gasStation2.getSuperPrice());
-        assertEquals(gs2.getSuperPlusPrice(), gasStation2.getSuperPlusPrice());
-        assertEquals(gs2.getLat(), gasStation2.getLat());
-        assertEquals(gs2.getLon(), gasStation2.getLon());
-        
-        gasStationRepository.delete(gasStation);
-		gasStationRepository.delete(gasStation2);
-
-	}
-	
-	@Test
-    public void testFindByHasGasTrueOrderByGasPriceDesc() {
-		
-		GasStation gs;
-		GasStation gs2;
-		gasStation = new GasStation("Q8", "Via Calcio Lombardy Italy", true, true, true, true, true, "Car2Go", 45.4955025, 9.8530837, 1.0, 1.2, 1.9, 1.1, 1.4, -1, null, 0);
-		gasStation2 = new GasStation("Esso", "Via Filatoio Calcio Lombardy Italy", true, true, true, true, true, "Enjoy", 45.4955025, 9.8530837, 1.0, 1.5, 1.5, 1.7, 1.3, -1, null, 0);
-		
-		gsList.add(gasStation);
-		gsList.add(gasStation2);	
-		
-		gasStationRepository.save(gasStation);
-		gasStationRepository.save(gasStation2);
-		
-        List<GasStation> gsList2 = gasStationRepository.findByHasGasTrueOrderByGasPriceDesc();
-        
-        gs = gsList2.get(0);
-        gs2 = gsList2.get(1);
-        
-        assertNotNull(gs);
-        assertEquals(gs.getGasStationId(), gasStation.getGasStationId());
-        assertEquals(gs.getGasStationName(), gasStation.getGasStationName());
-        assertEquals(gs.getGasStationAddress(), gasStation.getGasStationAddress());
-        assertEquals(gs.getHasDiesel(), gasStation.getHasDiesel());
-        assertEquals(gs.getHasGas(), gasStation.getHasGas());
-        assertEquals(gs.getHasMethane(), gasStation.getHasMethane());
-        assertEquals(gs.getHasSuper(), gasStation.getHasSuper());
-        assertEquals(gs.getHasSuperPlus(), gasStation.getHasSuperPlus());
-        assertEquals(gs.getCarSharing(), gasStation.getCarSharing());
-        assertEquals(gs.getDieselPrice(), gasStation.getDieselPrice());
-        assertEquals(gs.getGasPrice(), gasStation.getGasPrice());
-        assertEquals(gs.getMethanePrice(), gasStation.getMethanePrice());
-        assertEquals(gs.getSuperPrice(), gasStation.getSuperPrice());
-        assertEquals(gs.getSuperPlusPrice(), gasStation.getSuperPlusPrice());
-        assertEquals(gs.getLat(), gasStation.getLat());
-        assertEquals(gs.getLon(), gasStation.getLon());
-        assertNotNull(gs2);
-        assertEquals(gs2.getGasStationId(), gasStation2.getGasStationId());
-        assertEquals(gs2.getGasStationName(), gasStation2.getGasStationName());
-        assertEquals(gs2.getGasStationAddress(), gasStation2.getGasStationAddress());
-        assertEquals(gs2.getHasDiesel(), gasStation2.getHasDiesel());
-        assertEquals(gs2.getHasGas(), gasStation2.getHasGas());
-        assertEquals(gs2.getHasMethane(), gasStation2.getHasMethane());
-        assertEquals(gs2.getHasSuper(), gasStation2.getHasSuper());
-        assertEquals(gs2.getHasSuperPlus(), gasStation2.getHasSuperPlus());
-        assertEquals(gs2.getCarSharing(), gasStation2.getCarSharing());
-        assertEquals(gs2.getDieselPrice(), gasStation2.getDieselPrice());
-        assertEquals(gs2.getGasPrice(), gasStation2.getGasPrice());
-        assertEquals(gs2.getMethanePrice(), gasStation2.getMethanePrice());
-        assertEquals(gs2.getSuperPrice(), gasStation2.getSuperPrice());
-        assertEquals(gs2.getSuperPlusPrice(), gasStation2.getSuperPlusPrice());
-        assertEquals(gs2.getLat(), gasStation2.getLat());
-        assertEquals(gs2.getLon(), gasStation2.getLon());
-        
-        gasStationRepository.delete(gasStation);
-		gasStationRepository.delete(gasStation2);
-
-	}
 }
