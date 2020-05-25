@@ -4,11 +4,11 @@ Authors: Group 12
 
 Date: 21/05/2020
 
-Version: 1.0
+Version: 2.0
 
 # Contents
 
-- [Dependency graph](#dependency graph)
+- [Dependency graph](#dependency-graph)
 
 - [Integration approach](#integration)
 
@@ -22,8 +22,6 @@ Version: 1.0
 
 
 # Dependency graph
-
-     <report the here the dependency graph of the classes in it/polito/Ezgas, using plantuml>
 
 ```plantuml
 
@@ -123,20 +121,17 @@ GasStationConverter -> UserDto
 
 # Integration approach
 
-    <Write here the integration sequence you adopted, in general terms (top down, bottom up, mixed) and as sequence
-    (ex: step1: class A, step 2: class A+B, step 3: class A+B+C, etc)>
-    <The last integration step corresponds to API testing at level of Service package>
-    <Tests at level of Controller package will be done later>
-
-We adopted MIXED way for the integration tests. We used Mockito for the Service Tests to Mock the Repository, but we don't use it to Mock the Converter.
+We adopted the MIXED way for the integration tests. We used the bottom-up approach for the Converter - Service, and the top-down approach for the Repository - Service.
 
 Sequence:
 
-step1:  GasStationTest.java + UserTest.java +
+- step1:  GasStationTest.java + UserTest.java +
         GasStationDtoTest.java + UserDtoTest.java
-step2:  GasStationConverterTest.java + UserConverterTest.java +
-        GasStationRepositoryTest.java + UserRepositoryTests.java +
-stepN:  GasStationServiceTest.java + UserServiceTest.java
+
+- step2:  GasStationConverterTest.java + UserConverterTest.java +
+        GasStationRepositoryTest.java + UserRepositoryTests.java
+
+- stepN:  GasStationServiceTest.java + UserServiceTest.java
 
 #  Tests
 
@@ -223,8 +218,6 @@ stepN:  GasStationServiceTest.java + UserServiceTest.java
 | UserRepositoryTests.java      | testFindByUserId                                          |
 
 ## Step n API Tests
-
-   <The last integration step  should correspond to API testing, or tests applied to all classes implementing the APIs defined in the Service package>
 
 | Classes  | JUnit test cases |
 |--|--|
@@ -460,7 +453,7 @@ This scenario is a grouping of multiple tests covering the same area: the return
 |  2     | Admin tries to search for a gas station with a specific gas type (null, empty string or invalid string) |
 |  3     | An InvalidGasTypeException is raised |
 
-## Scenario UC7.2
+## Scenario UC10.3
 
 | Scenario | IncreaseReputation MaxValue | Technique | Coverage |
 | -------- |:-------------------:|:---------:|:--------:|
@@ -470,7 +463,7 @@ This scenario is a grouping of multiple tests covering the same area: the return
 |  1     | User1 searches for a gas station and evaluates the price list with a positive mark (prices are correct)|
 |  2     | The user2 reputation is increased, but since it's already 5 it will stay at maximum still|
 
-## Scenario UC7.3
+## Scenario UC10.4
 
 | Scenario | DecreaseReputation MinValue | Technique | Coverage |
 | -------- |:-------------------:|:---------:|:--------:|
