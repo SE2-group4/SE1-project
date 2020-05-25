@@ -144,19 +144,19 @@ public class GasStationServiceimpl implements GasStationService {
 
 		switch (gasolinetype) {
 		case "Diesel":
-			gasStationList = this.gasStationRepository.findByHasDieselTrueOrderByDieselPriceDesc();
+			gasStationList = this.gasStationRepository.findByHasDieselTrueOrderByDieselPriceAsc();
 			break;
 		case "Super":
-			gasStationList = this.gasStationRepository.findByHasSuperTrueOrderBySuperPriceDesc();
+			gasStationList = this.gasStationRepository.findByHasSuperTrueOrderBySuperPriceAsc();
 			break;
 		case "SuperPlus":
-			gasStationList = this.gasStationRepository.findByHasSuperPlusTrueOrderBySuperPlusPriceDesc();
+			gasStationList = this.gasStationRepository.findByHasSuperPlusTrueOrderBySuperPlusPriceAsc();
 			break;
 		case "Gas":
-			gasStationList = this.gasStationRepository.findByHasGasTrueOrderByGasPriceDesc();
+			gasStationList = this.gasStationRepository.findByHasGasTrueOrderByGasPriceAsc();
 			break;
 		case "Methane":
-			gasStationList = this.gasStationRepository.findByHasMethaneTrueOrderByMethanePriceDesc();
+			gasStationList = this.gasStationRepository.findByHasMethaneTrueOrderByMethanePriceAsc();
 			break;
 		default:
 			throw new InvalidGasTypeException("Wrong gasoline type.");

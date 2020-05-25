@@ -13,11 +13,11 @@ import it.polito.ezgas.entity.GasStation;
 public interface GasStationRepository extends JpaRepository<GasStation, Integer>{
 	
 	public Optional<GasStation> findByGasStationId(int gasStationId);
-	public List<GasStation> findByHasMethaneTrueOrderByMethanePriceDesc();
+	public List<GasStation> findByHasMethaneTrueOrderByMethanePriceAsc();
 	public List<GasStation> findByCarSharing(String carSharing);
-	public List<GasStation> findByHasDieselTrueOrderByDieselPriceDesc();
-	public List<GasStation> findByHasSuperTrueOrderBySuperPriceDesc();
-	public List<GasStation> findByHasSuperPlusTrueOrderBySuperPlusPriceDesc();
-	public List<GasStation> findByHasGasTrueOrderByGasPriceDesc();
+	public List<GasStation> findByHasDieselTrueOrderByDieselPriceAsc();
+	public List<GasStation> findByHasSuperTrueOrderBySuperPriceAsc();
+	public List<GasStation> findByHasSuperPlusTrueOrderBySuperPlusPriceAsc();
+	public List<GasStation> findByHasGasTrueOrderByGasPriceAsc();
 	
 }

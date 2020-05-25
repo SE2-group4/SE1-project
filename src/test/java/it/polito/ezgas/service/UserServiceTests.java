@@ -354,6 +354,7 @@ public class UserServiceTests {
 
 			initializeTest(); // re-create all mocks
 			when(userRepository.findByUserId(u1.getUserId())).thenReturn(uList);
+			when(userRepository.findByEmailAndPassword(this.u1.getEmail(), this.u1.getPassword())).thenReturn(this.uList);
 		}
 		
 		@Test
@@ -369,7 +370,11 @@ public class UserServiceTests {
 		
 		@Test
 		public void invalidPassword_ShouldThrowException() {
-			IdPw credentials = new IdPw(this.u1.getEmail(), "invalid email");
+			// IdPw credentials = new IdPw(this.u1.getEmail(), "invalid email");
+			IdPw credentials = new IdPw();
+			credentials.setUser(this.u1.getEmail());
+			credentials.setPw("invalid email");
+			
 			try {
 				service.login(credentials);
 				fail();
@@ -378,6 +383,7 @@ public class UserServiceTests {
 			}
 		}
 		
+		@Test
 		public void correctIdPw_ShouldReturnLogin() {
 			IdPw credentials = new IdPw(this.u1.getEmail(), this.u1.getPassword());
 			LoginDto res = null;
@@ -421,7 +427,16 @@ public class UserServiceTests {
 			when(userRepository.findByUserId(u1.getUserId())).thenReturn(uList);
 			when(userRepository.findByUserId(u2.getUserId())).thenReturn(new ArrayList<>());
 			when(userRepository.findByUserId(u3.getUserId())).thenReturn(uList3);
+<<<<<<< HEAD
 			when(userRepository.findByUserId(999)).thenReturn(new ArrayList<User>());
+=======
+			when(userRepository.save(Mockito.any(User.class))).thenAnswer(new Answer<User>() {
+				@Override
+				public User answer(InvocationOnMock invocation) throws Throwable {
+					return (User) (invocation.getArguments()[0]);
+				}				
+			});
+>>>>>>> 28d357f1b3aad6a614b9118a3fec080ea0c27e4b
 		}
 		
 		@Test 
@@ -454,8 +469,13 @@ public class UserServiceTests {
 		@Test
 		public void nonExistingId() {
 			try {
+<<<<<<< HEAD
 				service.increaseUserReputation(999);
 				fail("Non existing id should throw an InvalidGasStationException");
+=======
+				UserDto ud1 = service.getUserById(999);
+				assertNull(ud1, "User should be null");
+>>>>>>> 28d357f1b3aad6a614b9118a3fec080ea0c27e4b
 			} catch (InvalidUserException e) {
 				
 			}
@@ -493,6 +513,12 @@ public class UserServiceTests {
 			when(userRepository.findByUserId(u1.getUserId())).thenReturn(uList);
 			when(userRepository.findByUserId(u2.getUserId())).thenReturn(new ArrayList<>());
 			when(userRepository.findByUserId(u3.getUserId())).thenReturn(uList3);
+			when(userRepository.save(Mockito.any(User.class))).thenAnswer(new Answer<User>() {
+				@Override
+				public User answer(InvocationOnMock invocation) throws Throwable {
+					return (User) (invocation.getArguments()[0]);
+				}				
+			});
 		}
 		
 		@Test

@@ -509,14 +509,13 @@ public class GasStationServiceTest {
 			expectedList = gasStationFilteredByGasolineType.stream()
 					.map(gs -> GasStationConverter.GasStationConvertToGasStationDto(gs)).collect(Collectors.toList());
 
-			when(gasStationRepository.findByHasDieselTrueOrderByDieselPriceDesc())
+			when(gasStationRepository.findByHasDieselTrueOrderByDieselPriceAsc())
 					.thenReturn(gasStationFilteredByGasolineType);
 
 			try {
 				returnList = gasStationService.getGasStationsByGasolineType("Diesel");
 
 			} catch (InvalidGasTypeException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				fail("No exception expected");
 			}
@@ -542,14 +541,13 @@ public class GasStationServiceTest {
 			gasStationFilteredByGasolineType.sort((a, b) -> Double.compare(a.getDieselPrice(), b.getDieselPrice()));
 			expectedList.sort((a, b) -> Double.compare(a.getDieselPrice(), b.getDieselPrice()));
 
-			when(gasStationRepository.findByHasSuperTrueOrderBySuperPriceDesc())
+			when(gasStationRepository.findByHasSuperTrueOrderBySuperPriceAsc())
 					.thenReturn(gasStationFilteredByGasolineType);
 
 			try {
 				returnList = gasStationService.getGasStationsByGasolineType("Super");
 
 			} catch (InvalidGasTypeException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				fail("No exception expected");
 			}
@@ -574,14 +572,13 @@ public class GasStationServiceTest {
 			gasStationFilteredByGasolineType.sort((a, b) -> Double.compare(a.getDieselPrice(), b.getDieselPrice()));
 			expectedList.sort((a, b) -> Double.compare(a.getDieselPrice(), b.getDieselPrice()));
 
-			when(gasStationRepository.findByHasSuperPlusTrueOrderBySuperPlusPriceDesc())
+			when(gasStationRepository.findByHasSuperPlusTrueOrderBySuperPlusPriceAsc())
 					.thenReturn(gasStationFilteredByGasolineType);
 
 			try {
 				returnList = gasStationService.getGasStationsByGasolineType("SuperPlus");
 
 			} catch (InvalidGasTypeException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				fail("No exception expected");
 			}
@@ -606,14 +603,13 @@ public class GasStationServiceTest {
 			gasStationFilteredByGasolineType.sort((a, b) -> Double.compare(a.getDieselPrice(), b.getDieselPrice()));
 			expectedList.sort((a, b) -> Double.compare(a.getDieselPrice(), b.getDieselPrice()));
 
-			when(gasStationRepository.findByHasGasTrueOrderByGasPriceDesc())
+			when(gasStationRepository.findByHasGasTrueOrderByGasPriceAsc())
 					.thenReturn(gasStationFilteredByGasolineType);
 
 			try {
 				returnList = gasStationService.getGasStationsByGasolineType("Gas");
 
 			} catch (InvalidGasTypeException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				fail("No exception expected");
 			}
@@ -638,13 +634,12 @@ public class GasStationServiceTest {
 			gasStationFilteredByGasolineType.sort((a, b) -> Double.compare(a.getDieselPrice(), b.getDieselPrice()));
 			expectedList.sort((a, b) -> Double.compare(a.getDieselPrice(), b.getDieselPrice()));
 
-			when(gasStationRepository.findByHasMethaneTrueOrderByMethanePriceDesc())
+			when(gasStationRepository.findByHasMethaneTrueOrderByMethanePriceAsc())
 					.thenReturn(gasStationFilteredByGasolineType);
 
 			try {
 				returnList = gasStationService.getGasStationsByGasolineType("Methane");
 			} catch (InvalidGasTypeException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				fail("No exception expected");
 			}
@@ -662,13 +657,12 @@ public class GasStationServiceTest {
 			gasStationFilteredByGasolineType = new ArrayList<GasStation>();
 			expectedList = new ArrayList<GasStationDto>();
 
-			when(gasStationRepository.findByHasDieselTrueOrderByDieselPriceDesc())
+			when(gasStationRepository.findByHasDieselTrueOrderByDieselPriceAsc())
 					.thenReturn(gasStationFilteredByGasolineType);
 
 			try {
 				returnList = gasStationService.getGasStationsByGasolineType("Diesel");
 			} catch (InvalidGasTypeException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				fail("No exception expected");
 			}
@@ -868,14 +862,13 @@ public class GasStationServiceTest {
 			gasStationFilteredByGasolineType.sort((a, b) -> Double.compare(a.getDieselPrice(), b.getDieselPrice()));
 			expectedList.sort((a, b) -> Double.compare(a.getDieselPrice(), b.getDieselPrice()));
 
-			when(gasStationRepository.findByHasDieselTrueOrderByDieselPriceDesc())
+			when(gasStationRepository.findByHasDieselTrueOrderByDieselPriceAsc())
 					.thenReturn(gasStationFilteredByGasolineType);
 
 			try {
 				returnList = gasStationService.getGasStationsWithoutCoordinates("Diesel", "CarA");
 
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				fail("No exception expected");
 			}
@@ -905,14 +898,13 @@ public class GasStationServiceTest {
 			expectedList.sort((a, b) -> Double.compare(a.getDieselPrice(), b.getDieselPrice()));
 
 			initializeTest(); // re-create all mocks
-			when(gasStationRepository.findByHasSuperTrueOrderBySuperPriceDesc())
+			when(gasStationRepository.findByHasSuperTrueOrderBySuperPriceAsc())
 					.thenReturn(gasStationFilteredByGasolineType);
 
 			try {
 				returnList = gasStationService.getGasStationsWithoutCoordinates("Super", "CarB");
 
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				fail("No exception expected");
 			}
@@ -937,13 +929,12 @@ public class GasStationServiceTest {
 			gasStationFilteredByGasolineType.sort((a, b) -> Double.compare(a.getDieselPrice(), b.getDieselPrice()));
 
 			initializeTest(); // re-create all mocks
-			when(gasStationRepository.findByHasDieselTrueOrderByDieselPriceDesc())
+			when(gasStationRepository.findByHasDieselTrueOrderByDieselPriceAsc())
 					.thenReturn(gasStationFilteredByGasolineType);
 
 			try {
 				returnList = gasStationService.getGasStationsWithoutCoordinates("Super", "CarC");
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				fail("No exception expected");
 			}
@@ -1015,7 +1006,7 @@ public class GasStationServiceTest {
 			expectedList = expectedList.stream().filter(gs -> gs.getGasStationId() <= 6).collect(Collectors.toList());
 			;
 
-			when(gasStationRepository.findByHasDieselTrueOrderByDieselPriceDesc())
+			when(gasStationRepository.findByHasDieselTrueOrderByDieselPriceAsc())
 					.thenReturn(gasStationFilteredByGasolineType);
 
 			try {
@@ -1108,7 +1099,7 @@ public class GasStationServiceTest {
 			gasStationFilteredByGasolineType.sort((a, b) -> Double.compare(a.getDieselPrice(), b.getDieselPrice()));
 			expectedList = expectedList.stream().filter(gs -> gs.getGasStationId() <= 6).collect(Collectors.toList());
 
-			when(gasStationRepository.findByHasMethaneTrueOrderByMethanePriceDesc())
+			when(gasStationRepository.findByHasMethaneTrueOrderByMethanePriceAsc())
 					.thenReturn(gasStationFilteredByGasolineType);
 
 			try {
