@@ -215,71 +215,104 @@ Contains Service classes that implement the Service Interfaces in the Service pa
 ```plantuml
 package "Backend" {
 
-package "it.polito.ezgas.repository" {
-    interface UserRepository{
-        + updateUserName(userId, userName): User
-        + updateEmail(userId, email): User
-        + updatePassword(userId, password): User
-        + updateReputation(userId, reputation): User
-    }
-    interface GasStationRepository{
-        + updateGasStationName(gasStationId, gasStationName): GasStation
-        + updateGasStationAddress(gasStationId, gasStationAddress): GasStation
-        + updateBrand(gasStationId, brand): GasStation
-        + updateCarSharing(gasStationId, carSharing): GasStation
-        + findByGasolineType(gasolinetype): List<GasStation>
-        + findByProximity(GeoPoint): List<GasStation>
-        + findByGeoPoint(GeoPoint, gasolinetype, carsharing): List<GasStation>
-        + findWithoutGeoPoint(gasolinetype, carsharing): List<GasStation>
-        + findByCarSharing(carsharing): List<GasStation>
-        + updateReport(gasStationId, priceReportId): void
-    }
-    interface PriceReportRepository
+package "it.polito.ezgas.service" {
+   interface "GasStationService"{
+       - gasStationRepository
+       - userRepository
+       + getGasStationById(gasStationId): GasStationDto
+       + saveGasStation(gasStationDto): GasStationDto
+       + getAllGasStations(): List<GasStationDto>
+       + Boolean deleteGasStation(gasStationId): Boolean
+       + getGasStationsByGasolineType(gasolinetype): List<GasStationDto>
+       + getGasStationsByProximity(lat, lon): List<GasStationDto>
+       + getGasStationsWithCoordinates(lat, lon, gasolinetype, carsharing): List<GasStationDto>
+       + getGasStationsWithoutCoordinates(gasolinetype, carsharing): List<GasStationDto>
+       + setReport(gasStationId, dieselPrice, superPrice, superPlusPrice, gasPrice, methanePrice, userId): void
+       + getGasStationByCarSharing(carSharing): List<GasStationDto>
+   }
+   interface "UserService" {
+       - userRepository
+       + getUserById(userId): UserDto
+       + saveUser(userDto): UserDto
+       + getAllUsers(): List<UserDto>
+       + deleteUser(userId): Boolean
+       + login(credentials): LoginDto
+       + increaseUserReputation(userId): Integer
+       + decreaseUserReputation(userId): Integer
+   }
 }
 
-package "it.polito.ezgas.entity" {
-    class GasStation{
+package "it.polito.ezgas.controller" {
+    class GasStationController{
+        - gasStationService
+        + getGasStationById(gasStationId): GasStationDto
+        + getAllGasStations(): List<GasStationDto>
+        + saveGasStation(gasStationDto): void
+        + deleteUser(gasStationId): void
+        + getGasStationsByGasolineType(gasolineType): List<GasStationDto>
+        + getGasStationsByProximity(myLat, myLon): List<GasStationDto>
+        + getGasStationsWithCoordinates(myLat, myLon, gasolineType, carSharing): List<GasStationDto>
+        + setGasStationReport(gasStationId, dieselPrice, superPrice, superPlusPrice, gasPrice, methanePrice, userId): void
+    }
+
+    class UserController{
+        - UserService
+        + getAllUsers(): List<UserDto>
+        + saveUser(userDto): UserDto
+        + deleteUser(userId): Boolean
+        + increaseUserReputation(userId): Integer
+        + decreaseUserReputation(userId): Integer
+        + login(credentials): LoginDto
+    }
+}
+
+package "it.polito.ezgas.utility"{
+    class Utility{
+        + checkCoordinates(lat, lon): Boolean
+        + calculateDistanceInMeters(lat1, lon1, lat2, lon2): Double
+        + trustCalculation(userRep, timestamp): Double
+    }
+}
+
+package "it.polito.ezgas.converter" {
+    class UserConverter{
+        + userConvertToUserDto(User): UserDto
+        + userDtoConvertTouser(UserDto): User
+    }
+    class GasStationConverter{
+        + GasStationConvertToGasStationDto(GasStation): GasStationDto
+        + GasStationDtoConvertToGasStation(GasStationDto): GasStation
+    }
+}
+
+package "it.polito.ezgas.dto" {
+    class GasStationDto{
         - gasStationId
         - gasStationName
         - gasStationAddress
         - brand
+        - hasDiesel
+        - hasSuper
+        - hasSuperPlus
+        - hasGas
+        - hasMethane
         - carSharing
-        - priceReportId
-        - geoPoint
-        + Getter()
-        + Setter()
-    }
-    class User{
-        - userId
-        - userName
-        - password
-        - email
-        - reputation
-        - isAdmin
-        + Getter()
-        + Setter()
-    }
-    class PriceReport{
-        - priceReportId
-        - userId
+        - lat
+        - lon
         - dieselPrice
         - superPrice
         - superPlusPrice
         - gasPrice
-        - time_tag
+        - methanePrice
+        - reportUser
+        - userDto
+        - reportTimestamp
+        - reportDependability
+        - priceReportDtos
         + Getter()
         + Setter()
     }
-    class GeoPoint{
-        - latitude
-        - longitude
-        + Getter()
-        + Setter()
-    }
-
-}
-
-package "it.polito.ezgas.dto" {
+    
     class IdPw{
         - user
         - pw
@@ -296,129 +329,123 @@ package "it.polito.ezgas.dto" {
         + Getter()
         + Setter()
     }
+
     class UserDto{
         - userId
         - userName
         - password
         - email
         - reputation
-        - isAdmin
+        - admin
         + Getter()
         + Setter()
     }
-    class GasStationDto{
+}
+
+package "it.polito.ezgas.entity" {
+    class GasStation{
         - gasStationId
         - gasStationName
         - gasStationAddress
         - brand
+        - hasDiesel
+        - hasSuper
+        - hasSuperPlus
+        - hasGas
+        - hasMethane
         - carSharing
-        - priceReport
-        - geoPoint
-        + Getter()
-        + Setter()
-    }
-    class PriceReportDto{
-        - priceReportId
-        - user
+        - lat
+        - lon
         - dieselPrice
         - superPrice
         - superPlusPrice
         - gasPrice
-        - time_tag
-        + Getter()
-        + Setter()
-        + getTrustLevel()
-    }
-    class GeoPointDto{
-        - latitude
-        - longitude
+        - methanePrice
+        - reportUser
+        - reportTimestamp
+        - reportDependability
+        - user
         + Getter()
         + Setter()
     }
-}
-
-package "it.polito.ezgas.converter" {
-    class UserConverter{
-        + toUserDto(User): UserDto
-    }
-    class GasStationConverter{
-        + toGasStationDto(GasStation): GasStationDto
-    }
-    class PriceReportConverter{
-        + toPriceReportConverter(PriceReport): PriceReportDto
-    }
-    class GeoPointConverter{
-        + toGeoPointConverter(GeoPoint): GeoPointDto
+    class User{
+        - userId
+        - userName
+        - password
+        - email
+        - reputation
+        - admin
+        + Getter()
+        + Setter()
     }
 }
 
-package "it.polito.ezgas.service" {
-   interface "GasStationService"{
-       + modifyGasStationName(gasStationId, gasStationName): GasStationDto
-       + modifyGasStationAddress(gasStationId, gasStationAddress): GasStationDto
-       + modifyBrand(gasStationId, brand): GasStationDto
-       + modifyCarSharing(gasStationId, carSharing): GasStationDto
-       + getGasStationById(gasStationId): GasStationDto
-       + saveGasStation(GasStationDto): GasStationDto
-       + getAllGasStations(): List<GasStationDto>
-       + deleteGasStation(gasStationId): Boolean
-       + getGasStationsByGasolineType(gasolinetype):  
-       + getGasStationsByProximity(GeoPoint): List<GasStationDto>
-       + getGasStationsWithCoordinates(Geopoint, gasolinetype, carsharing): List<GasStationDto>
-       + getGasStationsWithoutCoordinates(gasolinetype, carsharing): List<GasStationDto>
-       + setReport(gasStationId, priceReportId): void
-       + getGasStationByCarSharing(carSharing): List<GasStation>
-       + savePriceReport(dieselPrice, superPrice, superPlusPrice, gasPrice, methanePrice, userId): PriceReport
-   }
-   interface "UserService" {
-       + modifyUserName(userId, userName): UserDto
-       + modifyEmail(userId, email): UserDto
-       + modifyPassword(userId, password): UserDto
-       + getUserById(userId): UserDto 
-       + saveUser(userDto): UserDto 
-       + getAllUsers(): List<UserDto>
-       + deleteUser(userId): Boolean
-       + login(credentials): LoginDto
-       + increaseUserReputation(userId): Integer
-       + decreaseUserReputation(userId): Integer
-   }
-}
-
-package  "it.polito.ezgas.controller" {
-    class GasStationController{
-        - gasStationService
-        + getGasStationById(gasStationId): GasStationDto 
-        + getAllGasStations(): List<GasStationDto>
-        + saveGasStation(gasStationDto): GasStationDto 
-        + deleteGasStation(gasStationId): Boolean 
-        + getGasStationsByGasolineType(gasolineType): List<GasStationDto>
-        + getGasStationsByProximity(myLat, myLon): List<GasStationDto>
-        + getGasStationsWithCoordinates(myLat, myLon, gasolineType, carSharing): List<GasStationDto>
-        + setGasStationReport(gasStationId, dieselPrice, superPrice, superPlusPrice, gasPrice, methanePrice, userId): void
+package "it.polito.ezgas.repository" {
+    class GasStationRepository{
+        + findByGasStationId(gasStationId): List<GasStation>
+        + findByHasMethaneTrueOrderByMethanePriceDesc(): List<GasStation> 
+	    + findByHasDieselTrueOrderByDieselPriceDesc(): List<GasStation>
+	    + findByHasSuperTrueOrderBySuperPriceDesc(): List<GasStation>
+	    + findByHasSuperPlusTrueOrderBySuperPlusPriceDesc():  List<GasStation>
+	    + findByHasGasTrueOrderByGasPriceDesc():  List<GasStation>
+        + findByCarSharing(carSharing): List<GasStation>
     }
 
-    class UserController{
-        - userService
-        + modifyGasStationName(gasStationId, gasStationName): GasStationDto
-        + modifyGasStationAddress(gasStationId, gasStationAddress): GasStationDto
-        + modifyBrand(gasStationId, brand): GasStationDto
-        + modifyCarSharing(gasStationId, carSharing): GasStationDto
-        + modifyUserName(userId, userName): UserDto
-        + modifyEmail(userId, email): UserDto
-        + modifyPassword(userId, password): UserDto
-        + getUserById(userid): UserDto
-        + getAllUsers(): List<UserDto>
-        + saveUser(UserDto): UserDto
-        + deleteUser(userId): Boolean
-        + increaseUserReputation(userId): Integer
-        + decreaseUserReputation(userId): Integer
-        + login(IdPw): LoginDto
+    class UserRepository{
+        + findByEmailAndPassword(email, password): List<User>
+        + findByUserId(user_id): List<User>
     }
 }
 
-it.polito.ezgas.controller -[hidden]-> it.polito.ezgas.service
-it.polito.ezgas.service -[hidden]-> it.polito.ezgas.repository
-it.polito.ezgas.repository -[hidden]> it.polito.ezgas.converter
+
+''' UserController dependencies '''
+UserController --> UserService
+UserController --> IdPw
+UserController --> LoginDto
+UserController --> UserDto
+
+''' GasStationController dependencies '''
+GasStationController --> GasStationService
+GasStationController --> GasStationDto
+
+''' UserService dependencies '''
+UserService --> UserRepository
+UserService --> IdPw
+UserService --> LoginDto
+UserService --> UserDto
+UserService --> User
+
+''' GasStation dependencies '''
+GasStationService --> GasStationRepository
+GasStationService --> UserRepository
+GasStationService --> User
+GasStationService --> GasStation
+GasStationService --> GasStationDto
+GasStationService --> GasStationConverter
+GasStationService --> Utility
+
+''' UserRepository dependencies '''
+UserRepository --> User
+
+''' GasStationRepository dependencies '''
+GasStationRepository --> GasStation
+
+''' UserConverter dependencies '''
+UserConverter --> User
+UserConverter --> UserDto
+
+''' GasStationConverter dependencies '''
+GasStationConverter --> GasStation
+GasStationConverter --> GasStationDto
+
+''' GasStation dependencies '''
+GasStation --> User
+
+''' GasStationDto dependencies '''
+GasStationDto --> UserDto
+
+
+
 }
 
 ```
@@ -433,24 +460,24 @@ Only classes and interfaces from the following packages have been considered in 
 
 Others are support classes (or interfaces) and do not perform operations to directly implement functional requirements.
 
-|       | User | GasStation | GeoPoint | PriceList | UserService | GasStationService | UserController | GasStationController | UserRepository | GasStationRepository | PriceListRepository |
-| :-    | :-:  | :-:        | :-:      | :-:       | :-:         | :-:               | :-:            | :-:                  | :-:            | :-:                  | :-: |
-| FR1.1 | x    |            |          |           | x           |                   | x              |                      | x              |                      |     |
-| FR1.2 | x    |            |          |           | x           |                   | x              |                      | x              |                      |     |
-| FR1.3 | x    |            |          |           | x           |                   | x              |                      | x              |                      |     |
-| FR1.4 | x    |            |          |           | x           |                   | x              |                      | x              |                      |     |
-| FR2   | x    |            |          |           | x           |                   | x              |                      |                |                      |     |
-| FR3.1 | x    |            |          |           | x           |                   | x              | x                    |                | x                    | x   |
-| FR3.2 | x    |            |          |           | x           |                   | x              | x                    |                | x                    |     |
-| FR3.3 | x    | x          |          |           | x           | x                 | x              | x                    |                | x                    |     |
-| FR4.1 | x    | x          | x        |           | x           | x                 | x              | x                    |                | x                    |     | 
-| FR4.2 | x    | x          | x        |           | x           | x                 | x              | x                    |                | x                    |     | 
-| FR4.3 | x    | x          | x        | x         | x           | x                 | x              | x                    |                | x                    | x   | 
-| FR4.4 | x    | x          |          | x         | x           | x                 | x              | x                    |                | x                    | x   | 
-| FR4.5 | x    | x          |          | x         | x           | x                 | x              | x                    |                | x                    | x   | 
-| FR5.1 | x    | x          |          | x         | x           | x                 | x              | x                    |                |                      | x   |
-| FR5.2 | x    | x          |          | x         | x           | x                 | x              | x                    |                |                      | x   |
-| FR5.3 | x    | x          |          | x         | x           | x                 | x              | x                    |                |                      | x   | 
+|       | User | GasStation | UserService | GasStationService | UserController | GasStationController | UserRepository | GasStationRepository | PriceListRepository | Utility |
+| :-    | :-:  | :-:        | :-:      | :-:       | :-:         | :-:               | :-:            | :-:                  | :-:            | :-:                  | :-: | :-: |
+| FR1.1 | x    |            | x           |                   | x              |                      | x              |                      |     | |
+| FR1.2 | x    |            | x           |                   | x              |                      | x              |                      |     | |
+| FR1.3 | x    |            | x           |                   | x              |                      | x              |                      |     | |
+| FR1.4 | x    |            | x           |                   | x              |                      | x              |                      |     | |
+| FR2   | x    |            | x           |                   | x              |                      |                |                      |     | |
+| FR3.1 | x    |            | x           |                   | x              | x                    |                | x                    | x   | x|
+| FR3.2 | x    |            | x           |                   | x              | x                    |                | x                    |     | |
+| FR3.3 | x    | x          | x           | x                 | x              | x                    |                | x                    |     | x|
+| FR4.1 | x    | x          | x           | x                 | x              | x                    |                | x                    |     | x |
+| FR4.2 | x    | x          | x           | x                 | x              | x                    |                | x                    |     | x |
+| FR4.3 | x    | x          | x           | x                 | x              | x                    |                | x                    | x   | x |
+| FR4.4 | x    | x          | x           | x                 | x              | x                    |                | x                    | x   | x |
+| FR4.5 | x    | x          | x           | x                 | x              | x                    |                | x                    | x   | x |
+| FR5.1 | x    | x          | x           | x                 | x              | x                    |                |                      | x   | x|
+| FR5.2 | x    | x          | x           | x                 | x              | x                    |                |                      | x   | x |
+| FR5.3 | x    | x          | x           | x                 | x              | x                    |                |                      | x   | x |
 
 # Verification sequence diagrams
 
@@ -507,13 +534,13 @@ participant UserRepository as UR
 participant H2Database as H2
 
 activate UC
-UC -> US: 1: modifyUserName()
+UC -> US: 1: saveUser()
 activate US
 
-US -> UR: 2: modifyUserName()
+US -> UR: 2: saveUser()
 activate UR
 
-UR -> H2: 3: updateUserName()
+UR -> H2: 3: save()
 
 activate H2
 H2 --> UR: 4: return User
@@ -552,7 +579,7 @@ activate US
 US -> UR: 2: deleteUser()
 activate UR
 
-UR -> H2: 3: deleteById()
+UR -> H2: 3: delete()
 
 activate H2
 H2 --> UR: 4: return Boolean
@@ -586,7 +613,7 @@ activate GS
 GS -> GR: 2: saveGasStation()
 activate GR
 
-GR -> H2: 3: saveById()
+GR -> H2: 3: save()
 
 activate H2
 H2 --> GR: 4: return GasStation
@@ -618,13 +645,13 @@ participant GasStationRepository as GR
 participant H2Database as H2
 
 activate GC
-GC -> GS: 1: modifyGasStationName()
+GC -> GS: 1: saveGasStation()
 activate GS
 
-GS -> GR: 2: modifyGasStation()
+GS -> GR: 2: saveGasStation()
 activate GR
 
-GR -> H2: 3: updateGasStation()
+GR -> H2: 3: save()
 
 activate H2
 H2 --> GR: 4: return GasStation
@@ -654,7 +681,6 @@ skinparam shadowing false
 participant GasStationController as GC
 participant GasStationService as GS
 participant GasStationRepository as GR
-participant PriceListRepository as PR
 participant H2Database as H2
 
 activate GC
@@ -664,16 +690,9 @@ activate GS
 GS -> GR: 2: deleteGasStation()
 activate GR
 
-GS -> PR: 2: deleteById()
-activate PR
-
-GR -> H2: 3: deleteById()
+GR -> H2: 3: delete()
 
 activate H2
-PR -> H2: 3: deleteById()
-
-H2 --> PR: 4: return Boolean
-deactivate PR
 
 H2 --> GR: 4: return Boolean
 deactivate H2
@@ -697,30 +716,22 @@ skinparam shadowing false
 participant GasStationController as GC
 participant GasStationService as GS
 participant GasStationRepository as GR
-participant PriceReportRepository as PRR
-participant PriceReport as PR
 participant H2Database as H2
 
 activate GC
 GC -> GS: 1: setGasStationReport()
-deactivate GC
-
 activate GS
-GS -> PRR: 2: savePriceReport()
-activate PRR
-PRR -> H2: 3: save()
+GS -> GR: 2: setReport()
+activate GR
+GR -> H2: 3: save()
 activate H2
-H2 --> PRR: 4: return PriceReport
+H2 --> GR: 4: return GasStation
 deactivate H2
-PRR --> GS: 5: return PriceReport
-deactivate PRR
-GS -> GR: 6: setReport()
-deactivate GS
-activate GR 
-GR -> H2: updateReport()
+GR --> GS: 5: return GasStation
 deactivate GR
-activate H2
-deactivate H2
+GS --> GC: 6: return GasStation
+deactivate GS
+deactivate GC
 
 @enduml
 ```
@@ -734,6 +745,7 @@ skinparam shadowing false
 
 participant GasStationController as GC
 participant GasStationService as GS
+participant Utility as U
 participant GasStationConverter as GCV
 participant GasStationRepository as GR
 participant H2Database as H2
@@ -746,7 +758,7 @@ activate GS
 GS -> GR: 2: getGasStationsByProximity()
 activate GR
 
-GR -> H2: 3: findByProximity()
+GR -> H2: 3: findAll()
 
 activate H2
 H2 --> GR: 4: return List<GasStation>
@@ -755,19 +767,25 @@ deactivate H2
 GR --> GS: 5: return List<GasStation>
 deactivate GR
 
-GS -> GCV: 6: for each(toGasStationDto())
+GS --> U: 6: trustCalculation()
+activate U
+
+U --> GS: 7: return Double
+deactivate U
+
+GS -> GCV: 8: for each(toGasStationDto())
 activate GCV
-GCV --> GS: 7: return GasStationDto
+GCV --> GS: 9: return GasStationDto
 deactivate GCV
 
-GS --> GC: 8: return List<GasStationDto>
+GS --> GC: 10: return List<GasStationDto>
 deactivate GS
 deactivate GC
 @enduml
 ```
 
 ### Use case 9, UC9 - Update trust level of price list
-This use case doesn't have a sequence diagram since the trust level is computed by the getTrustLevel() function in the PriceReportDto and is returned to the Gas station.
+This use case doesn't have a sequence diagram since the trust level is computed by the function tustCalculation() in Utility class each time a gasStation search is done.
 
 ### Use Case 10, UC10 - Evaluate price
 #### Scenario 10.1 - Price is correct (UC.10)
@@ -790,7 +808,7 @@ activate US
 US -> UR: 2: increaseUserReputation()
 activate UR
 
-UR -> H2: 3: updateReputation()
+UR -> H2: 3: save()
 
 activate H2
 H2 --> UR: 4: return User
@@ -800,7 +818,7 @@ deactivate H2
 UR --> US: 5: return User
 deactivate UR
 
-US -> UCV: 6: toUserDto()
+US -> UCV: 6: UserToUserDto()
 activate UCV
 UCV --> US: 7: return UserDto
 deactivate UCV
@@ -831,7 +849,7 @@ activate US
 US -> UR: 2: decreaseUserReputation()
 activate UR
 
-UR -> H2: 3: updateReputation()
+UR -> H2: 3: save()
 
 activate H2
 H2 --> UR: 4: return User
@@ -840,7 +858,7 @@ deactivate H2
 UR --> US: 5: return User
 deactivate UR
 
-US -> UCV: 6: toUserDto()
+US -> UCV: 6: UserToUserDto()
 activate UCV
 UCV --> US: 7: return UserDto
 deactivate UCV
