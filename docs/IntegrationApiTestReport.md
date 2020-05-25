@@ -126,17 +126,14 @@ We adopted the MIXED way for the integration tests. We used the bottom-up approa
 Sequence:
 
 - step1:  GasStationTest.java + UserTest.java +
-        GasStationDtoTest.java + UserDtoTest.java
+          GasStationDtoTest.java + UserDtoTest.java
 
 - step2:  GasStationConverterTest.java + UserConverterTest.java +
-        GasStationRepositoryTest.java + UserRepositoryTests.java
+          GasStationRepositoryTest.java + UserRepositoryTests.java
 
-- stepN:  GasStationServiceTest.java + UserServiceTest.java
+- step3:  GasStationServiceTest.java + UserServiceTest.java
 
 #  Tests
-
-   <define below a table for each integration step. For each integration step report the group of classes under test, and the names of
-     JUnit test cases applied to them>
 
 ## Step 1
 | Classes  | JUnit test cases |
@@ -217,10 +214,11 @@ Sequence:
 | UserRepositoryTests.java      | testFindByEmailAndPassword                                |
 | UserRepositoryTests.java      | testFindByUserId                                          |
 
-## Step n API Tests
+## Step 3 API Tests
 
 | Classes  | JUnit test cases |
 |--|--|
+| GasStationServiceTest.java    | validGasStationDto_updateAndReturnGasStationDto  |
 | GasStationServiceTest.java    | existingId_returnCorrespondingGasStationDto  |
 | GasStationServiceTest.java    | nonExistingId_returnNull  |
 | GasStationServiceTest.java    | negativeId_InvalidGasStationExceptionThrown  |
@@ -331,7 +329,7 @@ Sequence:
 | -------- |:-------------------:|:---------:|:--------:|
 |  Precondition     | User to search is not in the database |
 |  Post condition   | |
-| Step#             | Description  | Test created for code coverage | 90.9% |
+| Step#             | Description  | Test created for code coverage | 92.3% |
 |  1     | Admin logs in |
 |  2     | Admin tries to search for a user which is not in the database |
 |  3     | An InvalidUserException is lauched |
@@ -342,7 +340,7 @@ Sequence:
 | -------- |:-------------------:|:---------:|:--------:|
 |  Precondition     | User to search is not in the database |
 |  Post condition   | |
-| Step#             | Description  | Test created from Requirements | 41.2% |
+| Step#             | Description  | Test created from Requirements | 92.3% |
 |  1     | Admin logs in |
 |  2     | Admin tries to search for a user which is not in the database and inserts a nevative id (not valid) |
 |  3     | An InvalidUserException is lauched |
@@ -353,7 +351,7 @@ Sequence:
 | -------- |:-------------------:|:---------:|:--------:|
 |  Precondition     | Specific GasStation is present in the database  |
 |  Post condition   | No changes are done|
-| Step#             | Description  | Test created from Requirements | 70% |
+| Step#             | Description  | Test created from Requirements | 100% |
 |  1     | Admin logs in |
 |  2     | Admin tries to modify a price for a gas station inserting a negative price (not valid) |
 |  3     | A PriceException is raised |
@@ -364,7 +362,7 @@ Sequence:
 | -------- |:-------------------:|:---------:|:--------:|
 |  Precondition     | User to search is not in the database |
 |  Post condition   | |
-| Step#             | Description  | Test created from Requirements | 69.6% |
+| Step#             | Description  | Test created from Requirements | 100% |
 |  1     | Admin logs in |
 |  2     | Admin tries to create a new gas station inserting invalid latitude (<-90° or >90°) or an invalid longitude (<-180° or >180°) |
 |  3     | A GPSDataException is raised |
@@ -375,7 +373,7 @@ Sequence:
 | -------- |:-------------------:|:---------:|:--------:|
 |  Precondition     | Gas Station is not in the database |
 |  Post condition   | |
-| Step#             | Description  | Test created from Requirements | 18.2% |
+| Step#             | Description  | Test created from Requirements | 100% |
 |  1     | Admin logs in |
 |  2     | Admin tries to search for a gas station having a negative id |
 |  3     | An InvalidGasStationException is raised |
@@ -397,18 +395,7 @@ Sequence:
 | -------- |:-------------------:|:---------:|:--------:|
 |  Precondition     | Gas Station is not in the database |
 |  Post condition   | |
-| Step#             | Description  | Test created from Requirements | 76.5% |
-|  1     | Admin logs in |
-|  2     | Admin tries to search for a gas station with an ID which is not in the database |
-|  3     | An InvalidGasStationException is raised |
-
-## Scenario UC6.2
-
-| Scenario | Non existing GasStationID | Technique | Coverage |
-| -------- |:-------------------:|:---------:|:--------:|
-|  Precondition     | Gas Station is not in the database |
-|  Post condition   | |
-| Step#             | Description  | Test created from Requirements | 76.5% |
+| Step#             | Description  | Test created from Requirements | 100% |
 |  1     | Admin logs in |
 |  2     | Admin tries to search for a gas station with an ID which is not in the database |
 |  3     | An InvalidGasStationException is raised |
@@ -419,7 +406,7 @@ Sequence:
 | -------- |:-------------------:|:---------:|:--------:|
 |  Precondition     | Gas Station is in the database |
 |  Post condition   | |
-| Step#             | Description  | Test created from Requirements | 10% |
+| Step#             | Description  | Test created from Requirements | 100% |
 |  1     | Admin logs in |
 |  2     | Admin searches for a gas station, and tries to insert a negative new price |
 |  3     | An PriceException is raised |
@@ -433,9 +420,9 @@ This scenario is a grouping of multiple tests covering the same area: the return
 |  Precondition     | Gas Station(s) is(are) not in the database |
 |  Post condition   | |
 | Step#             | Description  | Test created for code coverage | |
-|a|getGasStationsByProximity||78.8%|
-|b|getGasStationsWithoutCoordinates||89.8%|
-|c|getGasStationsByGasolineType||83.3%|
+|a|getGasStationsByProximity||100%|
+|b|getGasStationsWithoutCoordinates||100%|
+|c|getGasStationsByGasolineType||100%|
 |d|getGasStationsByCarSharing||100%|
 ||||
 |  1     | Admin logs in |
@@ -448,7 +435,7 @@ This scenario is a grouping of multiple tests covering the same area: the return
 | -------- |:-------------------:|:---------:|:--------:|
 |  Precondition     | Gas Station is not in the database |
 |  Post condition   | |
-| Step#             | Description  | Test created from Requirements | 23.8% |
+| Step#             | Description  | Test created from Requirements | 100% |
 |  1     | Admin logs in |
 |  2     | Admin tries to search for a gas station with a specific gas type (null, empty string or invalid string) |
 |  3     | An InvalidGasTypeException is raised |
@@ -459,7 +446,7 @@ This scenario is a grouping of multiple tests covering the same area: the return
 | -------- |:-------------------:|:---------:|:--------:|
 |  Precondition     | User2 has inserted a price list into a gas station and has already a reputation of 5|
 |  Post condition   | No change in reputation|
-| Step#             | Description  | Test created from Requirements | 68.8% |
+| Step#             | Description  | Test created from Requirements | 100% |
 |  1     | User1 searches for a gas station and evaluates the price list with a positive mark (prices are correct)|
 |  2     | The user2 reputation is increased, but since it's already 5 it will stay at maximum still|
 
@@ -469,7 +456,7 @@ This scenario is a grouping of multiple tests covering the same area: the return
 | -------- |:-------------------:|:---------:|:--------:|
 |  Precondition     | User2 has inserted a price list into a gas station and has a reputation of -5|
 |  Post condition   | No change in reputation|
-| Step#             | Description  | Test created from Requirements | 68.8% |
+| Step#             | Description  | Test created from Requirements | 100% |
 |  1     | User1 searches for a gas station and evaluates the price list with a negative mark (prices are wrong) |
 |  2     | The user2 reputation is decreased, but since it's already -5 it will stay at minimum still|
 
@@ -480,19 +467,35 @@ This scenario is a grouping of multiple tests covering the same area: the return
 <Report in the following table the coverage of  scenarios (from official requirements and from above) vs FR.
 Report also for each of the scenarios the (one or more) API JUnit tests that cover it. >
 
-
-
-
 | Scenario ID | Functional Requirements covered | JUnit  Test(s) |
 | ----------- | ------------------------------- | ----------- |
-|  ..         | FRx                             |             |
-|  ..         | FRy                             |             |
-| ...         |                                 |             |
-| ...         |                                 |             |
-| ...         |                                 |             |
-| ...         |                                 |             |
-
-
+| UC1         | FR1.1                           |             |
+| UC1.1       | FR1.1                           |             |
+| UC1.2       | FR1.1                           |             |
+| UC1.3       | FR1.3                           |             |
+| UC1.4       | FR1.4                           |             |
+| UC1.5       | FR1.4                           |             |
+| UC3         | FR1.2                           |             |
+| UC4         | FR3.1                           |             |
+| UC4.1       | FR4.4                           |             |
+| UC4.2       | FR4.1                           |             |
+| UC4.2       | FR4.2                           |             |
+| UC4.3       | FR4                             |             |
+| UC4.4       | FR3.3                           |             |
+| UC5         | FR3.1                           |             |
+| UC6         | FR3.2                           |             |
+| UC6.1       | FR4                             |             |
+| UC7         | FR5.1                           |             |
+| UC7.1       | FR5.1                           |             |
+| UC8         | FR4.1                           |             |
+| UC8.1       | FR4                             |             |
+| UC8.2       | FR4.4                           |             |
+| UC9         | FR5.2                           |             |
+| UC10        | FR5.3                           |             |
+| UC10.1      | FR5.3                           |             |
+| UC10.2      | FR5.3                           |             |
+| UC10.3      | FR5.3                           |             |
+| UC10.4      | FR5.3                           |             |
 
 # Coverage of Non Functional Requirements
 
