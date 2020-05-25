@@ -46,7 +46,7 @@ public class GasStationServiceimpl implements GasStationService {
 			gasStation.setReportDependability(
 					Utility.trustCalculation(gasStation.getUser().getReputation(), gasStation.getReportTimestamp()));
 		}
-
+		
 		return (gasStation != null) ? GasStationConverter.GasStationConvertToGasStationDto(gasStation) : null;
 	}
 
@@ -95,11 +95,9 @@ public class GasStationServiceimpl implements GasStationService {
 		} else
 			gasStation.setDieselPrice(-1);
 
-		User u;
-
-		if (!this.userRepository.findByUserId(gasStation.getReportUser()).isEmpty()) {
-			u = this.userRepository.findByUserId(gasStation.getReportUser()).get(0);
-			gasStation.setUser(u);
+		List<User> userList = this.userRepository.findByUserId(gasStation.getReportUser());
+		if (!userList.isEmpty()) {
+			gasStation.setUser(userList.get(0));
 		}
 
 		g = this.gasStationRepository.save(gasStation);
@@ -125,15 +123,10 @@ public class GasStationServiceimpl implements GasStationService {
 		if (gasStationId < 0 || gasStationId == null) {
 			throw new InvalidGasStationException("Invalid (negative) gasStationId");
 		}
-		try {
-			this.gasStationRepository.delete(gasStationId);
-		} catch (IllegalArgumentException e) {
-			throw new InvalidGasStationException(e.getMessage());
-		}
-		if (!this.gasStationRepository.findByGasStationId(gasStationId).isPresent()) {
-			return true;
-		}
-		return false;
+		
+		this.gasStationRepository.delete(gasStationId);
+			
+		return !(this.gasStationRepository.findByGasStationId(gasStationId).isPresent());
 	}
 
 	@Override
@@ -243,18 +236,23 @@ public class GasStationServiceimpl implements GasStationService {
 		}
 		*/
 		
-		if ((gasStation.getMethanePrice() != -1 && methanePrice < 0)
-				|| (gasStation.getSuperPlusPrice() != -1 && superPlusPrice < 0)
-				|| (gasStation.getSuperPrice() != -1 && superPrice < 0)
-				|| (gasStation.getGasPrice() != -1 && gasPrice < 0)
-				|| (gasStation.getDieselPrice() != -1 && dieselPrice < 0)) {
+		if ((gasStation.getHasMethane() && methanePrice < 0)
+				|| (gasStation.getHasSuperPlus() && superPlusPrice < 0)
+				|| (gasStation.getHasSuper() && superPrice < 0)
+				|| (gasStation.getHasGas() && gasPrice < 0)
+				|| (gasStation.getHasDiesel() && dieselPrice < 0)) {
 			throw new PriceException("Invalid (negative) price");
 		}
 
-		gasStation.setDieselPrice(dieselPrice);
-		gasStation.setSuperPrice(superPrice);
-		gasStation.setSuperPlusPrice(superPlusPrice);
+		if (gasStation.getHasDiesel())
+			gasStation.setDieselPrice(dieselPrice);
+		if (gasStation.getHasSuper())
+			gasStation.setSuperPrice(superPrice);
+		if (gasStation.getHasSuperPlus())
+			gasStation.setSuperPlusPrice(superPlusPrice);
+		if (gasStation.getHasGas())
 		gasStation.setGasPrice(gasPrice);
+		if (gasStation.getHasMethane())
 		gasStation.setMethanePrice(methanePrice);
 		gasStation.setUser(user);
 		gasStation.setReportUser(userId);
