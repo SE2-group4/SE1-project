@@ -360,7 +360,7 @@ Sequence:
 
 | Scenario | Invalid latitude or longitude test | Technique | Coverage |
 | -------- |:-------------------:|:---------:|:--------:|
-|  Precondition     | User to search is not in the database |
+|  Precondition     | Gas Station is not in the database |
 |  Post condition   | |
 | Step#             | Description  | Test created from Requirements | 100% |
 |  1     | Admin logs in |
@@ -463,39 +463,35 @@ This scenario is a grouping of multiple tests covering the same area: the return
 
 # Coverage of Scenarios and FR
 
-
-<Report in the following table the coverage of  scenarios (from official requirements and from above) vs FR.
-Report also for each of the scenarios the (one or more) API JUnit tests that cover it. >
-
 | Scenario ID | Functional Requirements covered | JUnit  Test(s) |
 | ----------- | ------------------------------- | ----------- |
-| UC1         | FR1.1                           |             |
-| UC1.1       | FR1.1                           |             |
-| UC1.2       | FR1.1                           |             |
-| UC1.3       | FR1.3                           |             |
-| UC1.4       | FR1.4                           |             |
-| UC1.5       | FR1.4                           |             |
-| UC3         | FR1.2                           |             |
-| UC4         | FR3.1                           |             |
-| UC4.1       | FR4.4                           |             |
-| UC4.2       | FR4.1                           |             |
-| UC4.2       | FR4.2                           |             |
-| UC4.3       | FR4                             |             |
-| UC4.4       | FR3.3                           |             |
-| UC5         | FR3.1                           |             |
-| UC6         | FR3.2                           |             |
-| UC6.1       | FR4                             |             |
-| UC7         | FR5.1                           |             |
-| UC7.1       | FR5.1                           |             |
-| UC8         | FR4.1                           |             |
-| UC8.1       | FR4                             |             |
-| UC8.2       | FR4.4                           |             |
-| UC9         | FR5.2                           |             |
-| UC10        | FR5.3                           |             |
-| UC10.1      | FR5.3                           |             |
-| UC10.2      | FR5.3                           |             |
-| UC10.3      | FR5.3                           |             |
-| UC10.4      | FR5.3                           |             |
+| UC1         | FR1.1                           | SaveUser            |
+| UC1.1       | FR1.1                           | SaveUser            |
+| UC1.2       | FR1.1                           | SaveUser            |
+| UC1.3       | FR1.3                           | GetAllUsers            |
+| UC1.4       | FR1.4                           | GetUserById            |
+| UC1.5       | FR1.4                           | GetUserById            |
+| UC3         | FR1.2                           | DeleteUser            |
+| UC4         | FR3.1                           | SaveGasStation            |
+| UC4.1       | FR4.4                           | SaveGasStation            |
+| UC4.2       | FR4.1                           | SaveGasStation            |
+| UC4.2       | FR4.2                           | SaveGasStation            |
+| UC4.3       | FR4                             | SaveGasStation            |
+| UC4.4       | FR3.3                           | GetAllGasStations            |
+| UC5         | FR3.1                           | SaveGasStation            |
+| UC6         | FR3.2                           | DeleteGasStation            |
+| UC6.1       | FR4                             | GetGasStationById            |
+| UC7         | FR5.1                           | SetReport            |
+| UC7.1       | FR5.1                           | SetReport            |
+| UC8         | FR4.1                           | GetGasStationsWithCoordinates, GetGasStationsWithoutCoordinates, GetGasStationsByProximity, GetGasStationsByGasolineType            |
+| UC8.1       | FR4                             | GetGasStationsWithCoordinates, GetGasStationsWithoutCoordinates, GetGasStationsByProximity, GetGasStationsByGasolineType            |
+| UC8.2       | FR4.4                           | GetGasStationsByGasolineType            |
+| UC9         | FR5.2                           | GetAllGasStations            |
+| UC10        | FR5.3                           | IncreaseReputation, DecreaseReputation            |
+| UC10.1      | FR5.3                           | IncreaseReputation            |
+| UC10.2      | FR5.3                           | DecreaseReputation            |
+| UC10.3      | FR5.3                           | IncreaseReputation            |
+| UC10.4      | FR5.3                           | DecreaseReputation            |
 
 # Coverage of Non Functional Requirements
 
