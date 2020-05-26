@@ -15,13 +15,11 @@ import it.polito.ezgas.utils.*;
 
 @RunWith(JUnitPlatform.class)
 @SelectClasses({
-	EZGasApplicationTests.class,
-	GasStationTest.class, UserTests.class, UtilityTest.class,
-	GasStationServiceTest.class, UserServiceTests.class,
-	GasStationConverterTest.class, UserConverterTests.class,
-	GasStationDtoTests.class, UserDtoTests.class,
-	GasStationRepositoryTest.class, UserRepositoryTests.class
+	GasStationRepositoryTest.class, 
+	UserRepositoryTests.class,
+	GasStationConverterTest.class, 
+	UserConverterTests.class
 })
-public class TestSuite {
+public class TestSuiteStep2 {
 
 }

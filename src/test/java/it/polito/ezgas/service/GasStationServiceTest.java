@@ -506,6 +506,13 @@ public class GasStationServiceTest {
 			} catch (InvalidGasStationException e) {
 
 			}
+			
+			try {
+				boolean result = gasStationService.deleteGasStation(null);
+				fail("Negative Id should throw an InvalidGasStationException");
+			} catch (InvalidGasStationException e) {
+
+			}
 		}
 	}
 

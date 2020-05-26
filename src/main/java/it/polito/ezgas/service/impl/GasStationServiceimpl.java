@@ -120,7 +120,7 @@ public class GasStationServiceimpl implements GasStationService {
 
 	@Override
 	public Boolean deleteGasStation(Integer gasStationId) throws InvalidGasStationException {
-		if (gasStationId < 0 || gasStationId == null) {
+		if (gasStationId == null || gasStationId < 0 ) {
 			throw new InvalidGasStationException("Invalid (negative) gasStationId");
 		}
 		
