@@ -13,8 +13,8 @@ public class GasStationConverter {
 		
 		GasStationDto gasStationDto = new GasStationDto();
 		BeanUtils.copyProperties(gasStation, gasStationDto);
-		
-		/*GasStationDto gasStationDto = new GasStationDto();
+		/*
+		GasStationDto gasStationDto = new GasStationDto();
 		User user = gasStation.getUser();
 		UserDto userDto = UserConverter.userConvertToUserDto(user);
 		

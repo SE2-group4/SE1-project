@@ -2,26 +2,45 @@ package it.polito.ezgas.service;
 
 
 
+//import static org.junit.Assert.assertNull;
+//import static org.junit.Assert.assertTrue;
+//import static org.junit.Assert.fail;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 import org.springframework.context.annotation.Bean;
-import org.springframework.test.context.junit4.SpringRunner;
+
+import exception.InvalidGasStationException;
+import exception.InvalidLoginDataException;
 import exception.InvalidUserException;
+import it.polito.ezgas.converter.GasStationConverter;
 import it.polito.ezgas.converter.UserConverter;
+import it.polito.ezgas.dto.GasStationDto;
+import it.polito.ezgas.dto.IdPw;
+import it.polito.ezgas.dto.LoginDto;
 import it.polito.ezgas.dto.UserDto;
+import it.polito.ezgas.entity.GasStation;
 import it.polito.ezgas.entity.User;
 import it.polito.ezgas.repository.UserRepository;
-import it.polito.ezgas.service.UserService;
 import it.polito.ezgas.service.impl.UserServiceImpl;
 
 public class UserServiceTests {
@@ -30,107 +49,157 @@ public class UserServiceTests {
   
         @Bean
         public UserService userService() {
-            return new UserServiceImpl();
+            return new UserServiceImpl(userRepository);
         }
     }
 	
-	/*
-	 * not working...
-	 * 
-	@Autowired
-    private TestEntityManager entityManager;
-    */
     
     @Autowired
-    private UserService service;   
+    static UserService service;   
     
-    @MockBean
-    private UserRepository userRepository;
+    static UserRepository userRepository;
+    	
     
-    private int initSize;
-    private List<User> myList;
+	@BeforeAll
+	static void initializeTest() {
+		userRepository = mock(UserRepository.class);
+		service = new UserServiceImpl(userRepository);
+	}
 	
-	@BeforeEach
-	public void setUp() throws Exception {
-		List<UserDto> list = this.service.getAllUsers();
+	boolean compareUserDto(UserDto u1, UserDto u2) {
+		if (u1 == null && u2 == null)
+			return true;
+		if (u1 == null || u2 == null)
+			return false;
+		
+		return (u1.getAdmin() == u2.getAdmin() 
+				&& u1.getEmail().compareTo(u2.getEmail()) == 0
+				&& u1.getPassword().compareTo(u2.getPassword()) == 0
+				&& u1.getReputation() == u2.getReputation()
+				&& u1.getUserId() == u2.getUserId()
+				&& u1.getUserName().compareTo(u2.getUserName()) == 0);
+	}
+	
+	boolean compareLoginDto(User u1, LoginDto l1) {
+		if (u1 == null && l1 == null)
+			return true;
+		if (u1 == null || l1 == null)
+			return false;
+		
+		return (u1.getAdmin() == l1.getAdmin() 
+				&& u1.getEmail().compareTo(l1.getEmail()) == 0
+				// && u1.getPassword().compareTo(l1.getPassword()) == 0
+				&& u1.getReputation() == l1.getReputation()
+				&& u1.getUserId() == l1.getUserId()
+				&& u1.getUserName().compareTo(l1.getUserName()) == 0);
+	}
+	
+	
+	@Nested
+	@DisplayName("Test getUserById")
+	public class GetUserById {
+		
+		private List<User> uList; 
+		
+		@BeforeEach
+		void setUp() {
+			this.uList = new ArrayList<User>();
 			
-		this.initSize = list.size();
+			User u1 = new User("Aldo", "aldo", "aldo.baglio@agg.it", -2);
+			u1.setUserId(4);
+			u1.setAdmin(false);
+			this.uList.add(u1);
+			
+			initializeTest(); // re-create all mocks
+			when(userRepository.findByUserId(4)).thenReturn(uList);
+		}
 		
-		this.myList = new ArrayList<>();
-		User user;
-
-		user = new User();
-		//user.setUserId(1);
-		user.setUserName("Aldo");
-		user.setPassword("buonaquestacadrega");
-		user.setEmail("aldo.baglio@agg.it");
-		user.setReputation(-3);
-		user.setAdmin(false);
-		this.myList.add(user);
-		assertTrue(this.service.saveUser(UserConverter.userConvertToUserDto(user)) != null);
-		//assertTrue(this.userRepository.save(user) != null);
-		//this.entityManager.persist(user);
-
-		user = new User();
-		//user.setUserId(2);
-		user.setUserName("Giovanni");
-		user.setPassword("franco");
-		user.setEmail("giovanni.storti@agg.it");
-		user.setReputation(+5);
-		user.setAdmin(true);
-		this.myList.add(user);
-		assertTrue(this.userRepository.save(user) != null);
-		//this.entityManager.persist(user);
-
-		user = new User();
-		//user.setUserId(3);
-		user.setUserName("Giacomo");
-		user.setPassword("ilnonno");
-		user.setEmail("giacomo.poretti@agg.it");
-		user.setReputation(+1);
-		user.setAdmin(false);
-		this.myList.add(user);
-		assertTrue(this.userRepository.save(user) != null);
-		//this.entityManager.persist(user);
+		@Test
+		public void getUser_UserId_ShouldReturnUser() {
+			UserDto ud1 = null;
+			try {
+				ud1 = service.getUserById(4);
+			} catch (Exception e) {
+				fail();
+			}
+			assertTrue(compareUserDto(UserConverter.userConvertToUserDto(this.uList.get(0)), ud1));
+		}
 		
-		assertEquals(this.getExpectedSize(), this.userRepository.count());
-		//this.entityManager.flush();
-
-		/*
-		myList.add(new UserDto(1, "Aldo", "buonaquestacadrega", "aldo.baglio@agg.it", -3, false));
-		myList.add(new UserDto(2, "Giovanni", "franco", "giovanni.storti@agg.it", +5, true));
-		myList.add(new UserDto(3, "Giacomo", "ilnonno", "giacomo.poretti@agg.it", +1, false));
-		*/
+		@Test
+		public void getUser_NotExistingUserId_ShouldThrowException() {
+			try {
+				service.getUserById(-1);
+				fail();
+			} catch (InvalidUserException e) {}
+			catch(Exception e) {
+				fail();
+			}
+		}	
 	}
 	
-	public int getExpectedSize() {
-		return(this.initSize + this.myList.size());
-	}
-	
-	@Test
-	public void testUniqueUser(){
-		UserDto user = new UserDto(4, "Silvana", "worstactress", "silvana.fallisi@agg.it", 5);
+	@Nested
+	@DisplayName("Test saveUser")
+	public class SaveUser {
+		User u1;
+		UserDto ud1;
+		List<User> uList;
+
+		@BeforeEach
+		public void setUp() {
+			this.u1 = new User("Aldo", "aldo", "aldo.baglio@agg.it", 5);
+			this.u1.setUserId(4);
+			this.u1.setAdmin(false);
+			this.ud1 = UserConverter.userConvertToUserDto(this.u1);
+			
+			this.uList = new ArrayList<User>();
+			this.uList.add(this.u1);			
+			
+			initializeTest(); // re-create all mocks
+		}
 		
-		UserDto insertedUser1 = this.service.saveUser(user);
-		assertTrue(insertedUser1 != null);
-		assertTrue(insertedUser1.getReputation() == 0, "Init reputation must be 0!");
+		@Test
+		public void saveNewUser_ShouldHaveReputationEq0() {
+			when(userRepository.findAll()).thenReturn(new ArrayList<User>()); // user not inserted yet
+			when(userRepository.save(Mockito.any(User.class))).thenAnswer(new Answer<User>() {
+				   public User answer(InvocationOnMock invocation) {
+				     Object[] args = invocation.getArguments();
+				     // Object mock = invocation.getMock();
+				     return (User)args[0];
+				   }
+				}); // return the same user inserted
+			
+			UserDto insertedUser1 = service.saveUser(this.ud1);
+			assertNotNull(insertedUser1);
+			assertEquals(0, insertedUser1.getReputation(), "Init reputation must be 0!");
+		}
 		
-		user.setUserId(5);
-		UserDto insertedUser2 = this.service.saveUser(user);
-		assertTrue(insertedUser2 != null);
-		assertTrue(insertedUser1.getEmail().compareTo(insertedUser2.getEmail()) != 0, "Email must be unique!");
+		@Test
+		public void saveTwoUser_ShouldNotHaveSameEmail(){
+			when(userRepository.findAll()).thenReturn(this.uList);
+			when(userRepository.save(Mockito.any(User.class))).thenReturn(this.u1);
+			
+			this.u1.setUserId(5);
+			UserDto insertedUser1 = service.saveUser(this.ud1);
+			assertNotNull(insertedUser1);
+			
+			this.u1.setUserId(3);
+			UserDto insertedUser2 = service.saveUser(this.ud1);
+			assertNotNull(insertedUser2);
+			
+			int nUsers = service.getAllUsers().stream().filter(u -> u.getEmail().equals(this.u1.getEmail())).collect(Collectors.toList()).size();
+			assertEquals(1, nUsers, "Email must be unique!");
+		}
 	}
-	
-	@Test
+
+	/*@Test
 	public void testGet() {
-		List<UserDto> list = this.service.getAllUsers();
+		List<UserDto> list = service.getAllUsers();
 		assertTrue(list != null);
-		assertEquals(this.getExpectedSize(), list.size());
 		
 		User myUser = this.myList.get(0);		
 		UserDto user = null;
 		try {
-			user = this.service.getUserById(myUser.getUserId());
+			user = service.getUserById(myUser.getUserId());
 		} catch (InvalidUserException e) {
 			fail();
 		} 
@@ -138,67 +207,11 @@ public class UserServiceTests {
 		assertSame(user.getUserName(), myUser.getUserName());
 	}
 	
-	@Test
-	public void testDelete() {
-		User user = this.myList.remove(2);
-		
-		try {
-			this.service.deleteUser(user.getUserId());			
-		} catch (InvalidUserException e) {
-			fail();
-		}
-		List<UserDto> list = this.service.getAllUsers();
-		
-		assertEquals(list.size(), this.getExpectedSize());
-	}
-	
-	public void testDecreaseReputation() {
-		int id = this.myList.get(1).getUserId();
-		UserDto user = null;
-		int previousReputation;
-		
-		try {
-			user = this.service.getUserById(id);
-		} catch (InvalidUserException e1) {
-			fail();
-		}
-		
-		previousReputation = user.getReputation();
-		
-		try {
-			this.service.decreaseUserReputation(id);
-		} catch (InvalidUserException e) {
-			fail();
-		}
-		assertTrue(previousReputation >= user.getReputation(), "User reputation should be less then before!");
-	}
-	
-	@Test
-	public void testIncreaseReputation() {
-		int id = this.myList.get(1).getUserId();
-		UserDto user = null;
-		int previousReputation;
-		
-		try {
-			user = this.service.getUserById(id);
-		} catch (InvalidUserException e1) {
-			fail();
-		}
-
-		assertTrue(user != null);
-		previousReputation = user.getReputation();		
-		try {
-			this.service.increaseUserReputation(id);
-		} catch (InvalidUserException e) {
-			fail();
-		}
-		assertTrue(user.getReputation() >= previousReputation, "User reputation should be more then before!");
-	}
 	
 	@Test
 	public void testGetUserException() {
 		try {
-			this.service.getUserById(-1);
+			service.getUserById(-1);
 			fail("InvalidUserException expected!");
 		} catch (InvalidUserException e) {}
 		catch(Exception e) {
@@ -209,45 +222,337 @@ public class UserServiceTests {
 	@Test
 	public void testDeleteUserException() {
 		try {
-			this.service.deleteUser(-1);
+			service.deleteUser(-1);
 			fail("InvalidUserException expected!");
 		} catch (InvalidUserException e) {}
 		catch(Exception e) {
 			fail("InvalidUserException expected!");
 		}
-	}
+	}*/
+	
+	
+	@Nested
+	@DisplayName("Test for deleteUser")
+	public class DeleteUser{
+		
+		User u1 = new User();
+		User u2 = new User();
+		List<User> uListEmpty = new ArrayList<>();
+		List<User> uList = new ArrayList<>();
+		int size_uList;
+		
+		@BeforeEach
+		void setUp() {
+			u1 = new User("Giacomo", "ilnonno", "giacomo.poretti@agg.it", +1);
+			u1.setUserId(1);
+			u1.setAdmin(false);
+			u2 = new User("Giovanni", "franco", "giovanni.storti@agg.it", +5);
+			u2.setUserId(2);
+			u2.setAdmin(true);
+			
+			uList = new ArrayList<>();
+			
+			uList.add(u1);
+			uList.add(u2);
+			
+			size_uList = uList.size();
 
-	@Test
-	public void testDecreaseReputationException() {
-		try {
-			this.service.decreaseUserReputation(-1);
-			fail();
-		} catch (InvalidUserException e) {}
-		catch(Exception e) {
-			fail();
+			initializeTest(); // re-create all mocks
+			when(userRepository.findByUserId(u1.getUserId())).thenReturn(new ArrayList<User>());
+			
 		}
-	}
-
-	@Test
-	public void testIncreaseReputationException() {
-		try {
-			this.service.increaseUserReputation(-1);
-			fail();
-		} catch (InvalidUserException e) {}
-		catch(Exception e) {
-			fail();
+		
+		@Test
+		public void testDelete() {
+			when(userRepository.findByUserId(u1.getUserId())).thenReturn(new ArrayList<User>());
+			
+			boolean del = false;
+			try {
+				del = service.deleteUser(u1.getUserId());			
+			} catch (Exception e) {
+				fail("No exception expected");
+			}
+			
+			assertTrue(del, "User is not deleted.");
+		}
+		
+		
+		@Test
+		public void testInvalidUserException() {
+			u2.setUserId(-1);
+			try {
+				service.deleteUser(u2.getUserId());
+				fail("Negative id should throw an InvalidGasStationException");
+			} catch (InvalidUserException e) {
+			} catch (Exception e) {
+				fail("Negative id should throw an InvalidGasStationException");
+			}
+			
+		}
+		
+		@Test
+		public void nonExistingId() {
+			try {
+				service.deleteUser(999);
+			} catch (Exception e) {
+				fail("No exception expected");
+			}
+			
 		}
 	}
 	
-	@AfterEach
-	public void tearDown() throws Exception {
-		for(User user : this.myList) {
-			try {
-				this.service.deleteUser(user.getUserId());
-			} catch(Exception e) {}
-		}
-		this.myList.clear();
+	@Nested
+	@DisplayName("Test for getAllUsers")
+	public class GetAllUsers {
+		User u1 = new User();
+		User u2 = new User();
+		List<User> uListEmpty = new ArrayList<>();
 		
-		//this.entityManager.clear();
+		@BeforeEach
+		void setUp() {
+			u1 = new User("Giacomo", "ilnonno", "giacomo.poretti@agg.it", +1);
+			u1.setUserId(1);
+			u1.setAdmin(false);
+			u2 = new User("Giovanni", "franco", "giovanni.storti@agg.it", +5);
+			u2.setUserId(2);
+			u2.setAdmin(true);
+			
+			
+			List<User> uList = new ArrayList<>();
+			
+			uList.add(u1);
+			uList.add(u2);
+
+			initializeTest(); // re-create all mocks
+			when(userRepository.findAll()).thenReturn(uList);
+		}
+		
+		@Test
+		public void _returnEmptyList() {
+			when(userRepository.findAll()).thenReturn(uListEmpty);
+			assertTrue(uListEmpty.isEmpty(), "List of users retrieved is not empty");
+		}
+		
+		@Test
+		public void _returnUserDtoList() {
+				List<UserDto> userDto = service.getAllUsers();
+				assertTrue(compareUserDto(userDto.get(0), UserConverter.userConvertToUserDto(u1)), 
+						"User retrieved is not the same that has been inserted");
+				assertTrue(compareUserDto(userDto.get(1), UserConverter.userConvertToUserDto(u2)),
+						"User retrieved is not the same that has been inserted");
+		}
+	}
+	
+	@Nested
+	@DisplayName ("Test for login")
+	public class Login {
+		User u1;
+		List<User> uList;
+		
+		@BeforeEach
+		public void setUp() {
+			this.uList = new ArrayList<User>();
+			
+			this.u1 = new User("Giovanni", "gvnn", "giovanni.storti@agg.it", +1);
+			this.u1.setUserId(3);
+			this.u1.setAdmin(true);
+			this.uList.add(this.u1);
+
+			initializeTest(); // re-create all mocks
+			when(userRepository.findByUserId(u1.getUserId())).thenReturn(uList);
+			when(userRepository.findByEmailAndPassword(this.u1.getEmail(), this.u1.getPassword())).thenReturn(this.uList);
+		}
+		
+		@Test
+		public void invalidEmail_ShouldThrowException() {
+			IdPw credentials = new IdPw("invalid email", this.u1.getPassword());
+			try {
+				service.login(credentials);
+				fail();
+			} catch (InvalidLoginDataException e) {
+				// good!
+			}
+		}
+		
+		@Test
+		public void invalidPassword_ShouldThrowException() {
+			// IdPw credentials = new IdPw(this.u1.getEmail(), "invalid email");
+			IdPw credentials = new IdPw();
+			credentials.setUser(this.u1.getEmail());
+			credentials.setPw("invalid email");
+			
+			try {
+				service.login(credentials);
+				fail();
+			} catch (InvalidLoginDataException e) {
+				// good!
+			}
+		}
+		
+		@Test
+		public void correctIdPw_ShouldReturnLogin() {
+			IdPw credentials = new IdPw(this.u1.getEmail(), this.u1.getPassword());
+			LoginDto res = null;
+			try {
+				res = service.login(credentials);
+			} catch (InvalidLoginDataException e) {
+				fail();
+			}
+			
+			assertTrue(compareLoginDto(this.u1, res));			
+		}
+	}
+	
+	@Nested
+	@DisplayName("Test for increase reputation")
+	public class IncreaseReputation {
+		
+		User u1 = new User();
+		User u2 = new User();
+		User u3 = new User();
+		
+		@BeforeEach
+		void setUp() {
+			u1 = new User("Giacomo", "ilnonno", "giacomo.poretti@agg.it", +5);
+			u1.setUserId(1);
+			u1.setAdmin(true);
+			u2 = new User("Giovanni", "franco", "giovanni2.storti@agg.it", +1);
+			u2.setUserId(-2);
+			u2.setAdmin(false);
+			u3 = new User("Giacomo", "ilnonno", "giacomo3.poretti@agg.it", +2);
+			u3.setUserId(3);
+			u3.setAdmin(true);
+			List<User> uList = new ArrayList<User>();
+			uList.add(u1);
+			List<User> uList2 = new ArrayList<User>();
+			uList2.add(u2);
+			List<User> uList3 = new ArrayList<User>();
+			uList3.add(u3);
+
+			initializeTest(); // re-create all mocks
+			when(userRepository.findByUserId(u1.getUserId())).thenReturn(uList);
+			when(userRepository.findByUserId(u2.getUserId())).thenReturn(new ArrayList<>());
+			when(userRepository.findByUserId(u3.getUserId())).thenReturn(uList3);
+			when(userRepository.findByUserId(999)).thenReturn(new ArrayList<User>());
+			when(userRepository.save(Mockito.any(User.class))).thenAnswer(new Answer<User>() {
+				@Override
+				public User answer(InvocationOnMock invocation) throws Throwable {
+					return (User) (invocation.getArguments()[0]);
+				}				
+			});
+		}
+		
+		@Test 
+		public void testMaxValueIncrease() {
+			try {
+				assertEquals(u1.getReputation(), service.increaseUserReputation(u1.getUserId()));
+			} catch(InvalidUserException e) {
+				fail(e.getMessage());
+			}			
+		}
+		
+		@Test
+		public void testIncrease() {
+			try {
+				assertEquals((u3.getReputation()+1), service.increaseUserReputation(u3.getUserId()));
+			} catch(InvalidUserException e) {
+				fail(e.getMessage());
+			}
+		}
+
+		@Test
+		public void testInvalidUserException() {
+			try {
+				service.increaseUserReputation(u2.getUserId());
+				fail("Negative id should throw an InvalidGasStationException");
+			} catch (InvalidUserException e) {
+			}
+		}
+		
+		@Test
+		public void nonExistingId() {
+			try {
+				service.increaseUserReputation(999);
+				fail("Non existing id should throw an InvalidGasStationException");
+			} catch (InvalidUserException e) {
+				
+			}
+			
+		}
+	}
+	
+	@Nested
+	@DisplayName("Test for decrease reputation")
+	public class DecreaseReputation {
+
+		User u1;
+		User u2;
+		User u3;
+		
+		@BeforeEach
+		void setUp() {
+			u1 = new User("Giacomo", "ilnonno", "giacomo.poretti@agg.it", -5);
+			u1.setUserId(1);
+			u1.setAdmin(true);
+			u2 = new User("Giovanni", "franco", "giovanni.storti@agg.it", +1);
+			u2.setUserId(-2);
+			u2.setAdmin(false);		
+			u3 = new User("Giacomo", "ilnonno", "giacomo3.poretti@agg.it", +2);
+			u3.setUserId(3);
+			u3.setAdmin(true);
+			List<User> uList = new ArrayList<User>();
+			uList.add(u1);
+			List<User> uList2 = new ArrayList<User>();
+			uList2.add(u2);
+			List<User> uList3 = new ArrayList<User>();
+			uList3.add(u3);
+
+			initializeTest(); // re-create all mocks
+			when(userRepository.findByUserId(u1.getUserId())).thenReturn(uList);
+			when(userRepository.findByUserId(u2.getUserId())).thenReturn(new ArrayList<>());
+			when(userRepository.findByUserId(u3.getUserId())).thenReturn(uList3);
+			when(userRepository.save(Mockito.any(User.class))).thenAnswer(new Answer<User>() {
+				@Override
+				public User answer(InvocationOnMock invocation) throws Throwable {
+					return (User) (invocation.getArguments()[0]);
+				}				
+			});
+		}
+		
+		@Test
+		public void testDecrease() {
+			u2.setUserId(2);
+			try {
+				assertEquals((u3.getReputation()-1), service.decreaseUserReputation(u3.getUserId()));
+			} catch(InvalidUserException e) {
+				fail(e.getMessage());
+			}
+		}
+		
+		@Test 
+		public void testMinValueDecrease() {
+			try {
+				assertEquals(u1.getReputation(), service.decreaseUserReputation(u1.getUserId()));
+			} catch(InvalidUserException e) {
+				fail(e.getMessage());
+			}
+		}
+
+		@Test
+		public void testInvalidUserException() {
+			try {
+				service.decreaseUserReputation(u2.getUserId());
+				fail("Negative id should throw an InvalidGasStationException");
+			} catch (InvalidUserException e) {
+			}
+		}
+		
+		@Test
+		public void nonExistingId() {
+			try {
+				service.decreaseUserReputation(999);
+				fail("Non existing id should throw an InvalidGasStationException");
+			} catch (InvalidUserException e) {}
+		}
 	}
 }

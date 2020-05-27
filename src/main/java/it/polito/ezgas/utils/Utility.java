@@ -41,7 +41,6 @@ public class Utility {
 		try {
 			data = sdf.parse(timestamp);
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
 			return 0;
 		}
 		Long timestamp_long = data.getTime();		
