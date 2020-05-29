@@ -27,6 +27,8 @@ public class BootEZGasApplication {
 		User user = new User("admin", "admin", "admin@ezgas.com", 5);
 		user.setAdmin(true);
 		
+		conn.close();
+		
 		// da commentare da qui 
 		/*PreparedStatement st = null;
 		PreparedStatement u1 = null;
