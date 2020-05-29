@@ -1,0 +1,8 @@
+click("1590767607333.png")
+type("newUser")
+click("1590767492107.png")
+type("password")
+click("1590767508937.png")
+type("newUser@ezgas.com")
+click("1590767528081.png")
+wait("1590767633629.png")
