@@ -102,7 +102,6 @@ public class GasStationController {
 		try {
 			
 			tmp = (ArrayList<GasStationDto>) gasStationService.getGasStationsWithCoordinates(myLat, myLon, gasolineType, carSharing);
-			System.out.println(tmp.get(0).getGasStationAddress());
 			
 		} catch (InvalidGasTypeException | GPSDataException e) {
 
