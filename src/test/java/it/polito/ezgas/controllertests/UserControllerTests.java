@@ -20,31 +20,6 @@ import it.polito.ezgas.dto.UserDto;
 
 public class UserControllerTests {
 	
-	@BeforeAll
-	static public void setUp() throws SQLException {
-		Connection conn = DriverManager.getConnection("jdbc:h2:./data/memo", "sa", "password");
-		
-		PreparedStatement st = null;
-		int result_from_query;
-				
-		try {
-			st = conn.prepareStatement("SELECT COUNT(*) FROM USER");
-			st.execute();
-			result_from_query = ((Number) st.getResultSet().getObject(1)).intValue();
-		} 
-		
-		catch(SQLException e) {
-			System.out.println(e.getMessage());
-			conn.close();
-		}
-		
-		finally {
-			if(st!=null) {
-				st.close();
-			}
-		}
-	}
-	
 	@Test
 	public void testGetAllUser() throws ClientProtocolException, IOException {
 		HttpUriRequest request = new HttpGet("http://localhost:8080/user/getAllUsers");
