@@ -1,19 +1,18 @@
-if(not exists("1590765672108-1.png")):
-    click("1590765489265-2.png")
-wait("1590765672108-1.png")
-while(not exists("1590772570205.png")):
+if(not exists("1590848166251-1.png")):
+    click("1590848176218-1.png")
+wait("1590848166251-1.png")
+while(not exists("1590848196225-1.png")):
     wheel(WHEEL_DOWN, 5)
     sleep(0.1)
-
-search = find("1590772570205.png")
-click(search.find("1590772624592.png"))
+click("1590848203667.png")
+type("a", KEY_CTRL)
 type("Via Roma Turin Piemont Italy")
 sleep(3)
 type(Key.DOWN + Key.ENTER)
-click(search.find("1590772775981.png"))
-wheel(WHEEL_DOWN, 2)
-sleep(0.5)
-click("1590773001048.png")
+click("1590850132600.png")
+wheel(WHEEL_DOWN, 3)
+sleep(0.2)
+click("1590850141461.png")
 sleep(0.5)
 wheel(WHEEL_UP, 2)
 sleep(0.5)
