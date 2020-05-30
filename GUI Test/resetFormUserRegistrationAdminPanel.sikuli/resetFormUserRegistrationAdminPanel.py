@@ -1,0 +1,11 @@
+if(not exists("1590848166251.png")):
+    click("1590848176218.png")
+wait("1590848166251.png")
+click("1590846457783.png")
+type("signUpTest")
+click("1590846463692.png")
+type("signUp@ezgas.com")
+click("1590846470074.png")
+type("password")
+click("1590848940055.png")
+find("1590848953451.png")
