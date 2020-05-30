@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import it.polito.ezgas.dto.GasStationDto;
+import it.polito.ezgas.dto.UserDto;
 
 public class GasStationControllerTests {
 	
@@ -29,7 +30,6 @@ public class GasStationControllerTests {
 	@BeforeAll
 	static public void setup() throws SQLException {
 		
-		//gsDto = new GasStationDto(1, "Station1", "Via Rocciamelone Caselle Torinese Piemont Italy", true, true, false, false, false, "Enjoy", 45.1635676, 7.6647799, 0, 0, -1, -1, -1, -1, null, 0);
 		gsDto = new GasStationDto();
 		gsDto.setGasStationId(1);
 		gsDto.setCarSharing("Enjoy");
@@ -52,6 +52,18 @@ public class GasStationControllerTests {
 		gsDto.setSuperPrice(0);
 		gsDto.setUserDto(null);
 	}
+	
+	/*@Test
+	public void testGetAllGasStation() throws ClientProtocolException, IOException {
+		HttpUriRequest request = new HttpGet("http://localhost:8080/gasstation/getAllGasStations");
+		HttpResponse response = HttpClientBuilder.create().build().execute(request);
+		
+		String jsonFromResponse = EntityUtils.toString(response.getEntity());
+		ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		GasStationDto[] gs_array = mapper.readValue(jsonFromResponse, GasStationDto[].class);
+		
+		//assert(gs_array.length == 6);
+	}*/
 	
 	/*@Test
 	public void testGetGasStationById() throws ClientProtocolException, IOException {
@@ -206,6 +218,37 @@ public class GasStationControllerTests {
         assertEquals(gs.getLat(), gsDto.getLat());
         assertEquals(gs.getLon(), gsDto.getLon());	
 	}*/
+	
+	@Test
+	public void testGetGasStationWithoutCoordinates() throws ClientProtocolException, IOException {
+		HttpUriRequest request = new HttpGet("http://localhost:8080/gasstation/getGasStationsWithoutCoordinates/Diesel/Enjoy");
+
+		HttpResponse response = HttpClientBuilder.create().build().execute(request);
+		
+		String jsonFromResponse = EntityUtils.toString(response.getEntity());
+						
+		ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		GasStationDto[] gs_array = mapper.readValue(jsonFromResponse, GasStationDto[].class);
+		GasStationDto gs = gs_array[0];
+				
+		assertNotNull(gs);
+        assertEquals(gs.getGasStationId(), gsDto.getGasStationId());
+        assertEquals(gs.getGasStationName(), gsDto.getGasStationName());
+        assertEquals(gs.getGasStationAddress(), gsDto.getGasStationAddress());
+        assertEquals(gs.getHasDiesel(), gsDto.getHasDiesel());
+        assertEquals(gs.getHasGas(), gsDto.getHasGas());
+        assertEquals(gs.getHasMethane(), gsDto.getHasMethane());
+        assertEquals(gs.getHasSuper(), gsDto.getHasSuper());
+        assertEquals(gs.getHasSuperPlus(), gsDto.getHasSuperPlus());
+        assertEquals(gs.getCarSharing(), gsDto.getCarSharing());
+        assertEquals(gs.getDieselPrice(), gsDto.getDieselPrice());
+        assertEquals(gs.getGasPrice(), gsDto.getGasPrice());
+        assertEquals(gs.getMethanePrice(), gsDto.getMethanePrice());
+        assertEquals(gs.getSuperPrice(), gsDto.getSuperPrice());
+        assertEquals(gs.getSuperPlusPrice(), gsDto.getSuperPlusPrice());
+        assertEquals(gs.getLat(), gsDto.getLat());
+        assertEquals(gs.getLon(), gsDto.getLon());	
+	}
 	
 	@Test
 	public void testSetGasStationReport() throws ClientProtocolException, IOException {

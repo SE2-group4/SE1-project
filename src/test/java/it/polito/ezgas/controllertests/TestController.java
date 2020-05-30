@@ -8,6 +8,7 @@ import org.junit.runner.RunWith;
 @SelectClasses({
 	UserControllerTests.class,
 	GasStationControllerTests.class,
+	HomeControllerTests.class,
 })
 
 public class TestController {
