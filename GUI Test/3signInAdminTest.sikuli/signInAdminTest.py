@@ -1,8 +1,0 @@
-click("1590665188078.png")
-click("1590662339029.png")
-type("admin@ezgas.com")
-click("1590662351314.png")
-type("admin")
-click("1590661895364.png")
-wait("1590665249299.png")
-wait("1590665260904.png")

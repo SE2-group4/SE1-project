@@ -63,14 +63,6 @@ public class BootEZGasApplication {
 						+ "false, true, false, 45.1635676, 7.6647799, -1, 0, null, -1, -1, 0, null);");
 		gs1.execute();
 
-		gs2 = conn.prepareStatement(
-				"INSERT INTO GAS_STATION (gas_station_id, car_sharing, diesel_price, gas_price, gas_station_address,"
-						+ "gas_station_name, has_diesel, has_gas, has_methane, has_super, has_super_plus, lat, lon, methane_price,"
-						+ "report_dependability, report_timestamp, report_user, super_plus_price, super_price, user_id) "
-						+ "VALUES (2, 'Car2Go', -1, 3, 'Via Roma Turin Piemont Italy', 'Station2', false, true,"
-						+ "true, false, true, 45.0705111, 7.6845806, -1, 0, 'Thu May 28 17:11:56 CEST 2020', 1, 3, -1, 1);");
-		gs2.execute();
-
 		gs3 = conn.prepareStatement(
 				"INSERT INTO GAS_STATION (gas_station_id, car_sharing, diesel_price, gas_price, gas_station_address,"
 						+ "gas_station_name, has_diesel, has_gas, has_methane, has_super, has_super_plus, lat, lon, methane_price,"
@@ -78,6 +70,15 @@ public class BootEZGasApplication {
 						+ "VALUES (3, null, 0, -1, 'Via Rocciamelone Caselle Torinese Piemont Italy', 'Station3', true, false,"
 						+ "false, true, false, 45.1635676, 7.6647799, -1, 0, null, -1, -1, 0, null);");
 		gs3.execute();
+		
+		gs2 = conn.prepareStatement(
+				"INSERT INTO GAS_STATION (gas_station_id, car_sharing, diesel_price, gas_price, gas_station_address,"
+						+ "gas_station_name, has_diesel, has_gas, has_methane, has_super, has_super_plus, lat, lon, methane_price,"
+						+ "report_dependability, report_timestamp, report_user, super_plus_price, super_price, user_id) "
+						+ "VALUES (2, 'Car2Go', -1, 3, 'Via Roma Turin Piemont Italy', 'Station2', false, true,"
+						+ "true, false, true, 45.0705111, 7.6845806, -1, 0, 'Thu May 28 17:11:56 CEST 2020', 1, 3, -1, 1);");
+		gs2.execute();
+		
 		conn.close();
 
 		/*

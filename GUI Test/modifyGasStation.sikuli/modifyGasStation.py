@@ -4,7 +4,7 @@ wait("1590765672108.png")
 wheel(WHEEL_DOWN, 10)
 sleep(0.5)
 
-gasStation = find("1590769264497.png")
+gasStation = find("1590828389511.png")
 click(gasStation.find("1590769285468.png"))
 wheel(WHEEL_UP, 5)
 sleep(0.5)
