@@ -53,7 +53,7 @@ public class GasStationControllerTests {
 		gsDto.setUserDto(null);
 	}
 	
-	@Test
+	/*@Test
 	public void testGetGasStationById() throws ClientProtocolException, IOException {
 		HttpUriRequest request = new HttpGet("http://localhost:8080/gasstation/getGasStation/1");
 		HttpResponse response = HttpClientBuilder.create().build().execute(request);
@@ -100,7 +100,7 @@ public class GasStationControllerTests {
         
 	}
 	
-	/*@Test
+	@Test
 	public void testDeleteGasStation() throws ClientProtocolException, IOException {
 		HttpDelete request = new HttpDelete("http://localhost:8080/gasstation/deleteGasStation/3");
 	    
@@ -108,7 +108,7 @@ public class GasStationControllerTests {
 	    
 		assertEquals(response.getStatusLine().getStatusCode(), 200);
         
-	}*/
+	}
 	
 	@Test
 	public void testGetGasStationByGasolineType() throws ClientProtocolException, IOException {
@@ -141,7 +141,7 @@ public class GasStationControllerTests {
         assertEquals(gs.getLon(), gsDto.getLon());	
 	}
 	
-	/*@Test
+	@Test
 	public void testGetGasStationByProximity() throws ClientProtocolException, IOException {
 		HttpUriRequest request = new HttpGet("http://localhost:8080/gasstation/searchGasStationByProximity/45.1635676/7.6647799");
 
@@ -172,7 +172,7 @@ public class GasStationControllerTests {
         assertEquals(gs.getSuperPlusPrice(), gsDto.getSuperPlusPrice());
         assertEquals(gs.getLat(), gsDto.getLat());
         assertEquals(gs.getLon(), gsDto.getLon());	
-	}*/
+	}
 	
 	@Test
 	public void testGetGasStationWithCoordinates() throws ClientProtocolException, IOException {
@@ -205,11 +205,12 @@ public class GasStationControllerTests {
         assertEquals(gs.getSuperPlusPrice(), gsDto.getSuperPlusPrice());
         assertEquals(gs.getLat(), gsDto.getLat());
         assertEquals(gs.getLon(), gsDto.getLon());	
-	}
+	}*/
 	
 	@Test
 	public void testSetGasStationReport() throws ClientProtocolException, IOException {
-		HttpPost request = new HttpPost("http://localhost:8080/gasstation/setGasStationReport/1/2/3/-1/-1/-1/1");
+		HttpPost request = new HttpPost("http://localhost:8080/gasstation/setGasStationReport/1/5/7/-1/-1/-1/1");
+		request.setHeader("Content-Type", "application/json");
 	    
 	    HttpResponse response = HttpClientBuilder.create().build().execute(request);
 	    
