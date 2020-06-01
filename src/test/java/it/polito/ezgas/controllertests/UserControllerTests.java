@@ -49,7 +49,7 @@ public class UserControllerTests {
 		ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		UserDto[] userarray = mapper.readValue(jsonFromResponse, UserDto[].class);
 		
-		//assert(userarray.length == 6);
+		assert(userarray.length != 0);
 	}
 	
 	@Test
