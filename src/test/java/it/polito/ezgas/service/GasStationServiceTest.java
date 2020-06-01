@@ -43,6 +43,7 @@ import it.polito.ezgas.entity.User;
 import it.polito.ezgas.repository.GasStationRepository;
 import it.polito.ezgas.repository.UserRepository;
 import it.polito.ezgas.service.impl.GasStationServiceimpl;
+import it.polito.ezgas.utils.Utility;
 
 public class GasStationServiceTest {
 
@@ -252,19 +253,23 @@ public class GasStationServiceTest {
 
 		@Test
 		public void validGasStationDto_updateAndReturnGasStationDto() {
-			GasStation gs = new GasStation("Gas station c", "Address 3", true, true, true, true, true, "", 31.5,
-					35, 5, 4, 3, 2, 1, 1, new Date().toString(), 0.0);
+			GasStation newGs = new GasStation("Gas station c", "Address 3", true, true, true, true, true, "", 31.5,
+					35, 5, 4, 3, 2, 0, 1, new Date().toString(), 1);
+			newGs.setReportDependability(Utility.trustCalculation(1, newGs.getReportTimestamp()));
+			GasStation currentGs = new GasStation("Gas station c", "Address 3", true, true, true, true, false, "", 31.5,
+					35, 5, 4, 3, 2, -1, 1, newGs.getReportTimestamp(), 1);
 			User u = new User("user", "password", "user@mail.com", 1);
-			gs.setGasStationId(1);
+			newGs.setGasStationId(1);
 			u.setUserId(1);
-			gs.setUser(u);
+			newGs.setUser(u);
 			when(userRepository.findByUserId(1)).thenReturn(new ArrayList<User>(Arrays.asList(u)));
+			when(gasStationRepository.findByGasStationId(1)).thenReturn(Optional.ofNullable(currentGs));
 			GasStationDto result = new GasStationDto();
 			
 			try {
-				GasStationDto gDto = GasStationConverter.GasStationConvertToGasStationDto((gs));
+				GasStationDto gDto = GasStationConverter.GasStationConvertToGasStationDto((newGs));
 				result = gasStationService.saveGasStation(gDto);
-				assertTrue(compareGasStationDto(result, GasStationConverter.GasStationConvertToGasStationDto(gs)),
+				assertTrue(compareGasStationDto(result, GasStationConverter.GasStationConvertToGasStationDto(newGs)),
 						"Gas station retrieved is not the same that has been inserted");
 
 			} catch (PriceException | GPSDataException e) {

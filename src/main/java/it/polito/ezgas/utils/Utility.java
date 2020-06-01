@@ -29,11 +29,11 @@ public class Utility {
 		/*return Math.sqrt(Math.pow((Math.abs(lat1-lat2)), 2)+Math.pow((Math.abs(lon1-lon2)), 2));*/
 	}
 
-	public static double trustCalculation(int userRep, String timestamp) {
+	public static double trustCalculation(double d, String timestamp) {
 		double obsolescence;
 		double trust;
 		
-		if(userRep < -5 || userRep > 5)
+		if(d < -5 || d > 5)
 			return 0;
 
 		SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy", Locale.ENGLISH);
@@ -56,7 +56,7 @@ public class Utility {
 			obsolescence = 1 - (today_long - timestamp_long) / 604800000.0;
 		}
 
-		trust = 50 * (userRep + 5) / 10 + 50 * obsolescence;
+		trust = 50 * (d + 5) / 10 + 50 * obsolescence;
 		return trust;
 	}
 }
