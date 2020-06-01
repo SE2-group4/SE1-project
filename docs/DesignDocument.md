@@ -1,11 +1,11 @@
 # Design Document
 
 
-Authors:
+Authors: Group 12
 
-Date:
+Date: 03.05.2020
 
-Version:
+Version: 2.0
 
 
 # Contents
