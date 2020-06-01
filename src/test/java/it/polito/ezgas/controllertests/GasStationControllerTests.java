@@ -53,7 +53,7 @@ public class GasStationControllerTests {
 		gsDto.setUserDto(null);
 	}
 
-	/*@Test
+	@Test
 	public void testGetAllGasStation() throws ClientProtocolException, IOException {
 		HttpUriRequest request = new HttpGet("http://localhost:8080/gasstation/getAllGasStations");
 		HttpResponse response = HttpClientBuilder.create().build().execute(request);
@@ -63,9 +63,9 @@ public class GasStationControllerTests {
 		GasStationDto[] gs_array = mapper.readValue(jsonFromResponse, GasStationDto[].class);
 
 		//assert(gs_array.length == 6);
-	}*/
+	}
 
-	/*@Test
+	@Test
 	public void testGetGasStationById() throws ClientProtocolException, IOException {
 		HttpUriRequest request = new HttpGet("http://localhost:8080/gasstation/getGasStation/1");
 		HttpResponse response = HttpClientBuilder.create().build().execute(request);
@@ -217,7 +217,7 @@ public class GasStationControllerTests {
         assertEquals(gs.getSuperPlusPrice(), gsDto.getSuperPlusPrice());
         assertEquals(gs.getLat(), gsDto.getLat());
         assertEquals(gs.getLon(), gsDto.getLon());
-	}*/
+	}
 
 	@Test
 	public void testGetGasStationWithoutCoordinates() throws ClientProtocolException, IOException {
@@ -252,7 +252,7 @@ public class GasStationControllerTests {
 
 	@Test
 	public void testSetGasStationReport() throws ClientProtocolException, IOException {
-		HttpPost request = new HttpPost("http://localhost:8080/gasstation/setGasStationReport/1/5/7/-1/-1/-1/1");
+		HttpPost request = new HttpPost("http://localhost:8080/gasstation/setGasStationReport/2/-1/-1/3/3/3/1");
 		request.setHeader("Content-Type", "application/json");
 
 	    HttpResponse response = HttpClientBuilder.create().build().execute(request);

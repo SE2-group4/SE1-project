@@ -86,7 +86,7 @@ public class UserControllerTests {
         
 	}
 	
-	/*@Test
+	@Test
 	public void testDeleteGasStation() throws ClientProtocolException, IOException {
 		HttpDelete request = new HttpDelete("http://localhost:8080/user/deleteUser/3");
 	    
@@ -114,7 +114,7 @@ public class UserControllerTests {
 	
 	@Test
 	public void testDecreaseReputation() throws ClientProtocolException, IOException {
-		HttpPost request = new HttpPost("http://localhost:8080/user/decreaseUserReputation/2");
+		HttpPost request = new HttpPost("http://localhost:8080/user/decreaseUserReputation/3");
 		
 	    request.setHeader("Content-Type", "application/json");
 	    
@@ -126,5 +126,5 @@ public class UserControllerTests {
 	    
 		assertEquals(-1, reputation);
         
-	}*/
+	}
 }
