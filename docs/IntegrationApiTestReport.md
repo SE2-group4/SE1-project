@@ -505,4 +505,7 @@ This scenario is a grouping of multiple tests covering the same area: the return
 | -------------------------- | --------- |
 |                            |           |
 
+# Coverage of integration tests
+![coverage](./resources/coverage_integration_tests.PNG)
+
 

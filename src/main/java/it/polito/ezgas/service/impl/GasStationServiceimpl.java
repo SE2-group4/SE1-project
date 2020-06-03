@@ -44,7 +44,7 @@ public class GasStationServiceimpl implements GasStationService {
 
 		if (gasStation != null && gasStation.getReportTimestamp() != null) {
 			gasStation.setReportDependability(
-					Utility.trustCalculation(gasStation.getUser().getReputation(), gasStation.getReportTimestamp()));
+					Utility.trustCalculation(gasStation.getReportDependability(), gasStation.getReportTimestamp()));
 		}
 		
 		return (gasStation != null) ? GasStationConverter.GasStationConvertToGasStationDto(gasStation) : null;
@@ -53,6 +53,7 @@ public class GasStationServiceimpl implements GasStationService {
 	@Override
 	public GasStationDto saveGasStation(GasStationDto gasStationDto) throws PriceException, GPSDataException {
 		GasStation gasStation = GasStationConverter.GasStationDtoConvertToGasStation(gasStationDto);
+		
 		GasStation g = new GasStation();
 		if ((gasStation.getMethanePrice() != -1 && gasStation.getMethanePrice() < 0)
 				|| (gasStation.getSuperPlusPrice() != -1 && gasStation.getSuperPlusPrice() < 0)
@@ -96,11 +97,17 @@ public class GasStationServiceimpl implements GasStationService {
 			gasStation.setDieselPrice(-1);
 
 		List<User> userList = this.userRepository.findByUserId(gasStation.getReportUser());
-		if (!userList.isEmpty()) {
+		if (!userList.isEmpty() && gasStation.getGasStationId() != null) {
+			Optional<GasStation> currentGasStation = gasStationRepository.findByGasStationId(gasStation.getGasStationId());
+			gasStation.setReportDependability(currentGasStation.get().getReportDependability());
 			gasStation.setUser(userList.get(0));
 		}
 
 		g = this.gasStationRepository.save(gasStation);
+		if (g.getReportTimestamp() != null) {
+			g.setReportDependability(
+					Utility.trustCalculation(g.getReportDependability(), g.getReportTimestamp()));
+		}
 		return GasStationConverter.GasStationConvertToGasStationDto(g);
 	}
 
@@ -111,7 +118,7 @@ public class GasStationServiceimpl implements GasStationService {
 		gasStationList.forEach(gs -> {
 			if (gs.getReportTimestamp() != null)
 				gs.setReportDependability(
-						Utility.trustCalculation(gs.getUser().getReputation(), gs.getReportTimestamp()));
+						Utility.trustCalculation(gs.getReportDependability(), gs.getReportTimestamp()));
 		});
 
 		return gasStationList.stream().map(gs -> GasStationConverter.GasStationConvertToGasStationDto(gs))
@@ -158,7 +165,7 @@ public class GasStationServiceimpl implements GasStationService {
 		gasStationList.forEach(gs -> {
 			if (gs.getReportTimestamp() != null)
 				gs.setReportDependability(
-						Utility.trustCalculation(gs.getUser().getReputation(), gs.getReportTimestamp()));
+						Utility.trustCalculation(gs.getReportDependability(), gs.getReportTimestamp()));
 		});
 
 		return gasStationList.stream().map(gs -> GasStationConverter.GasStationConvertToGasStationDto(gs))
@@ -257,6 +264,7 @@ public class GasStationServiceimpl implements GasStationService {
 		gasStation.setUser(user);
 		gasStation.setReportUser(userId);
 		gasStation.setReportTimestamp((new Date()).toString());
+		gasStation.setReportDependability(user.getReputation());
 		gasStationRepository.save(gasStation);
 	}
 

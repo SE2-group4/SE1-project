@@ -1,0 +1,22 @@
+if(not exists("1590765672108.png")):
+    click("1590765489265-1.png")
+wait("1590765672108.png")
+wheel(WHEEL_DOWN, 10)
+sleep(0.5)
+
+gasStation = find("1590828389511.png")
+click(gasStation.find("1590769285468.png"))
+wheel(WHEEL_UP, 5)
+sleep(0.5)
+click("1590769427036.png")
+type("a", KEY_CTRL)
+type("new Gas")
+click("1590769491962.png")
+type(Key.DOWN + Key.INSERT)
+click("1590769519697.png")
+click("1590769527212.png")
+click("1590769535126.png")
+wheel(WHEEL_DOWN, 5)
+sleep(0.5)
+find("1590769725747.png")
+
