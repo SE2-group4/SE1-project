@@ -1,5 +1,7 @@
 package it.polito.ezgas.service.impl;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -213,7 +215,7 @@ public class GasStationServiceimpl implements GasStationService {
 	public void setReport(Integer gasStationId, double dieselPrice, double superPrice, double superPlusPrice,
 			double gasPrice, double methanePrice, Integer userId)
 			throws InvalidGasStationException, PriceException, InvalidUserException {
-
+		
 		if (userId == null || userId < 0) {
 			throw new InvalidUserException("Invalid (negative) userId");
 		}
@@ -222,7 +224,7 @@ public class GasStationServiceimpl implements GasStationService {
 		}
 
 		Optional<GasStation> gasStationOpt = this.gasStationRepository.findByGasStationId(gasStationId);
-
+		DateFormat formatter = new SimpleDateFormat("MM-dd-YYYY");
 		if (!gasStationOpt.isPresent()) {
 			throw new InvalidGasStationException("GasStation not present");
 		}
@@ -263,7 +265,7 @@ public class GasStationServiceimpl implements GasStationService {
 		gasStation.setMethanePrice(methanePrice);
 		gasStation.setUser(user);
 		gasStation.setReportUser(userId);
-		gasStation.setReportTimestamp((new Date()).toString());
+		gasStation.setReportTimestamp((formatter.format(new Date())).toString());
 		gasStation.setReportDependability(user.getReputation());
 		gasStationRepository.save(gasStation);
 	}
