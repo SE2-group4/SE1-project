@@ -97,6 +97,10 @@ public class GasStationServiceimpl implements GasStationService {
 				gasStation.setDieselPrice(0);
 		} else
 			gasStation.setDieselPrice(-1);
+		
+		if(gasStation.getCarSharing().equals("null")) {
+			gasStation.setCarSharing(null);
+		}
 
 		List<User> userList = this.userRepository.findByUserId(gasStation.getReportUser());
 		if (!userList.isEmpty() && gasStation.getGasStationId() != null) {
