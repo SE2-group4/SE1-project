@@ -7,7 +7,7 @@ import java.util.Locale;
 public class Utility {
 	
 	public static boolean checkCoordinates(double lat, double lon) {
-		if (lat < (double) -90 || lon < (double) -180 || lat > (double) 90 || lon > (double) 180)
+		if (lat < (double) -90 || lon < (double) -180 || lat >= (double) 90 || lon >= (double) 180)
 			return false;
 		return true;
 	}

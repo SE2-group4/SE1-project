@@ -24,7 +24,7 @@ public class UtilityTest {
 		
 		@Test
 		public void latOver90_returnFalse() {
-			assertFalse(Utility.checkCoordinates(90.1, -180.01));
+			assertFalse(Utility.checkCoordinates(90, -180.01));
 			assertFalse(Utility.checkCoordinates(90.01, 0));
 			assertFalse(Utility.checkCoordinates(90.001, 180.01));
 		}
@@ -43,9 +43,9 @@ public class UtilityTest {
 		public void latValidLonValid_returnTrue() {
 			assertTrue(Utility.checkCoordinates(50.2, 41));
 			assertTrue(Utility.checkCoordinates(-90, 0));
-			assertTrue(Utility.checkCoordinates(90, 0));
+			assertTrue(Utility.checkCoordinates(89.99, 0));
 			assertTrue(Utility.checkCoordinates(0, -180));
-			assertTrue(Utility.checkCoordinates(0, 180));
+			assertTrue(Utility.checkCoordinates(0, 179.99));
 		}
 	}
 	
