@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -238,16 +239,6 @@ public class GasStationServiceimpl implements GasStationService {
 		if(uList.size() != 1)
 			throw new InvalidUserException("User not present");
 		User user = uList.get(0);
-
-		/*
-		if ((gasStation.getMethanePrice() != -1 && gasStation.getMethanePrice() < 0)
-				|| (gasStation.getSuperPlusPrice() != -1 && gasStation.getSuperPlusPrice() < 0)
-				|| (gasStation.getSuperPrice() != -1 && gasStation.getSuperPrice() < 0)
-				|| (gasStation.getGasPrice() != -1 && gasStation.getGasPrice() < 0)
-				|| (gasStation.getDieselPrice() != -1 && gasStation.getDieselPrice() < 0)) {
-			throw new PriceException("Invalid (negative) price");
-		}
-		*/
 		
 		if ((gasStation.getHasMethane() && methanePrice < 0)
 				|| (gasStation.getHasSuperPlus() && superPlusPrice < 0)
@@ -255,6 +246,23 @@ public class GasStationServiceimpl implements GasStationService {
 				|| (gasStation.getHasGas() && gasPrice < 0)
 				|| (gasStation.getHasDiesel() && dieselPrice < 0)) {
 			throw new PriceException("Invalid (negative) price");
+		}
+		
+				
+		if (gasStation.getUser() != null && gasStation.getReportTimestamp() != null) {
+			SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy", Locale.ENGLISH);
+			Date data = null;
+			try {
+				data = sdf.parse(gasStation.getReportTimestamp());
+			} catch(Exception e) {
+				throw new PriceException("Parsing error");
+			}
+			Long timestamp_long = data.getTime();		
+			Date today = new Date();
+			Long today_long = today.getTime();
+			if(user.getReputation() < gasStation.getUser().getReputation() && (timestamp_long - today_long) <= 345600000) {
+				return;
+			}
 		}
 
 		if (gasStation.getHasDiesel())
