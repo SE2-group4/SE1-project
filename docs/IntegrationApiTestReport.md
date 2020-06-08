@@ -151,6 +151,10 @@ Sequence:
 | GasStationTest.java | setReportUSer__modifyReportUser |
 | GasStationTest.java | getReportTimestamp__returnReportTimestamp |
 | GasStationTest.java | setReportTimestamp__modifyReportTimestamp |
+| GasStationTest.java | correctParams_ShouldSetNewReport |
+| GasStationTest.java | correctParamsAndLowerTrustLevelAndMoreThanFourDays_ShouldSetNewReport |
+| GasStationTest.java | correctParamsAndLowerTrustLevel_ShouldNotSetNewReport |
+| GasStationTest.java | correctParamsAndGreaterTrustLevel_ShouldSetNewReport |
 | GasStationTest.java | getHasDiesel__returnHasDiesel |
 | GasStationTest.java | setHasDiesel__modifyHasDiesel |
 | GasStationTest.java | getHasSuper__returnHasSuper |
@@ -406,10 +410,42 @@ Sequence:
 | -------- |:-------------------:|:---------:|:--------:|
 |  Precondition     | Gas Station is in the database |
 |  Post condition   | |
-| Step#             | Description  | Test created from Requirements | 100% |
-|  1     | Admin logs in |
-|  2     | Admin searches for a gas station, and tries to insert a negative new price |
+| Step#             | Description  | Test created from Requirements | 97.2% |
+|  1     | User logs in |
+|  2     | User searches for a gas station, and tries to insert a negative new price |
 |  3     | An PriceException is raised |
+
+## Scenario UC7.2
+
+| Scenario | Report PriceExeption | Technique | Coverage |
+| -------- |:-------------------:|:---------:|:--------:|
+|  Precondition     | Gas Station is in the database, no report done yet |
+|  Post condition   | new report is set to the gas station|
+| Step#             | Description  | Test created from Requirements | 97.2% |
+|  1     | User logs in |
+|  2     | User searches for a gas station and tries to insert new prices |
+|  3     | New report is set to the gas station |
+
+## Scenario UC7.3
+
+| Scenario | Report PriceExeption | Technique | Coverage |
+| -------- |:-------------------:|:---------:|:--------:|
+|  Precondition     | Gas Station is in the database, last report has been done by a user U1 less or equal than 4 days ago |
+|  Post condition   | new report is not set |
+| Step#             | Description  | Test created from Requirements | 97.2% |
+|  1     | User U2 logs in |
+|  2     | U2 searches for a gas station and tries to insert new prices |
+|  3     | The application checks if U1 has an higher reputation than U2  |
+
+## Scenario UC7.4
+
+| Scenario | Report PriceExeption | Technique | Coverage |
+| -------- |:-------------------:|:---------:|:--------:|
+|  Precondition     | Gas Station is in the database, last report is more than 4 days ago |
+|  Post condition   | new report is set to the gas station|
+| Step#             | Description  | Test created from Requirements | 97.2% |
+|  1     | User logs in |
+|  2     | User searches for a gas station and tries to insert new prices |
 
 ## Scenario UC8.1
 
