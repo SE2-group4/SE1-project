@@ -1172,33 +1172,63 @@ public class GasStationServiceTest {
 	@DisplayName("Test for setReport")
 	public class SetReport {
 		GasStation g1;
+		GasStation g2;
+		GasStation g3;
 		User u1;
+		User u2;
 		List<GasStation> gList;
 		List<User> uList;
-
+		List<User> uList2;
+		
 		@BeforeEach
 		public void setUp() {
+			
+			long ms = new Date().getTime() - 432000000; // 5 days
+			Date five_days_ago = new Date(ms);
 
 			this.u1 = new User("Giacomo", "giacomo", "giacomo.poretti@agg.it", 4);
 			this.u1.setUserId(4);
 
+			this.u2 = new User("Giacomo", "giacomo", "giacomo.poretti2@agg.it", 5);
+			this.u2.setUserId(5);
+			
 			this.g1 = new GasStation("Gas station 2_1", "Address 2_1, 2_1", true, true, true, true, true, "Enjoy", 41.5,
-					23.7, 1.2, 1.67, 2, 2, 2, 1, "07-05-2020 18:47:52", 0);
+					23.7, 1.2, 1.67, 2, 2, 2, 1, new Date().toString(), 0);
 			this.g1.setGasStationId(1);
 			this.g1.setReportUser(this.u1.getUserId());
 			this.g1.setUser(this.u1);
+			
+			this.g2 = new GasStation("Gas station 2_2", "Address 2_1, 2_1", true, true, true, true, true, "Enjoy", 41.5,
+					23.7, 1.2, 1.67, 2, 2, 2, 1, null, 0);
+			this.g2.setGasStationId(2);
+			this.g2.setUser(this.u1);
+			
+			this.g3 = new GasStation("Gas station 2_3", "Address 2_1, 2_1", true, true, true, true, true, "Enjoy", 41.5,
+					23.7, 1.2, 1.67, 2, 2, 2, 1, five_days_ago.toString(), 0);
+			this.g3.setGasStationId(3);
+			this.g3.setReportUser(this.u1.getUserId());
+			this.g3.setUser(this.u1);
 
 			this.uList = new ArrayList<User>();
 			this.uList.add(this.u1);
+			
+			this.uList2 = new ArrayList<User>();
+			this.uList2.add(this.u2);
 
 			initializeTest(); // re-create mocks
 			when(gasStationRepository.save(any(GasStation.class))).thenAnswer(new Answer<GasStation>() {
 				public GasStation answer(InvocationOnMock invocation) {
 					Object[] args = invocation.getArguments();
 					GasStation gs = (GasStation) (args[0]);
-					if(gs.getGasStationId().equals(g1.getGasStationId()))
+					if(gs.getGasStationId().equals(g1.getGasStationId())) {
 						g1 = gs;
-					return g1;
+						return g1;
+					}
+					else if (gs.getGasStationId().equals(g2.getGasStationId())) {
+						g2 = gs;
+						return g2;
+					}
+					return gs;
 				}
 			});
 			when(gasStationRepository.findByGasStationId(anyInt())).thenAnswer(new Answer<Optional<GasStation>>() {
@@ -1206,10 +1236,14 @@ public class GasStationServiceTest {
 				public Optional<GasStation> answer(InvocationOnMock invocation) throws IllegalArgumentException {
 					Integer param = (Integer) invocation.getArguments()[0];
 
-					// if(param == g1.getGasStationId()) // it doesn't work... I hate Integer - int
+					// if(param == g1.getGasStationId())
 					// problems...
 					if (param.equals(g1.getGasStationId()))
 						return Optional.of(g1);
+					else if (param.equals(g2.getGasStationId()))
+						return Optional.of(g2);
+					else if (param.equals(g3.getGasStationId()))
+						return Optional.of(g3);
 					else
 						return Optional.empty();
 				}
@@ -1221,12 +1255,31 @@ public class GasStationServiceTest {
 
 					if (param == u1.getUserId())
 						return uList;
+					else if (param == u2.getUserId())
+						return uList2;
 					else
 						return new ArrayList<User>();
 				}
 			});
 		}
 
+		@Test
+		public void noReportYet_ShouldCreateNewList() {
+			try {
+				gasStationService.setReport(this.g2.getGasStationId(), 1, 1, 1, 1, 1, this.u1.getUserId());
+				GasStationDto g_dto = gasStationService.getGasStationById(g2.getGasStationId());
+				assertTrue(g_dto.getReportUser() == this.u1.getUserId());
+				assertNotNull(g_dto.getReportTimestamp());
+			} catch (InvalidGasStationException e) {
+				fail();
+			} catch (PriceException e) {
+				fail();
+			} catch (InvalidUserException e) {
+				fail();
+			}
+		}
+
+		
 		@Test
 		public void invalidUserId_ShouldThrowException() {
 			try {
@@ -1330,7 +1383,57 @@ public class GasStationServiceTest {
 			}
 
 		}
-
+		
+		@Test
+		public void correctParamsAndGreaterTrustLevel_ShouldSetNewReport() {
+			try {
+				gasStationService.setReport(this.g1.getGasStationId(), 2, 2, 2, 2, 2, this.u2.getUserId());
+				GasStationDto gs = gasStationService.getGasStationById(g1.getGasStationId());
+				assertTrue(gs.getReportUser() == u2.getUserId());
+				
+			} catch (InvalidGasStationException e) {
+				fail();
+			} catch (PriceException e) {
+				fail();
+			} catch (InvalidUserException e) {
+				fail();
+			}
+		}
+		
+		@Test
+		public void correctParamsAndLowerTrustLevel_ShouldNotSetNewReport() {
+			u2.setReputation(1);
+			try {
+				gasStationService.setReport(this.g1.getGasStationId(), 2, 2, 2, 2, 2, this.u2.getUserId());
+				GasStationDto gs = gasStationService.getGasStationById(g1.getGasStationId());
+				assertTrue(gs.getReportUser() == u1.getUserId());
+				
+			} catch (InvalidGasStationException e) {
+				fail();
+			} catch (PriceException e) {
+				fail();
+			} catch (InvalidUserException e) {
+				fail();
+			}
+		}
+		
+		@Test
+		public void correctParamsAndLowerTrustLevelAndMoreThanFourDays_ShouldSetNewReport() {
+			u2.setReputation(1);
+			try {
+				gasStationService.setReport(this.g3.getGasStationId(), 2, 2, 2, 2, 2, this.u2.getUserId());
+				GasStationDto gs = gasStationService.getGasStationById(g3.getGasStationId());
+				assertTrue(gs.getReportUser() == u2.getUserId());
+				
+			} catch (InvalidGasStationException e) {
+				fail();
+			} catch (PriceException e) {
+				fail();
+			} catch (InvalidUserException e) {
+				fail();
+			}
+		}
+			
 		@Test
 		public void correctParams_ShouldSetNewReport() {
 			try {

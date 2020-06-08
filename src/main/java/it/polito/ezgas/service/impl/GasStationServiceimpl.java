@@ -249,7 +249,7 @@ public class GasStationServiceimpl implements GasStationService {
 		}
 		
 				
-		if (gasStation.getUser() != null && gasStation.getReportTimestamp() != null) {
+		if (gasStation.getReportUser() != null && gasStation.getReportTimestamp() != null) {
 			SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy", Locale.ENGLISH);
 			Date data = null;
 			try {
@@ -260,7 +260,7 @@ public class GasStationServiceimpl implements GasStationService {
 			Long timestamp_long = data.getTime();		
 			Date today = new Date();
 			Long today_long = today.getTime();
-			if(user.getReputation() < gasStation.getUser().getReputation() && (timestamp_long - today_long) <= 345600000) {
+			if(user.getReputation() < gasStation.getUser().getReputation() && (today_long - timestamp_long) <= 345600000) {
 				return;
 			}
 		}
