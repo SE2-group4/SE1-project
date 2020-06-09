@@ -76,7 +76,7 @@ public class BootEZGasApplication {
 						+ "gas_station_name, has_diesel, has_gas, has_methane, has_super, has_super_plus, lat, lon, methane_price,"
 						+ "report_dependability, report_timestamp, report_user, super_plus_price, super_price, user_id) "
 						+ "VALUES (2, 'Car2Go', -1, 3, 'Via Roma Turin Piemont Italy', 'Station2', false, true,"
-						+ "true, false, true, 45.0705111, 7.6845806, 3, 0, 'Thu May 28 17:11:56 CEST 2020', 1, 3, -1, 1);");
+						+ "true, false, true, 45.0705111, 7.6845806, 3, 0, '06.06.2020', 1, 3, -1, 1);");
 		gs2.execute();
 		
 		conn.close();

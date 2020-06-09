@@ -36,7 +36,7 @@ public class Utility {
 		if(d < -5 || d > 5)
 			return 0;
 
-		SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy", Locale.ENGLISH);
+		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy", Locale.ENGLISH);
 		Date data = null;
 		try {
 			data = sdf.parse(timestamp);
