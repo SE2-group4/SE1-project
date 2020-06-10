@@ -8,7 +8,9 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import it.polito.ezgas.dto.GasStationDto;
+import it.polito.ezgas.dto.UserDto;
 import it.polito.ezgas.entity.GasStation;
+import it.polito.ezgas.entity.User;
 
 public class GasStationConverterTest {
 	
@@ -20,14 +22,14 @@ public class GasStationConverterTest {
 	@BeforeAll
 	static void setUp() throws Exception {
 		
-		/*user = new User();
+		User user = new User();
 		user.setUserId(1);
 		user.setUserName("Aldo");
 		user.setPassword("buonaquestacadrega");
 		user.setEmail("aldo.baglio@agg.it");
 		user.setReputation(-3);
 		user.setAdmin(true);
-		userDto = new UserDto(1, "Aldo", "buonaquestacadrega", "aldo.baglio@agg.it", -3, true);*/
+		UserDto userDto = new UserDto(1, "Aldo", "buonaquestacadrega", "aldo.baglio@agg.it", -3, true);
 		gasStation = new GasStation();
 		gasStation.setGasStationId(1);
 		gasStation.setGasStationName("Esso");
@@ -48,9 +50,9 @@ public class GasStationConverterTest {
 		gasStation.setReportUser(-1);
 		gasStation.setReportTimestamp("2020/05/21");
 		gasStation.setReportDependability(0);
-		gasStation.setUser(null);
+		gasStation.setUser(user);
 		gasStationDto = new GasStationDto(1, "Esso", "Via Filatoio Calcio Lombardy Italy", true, false, false, false, false, "Enjoy", 45.4955025, 9.8530837, 1.0, -1, -1, -1, -1, -1, "2020/05/21", 0);
-		gasStationDto.setUserDto(null);
+		gasStationDto.setUserDto(userDto);
 
 	}
 	
@@ -77,7 +79,7 @@ public class GasStationConverterTest {
 		assertTrue(gasStation.getReportUser() == gasStationDto2.get().getReportUser());
 		assertTrue(gasStation.getReportTimestamp().equals(gasStationDto2.get().getReportTimestamp()));
 		assertTrue(gasStation.getReportDependability() == gasStationDto2.get().getReportDependability());	
-		//assertTrue(gasStation.getUser().equals(UserConverter.userDtoConvertToUser(gasStationDto2.get().getUserDto())));
+		assertTrue(gasStation.getUser().getUserId().equals(UserConverter.userDtoConvertToUser(gasStationDto2.get().getUserDto()).getUserId()));
 		
 	}
 
@@ -103,7 +105,7 @@ public class GasStationConverterTest {
 		assertTrue(gasStationDto.getReportUser() == gasStation2.getReportUser());
 		assertTrue(gasStationDto.getReportTimestamp().equals(gasStation2.getReportTimestamp()));
 		assertTrue(gasStationDto.getReportDependability() == gasStation2.getReportDependability());
-		//assertTrue(gasStationDto.getUserDto().equals(UserConverter.userConvertToUserDto(gasStation2.getUser())));
+		assertTrue(gasStationDto.getUserDto().getUserId().equals(UserConverter.userConvertToUserDto(gasStation2.getUser()).getUserId()));
 
 	}
 

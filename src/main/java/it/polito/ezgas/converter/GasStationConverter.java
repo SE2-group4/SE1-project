@@ -36,8 +36,12 @@ public class GasStationConverter {
 		gasStationDto.setMethanePrice(gasStation.getMethanePrice());
 		gasStationDto.setReportUser(gasStation.getReportUser());
 		gasStationDto.setReportDependability(gasStation.getReportDependability());
+		gasStationDto.setReportTimestamp(gasStation.getReportTimestamp());
 		gasStationDto.setUserDto(userDto);
 		*/
+		if(gasStation.getUser() != null) {
+			gasStationDto.setUserDto(UserConverter.userConvertToUserDto(gasStation.getUser()));
+		}
 		
 		return gasStationDto;
 		
@@ -50,7 +54,7 @@ public static GasStation GasStationDtoConvertToGasStation(GasStationDto gasStati
 	/*
 	UserDto userDto = gasStationDto.getUserDto();
 	User user = UserConverter.userDtoConvertToUser(userDto);
-	GasStationDto gasStationDto = new GasStation();
+	GasStation gasStation = new GasStation();
 	gasStation.setGasStationId(gasStationDto.getGasStationId());
 	gasStation.setGasStationName(gasStationDto.getGasStationName());
 	gasStation.setGasStationAddress(gasStationDto.getGasStationAddress());
@@ -69,8 +73,12 @@ public static GasStation GasStationDtoConvertToGasStation(GasStationDto gasStati
 	gasStation.setMethanePrice(gasStationDto.getMethanePrice());
 	gasStation.setReportUser(gasStationDto.getReportUser());
 	gasStation.setReportDependability(gasStationDto.getReportDependability());
+	gasStation.setReportTimestamp(gasStationDto.getReportTimestamp());
 	gasStation.setUser(user);
 	*/
+	if(gasStationDto.getUserDto() != null) {
+		gasStation.setUser(UserConverter.userDtoConvertToUser(gasStationDto.getUserDto()));
+	}
 	
 	return gasStation;
 	
