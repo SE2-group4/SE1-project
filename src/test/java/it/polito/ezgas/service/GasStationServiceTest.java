@@ -73,13 +73,13 @@ public class GasStationServiceTest {
 	}
 
 	boolean DoubleCompareEqual(Double d1, Double d2) {
-		if (d1 == null && d2 == null) 
-				return true;
+		if (d1 == null && d2 == null)
+			return true;
 		if (d1 == null || d2 == null)
-				return false;
+			return false;
 		return (Double.compare(d1, d2) == 0);
 	}
-	
+
 	boolean compareGasStationDto(GasStationDto gs1, GasStationDto gs2) {
 		return (gs1.getGasStationId() == gs2.getGasStationId()
 				&& gs1.getGasStationName().compareTo(gs2.getGasStationName()) == 0
@@ -88,13 +88,12 @@ public class GasStationServiceTest {
 				&& gs1.getHasSuper() == gs2.getHasSuper() && gs1.getHasSuperPlus() == gs2.getHasSuperPlus()
 				&& gs1.getHasGas() == gs2.getHasGas() && gs1.getHasMethane() == gs2.getHasMethane()
 				&& gs1.getCarSharing() == gs2.getCarSharing() && gs1.getLat() == gs2.getLat()
-				&& gs1.getLon() == gs2.getLon() 
-				&& DoubleCompareEqual(gs1.getDieselPrice(), gs2.getDieselPrice()) 
+				&& gs1.getLon() == gs2.getLon() && DoubleCompareEqual(gs1.getDieselPrice(), gs2.getDieselPrice())
 				&& DoubleCompareEqual(gs1.getSuperPrice(), gs2.getSuperPrice())
 				&& DoubleCompareEqual(gs1.getSuperPlusPrice(), gs2.getSuperPlusPrice())
 				&& DoubleCompareEqual(gs1.getGasPrice(), gs2.getGasPrice())
-				&& DoubleCompareEqual(gs1.getMethanePrice(), gs2.getMethanePrice()) 
-				&& DoubleCompareEqual(gs1.getPremiumDieselPrice(), gs2.getPremiumDieselPrice()) 
+				&& DoubleCompareEqual(gs1.getMethanePrice(), gs2.getMethanePrice())
+				&& DoubleCompareEqual(gs1.getPremiumDieselPrice(), gs2.getPremiumDieselPrice())
 				&& gs1.getReportUser() == gs2.getReportUser() && gs1.getReportTimestamp() == gs2.getReportTimestamp()
 				&& compareUserDto(gs1.getUserDto(), gs2.getUserDto()));
 	}
@@ -783,6 +782,16 @@ public class GasStationServiceTest {
 				fail("GPSDataException should have been thrown (lat = 91)");
 			} catch (GPSDataException e) {
 			}
+			try {
+				gasStationService.getGasStationsByProximity(-91, 50, 1);
+				fail("GPSDataException should have been thrown (lat = -91)");
+			} catch (GPSDataException e) {
+			}
+			try {
+				gasStationService.getGasStationsByProximity(91, 50, 1);
+				fail("GPSDataException should have been thrown (lat = 91)");
+			} catch (GPSDataException e) {
+			}
 		}
 
 		@Test
@@ -794,6 +803,16 @@ public class GasStationServiceTest {
 			}
 			try {
 				gasStationService.getGasStationsByProximity(0, 181);
+				fail("GPSDataException should have been thrown (lat = 181)");
+			} catch (GPSDataException e) {
+			}
+			try {
+				gasStationService.getGasStationsByProximity(0, -181, 1);
+				fail("GPSDataException should have been thrown (lon = -181)");
+			} catch (GPSDataException e) {
+			}
+			try {
+				gasStationService.getGasStationsByProximity(0, 181, 1);
 				fail("GPSDataException should have been thrown (lat = 181)");
 			} catch (GPSDataException e) {
 			}
@@ -818,6 +837,26 @@ public class GasStationServiceTest {
 			}
 			try {
 				gasStationService.getGasStationsByProximity(91, -181);
+				fail("GPSDataException should have been thrown (lat = 91, lon = -181)");
+			} catch (GPSDataException e) {
+			}
+			try {
+				gasStationService.getGasStationsByProximity(-91, -181, 1);
+				fail("GPSDataException should have been thrown (lat = -91, lon = -181)");
+			} catch (GPSDataException e) {
+			}
+			try {
+				gasStationService.getGasStationsByProximity(91, 181, 1);
+				fail("GPSDataException should have been thrown (lat = 91, lon = 181)");
+			} catch (GPSDataException e) {
+			}
+			try {
+				gasStationService.getGasStationsByProximity(-91, 181, 1);
+				fail("GPSDataException should have been thrown (lat = 91, lon = -181)");
+			} catch (GPSDataException e) {
+			}
+			try {
+				gasStationService.getGasStationsByProximity(91, -181, 1);
 				fail("GPSDataException should have been thrown (lat = 91, lon = -181)");
 			} catch (GPSDataException e) {
 			}
@@ -870,6 +909,36 @@ public class GasStationServiceTest {
 				if (!compareGasStationDto(expectedList.get(i), returnList.get(i)))
 					fail("Returned wrong list");
 			}
+
+			// ***** TEST RANGE *****
+			returnList = new ArrayList<GasStationDto>();
+			try {
+				returnList = gasStationService.getGasStationsByProximity(0, 0, 1);
+			} catch (GPSDataException e) {
+				e.printStackTrace();
+				fail("No exception should be thrown");
+			}
+
+			assertTrue(expectedList.size() == returnList.size(), "Wrong number of gasStation returned");
+			for (int i = 0; i < expectedList.size(); i++) {
+				if (!compareGasStationDto(expectedList.get(i), returnList.get(i)))
+					fail("Returned wrong list");
+			}
+			
+			// ***** TEST RANGE = 0*****
+						returnList = new ArrayList<GasStationDto>();
+						try {
+							returnList = gasStationService.getGasStationsByProximity(0, 0, 0);
+						} catch (GPSDataException e) {
+							e.printStackTrace();
+							fail("No exception should be thrown");
+						}
+
+						assertTrue(expectedList.size() == returnList.size(), "Wrong number of gasStation returned");
+						for (int i = 0; i < expectedList.size(); i++) {
+							if (!compareGasStationDto(expectedList.get(i), returnList.get(i)))
+								fail("Returned wrong list");
+						}
 		}
 
 		@Test
@@ -881,6 +950,18 @@ public class GasStationServiceTest {
 			List<GasStationDto> returnList = new ArrayList<GasStationDto>();
 			try {
 				returnList = gasStationService.getGasStationsByProximity(0, 0);
+			} catch (GPSDataException e) {
+				e.printStackTrace();
+				fail("No exception should be thrown");
+			}
+
+			assertTrue(returnList.size() == 0, "Wrong number of gasStation returned");
+
+			// ***** TEST RANGE *****
+
+			returnList = new ArrayList<GasStationDto>();
+			try {
+				returnList = gasStationService.getGasStationsByProximity(0, 0, 1);
 			} catch (GPSDataException e) {
 				e.printStackTrace();
 				fail("No exception should be thrown");
@@ -1064,7 +1145,6 @@ public class GasStationServiceTest {
 
 			gasStationFilteredByGasolineType.sort((a, b) -> Double.compare(a.getDieselPrice(), b.getDieselPrice()));
 			expectedList = expectedList.stream().filter(gs -> gs.getGasStationId() <= 6).collect(Collectors.toList());
-			;
 
 			when(gasStationRepository.findByHasDieselTrueOrderByDieselPriceAsc())
 					.thenReturn(gasStationFilteredByGasolineType);
@@ -1082,8 +1162,46 @@ public class GasStationServiceTest {
 				if (!compareGasStationDto(expectedList.get(i), returnList.get(i)))
 					fail("Returned wrong list");
 			}
+			
 		}
 
+		@Test
+		public void validLatValidLonDieselCarARangeLessThan0_returnGasStationListSortedByDistance() {
+			List<GasStationDto> returnList = null;
+			gasStationFilteredByGasolineType = new ArrayList<GasStation>();
+			expectedList = new ArrayList<GasStationDto>();
+
+			for (int i = 1; i < N + 1; i++) {
+				if (i % diesel == 0) {
+					gasStationFilteredByGasolineType.add(gasStations[i - 1]);
+					if (i % carA == 0)
+						expectedList.add(GasStationConverter.GasStationConvertToGasStationDto(gasStations[i - 1]));
+				}
+			}
+
+			gasStationFilteredByGasolineType.sort((a, b) -> Double.compare(a.getDieselPrice(), b.getDieselPrice()));
+			expectedList = expectedList.stream().filter(gs -> gs.getGasStationId() <= 6).collect(Collectors.toList());
+
+			when(gasStationRepository.findByHasDieselTrueOrderByDieselPriceAsc())
+					.thenReturn(gasStationFilteredByGasolineType);
+
+			try {
+				returnList = gasStationService.getGasStationsWithCoordinates(0, 0, -1, "Diesel", "CarA");
+			} catch (Exception e) {
+				e.printStackTrace();
+				fail("No exception expected");
+			}
+
+			assertTrue(expectedList.size() == returnList.size(),
+					"Wrong number of gasStation returned:" + returnList.size() + " instead of " + expectedList.size());
+			for (int i = 0; i < expectedList.size(); i++) {
+				if (!compareGasStationDto(expectedList.get(i), returnList.get(i)))
+					fail("Returned wrong list");
+			}
+		}
+		
+		
+		
 		@Test
 		public void validLatValidLonNullCarA_returnGasStationListSortedByDistance() {
 			List<GasStationDto> returnList = null;
