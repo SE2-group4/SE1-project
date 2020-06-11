@@ -43,6 +43,7 @@ public class Utility {
 		} catch(Exception e) {
 			return 0;
 		}
+		
 		Long timestamp_long = data.getTime();		
 		Date today = new Date();
 		Long today_long = today.getTime();
