@@ -99,6 +99,16 @@ public class GasStationDto {
 		this.reportTimestamp = reportTimestamp;
 		this.reportDependability = reportDependability;
 	}
+	
+	public GasStationDto(Integer gasStationId, String gasStationName, String gasStationAddress,
+			 boolean hasDiesel, boolean hasSuper, boolean hasSuperPlus, boolean hasGas, boolean hasMethane,
+			 String carSharing, double lat, double lon,
+			 double dieselPrice, double superPrice, double superPlusPrice, double gasPrice, double methanePrice,
+			 Integer reportUser, String reportTimestamp, double reportDependability) {
+		this(gasStationId, gasStationName, gasStationAddress, hasDiesel, hasSuper, hasSuperPlus, hasGas,
+				hasMethane, false, carSharing, lat, lon, (double) dieselPrice, (double) superPrice, (double) superPlusPrice,
+				(double) gasPrice, (double) methanePrice, -1.0, reportUser, reportTimestamp, reportDependability);
+	}
 
 	public double getReportDependability() {
 		return reportDependability;

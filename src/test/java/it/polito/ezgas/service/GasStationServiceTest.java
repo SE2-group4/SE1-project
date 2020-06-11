@@ -76,7 +76,8 @@ public class GasStationServiceTest {
 		return (gs1.getGasStationId() == gs2.getGasStationId()
 				&& gs1.getGasStationName().compareTo(gs2.getGasStationName()) == 0
 				&& gs1.getGasStationAddress().compareTo(gs2.getGasStationAddress()) == 0
-				&& gs1.getHasDiesel() == gs2.getHasDiesel() && gs1.getHasSuper() == gs2.getHasSuper()
+				&& gs1.getHasDiesel() == gs2.getHasDiesel() && gs1.getHasPremiumDiesel() == gs2.getHasPremiumDiesel()
+				&& gs1.getHasSuper() == gs2.getHasSuper()
 				&& gs1.getHasSuperPlus() == gs2.getHasSuperPlus() && gs1.getHasGas() == gs2.getHasGas()
 				&& gs1.getHasMethane() == gs2.getHasMethane() && gs1.getCarSharing() == gs2.getCarSharing()
 				&& gs1.getLat() == gs2.getLat() && gs1.getLon() == gs2.getLon()
@@ -140,11 +141,11 @@ public class GasStationServiceTest {
 
 		@BeforeEach
 		void setUp() {
-			gs1 = new GasStation("Gas station c", "Address c, 3", false, false, false, true, true, "", 31.5, -1, -1, -1,
-					-1, 1.2, 0.96, 3, null, 0);
+			gs1 = new GasStation("Gas station c", "Address c, 3", false, false, false, true, true, false, "", 31.5, -1.0, -1.0, -1.0,
+					-1.0, 1.2, 0.96, -1.0, 3, null, 0);
 			gs1.setGasStationId(5);
-			gs2 = new GasStation("Gas station d", "Address d, 3", false, false, false, true, true, "", 31.5, -1, -1, -1,
-					-1, 1.2, 0.96, 3, new Date().toString(), 0);
+			gs2 = new GasStation("Gas station d", "Address d, 3", false, false, false, true, true, false, "", 31.5, -1.0, -1.0, -1.0,
+					-1.0, 1.2, 0.96, -1.0, 3, new Date().toString(), 0);
 			gs2.setGasStationId(6);
 			u = new User("user", "password", "user@mail.com", 1);
 			u.setUserId(0);
@@ -226,14 +227,14 @@ public class GasStationServiceTest {
 
 		@Test
 		public void validGasStationDto_returnGasStationDto() {
-			GasStation gs1 = new GasStation("Gas station c", "Address 3", true, true, true, true, true, "", 31.5,
-					35, -1, -1, -1, -1, -1, -1, null, 0.0);
-			GasStationDto gs1DtoExpected = new GasStationDto(1, "Gas station c", "Address 3", true, true, true, true, true, "", 31.5,
-					35, 0, 0, 0, 0, 0, -1, null, 0.0) ;
-			GasStation gs2 = new GasStation("Gas station c", "Address 3", false, false, false, false, false, "", 31.5,
-					35, -1, -1, -1, -1, -1, -1, null, 0.0);
-			GasStationDto gs2DtoExpected = new GasStationDto(2, "Gas station c", "Address 3", false, false, false, false, false, "", 31.5,
-					35, -1, -1, -1, -1, -1, -1, null, 0.0) ;
+			GasStation gs1 = new GasStation("Gas station c", "Address 3", true, true, true, true, true, true, "", 31.5,
+					35, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1, null, 0.0);
+			GasStationDto gs1DtoExpected = new GasStationDto(1, "Gas station c", "Address 3", true, true, true, true, true, true, "", 31.5,
+					35, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1, null, 0.0) ;
+			GasStation gs2 = new GasStation("Gas station c", "Address 3", false, false, false, false, false, false, "", 31.5,
+					35, null, null, null, null, null, null, -1, null, 0.0);
+			GasStationDto gs2DtoExpected = new GasStationDto(2, "Gas station c", "Address 3", false, false, false, false, false, false, "", 31.5,
+					35, null, null, null, null, null, null, -1, null, 0.0) ;
 			gs1.setGasStationId(1);
 			gs2.setGasStationId(2);
 			GasStationDto result = new GasStationDto();
@@ -253,11 +254,11 @@ public class GasStationServiceTest {
 
 		@Test
 		public void validGasStationDto_updateAndReturnGasStationDto() {
-			GasStation newGs = new GasStation("Gas station c", "Address 3", true, true, true, true, true, "", 31.5,
-					35, 5, 4, 3, 2, 0, 1, new Date().toString(), 1);
+			GasStation newGs = new GasStation("Gas station c", "Address 3", true, true, true, true, true, true, "", 31.5,
+					35, 5., 4., 3., 2., 0., 1., 1, new Date().toString(), 1);
 			newGs.setReportDependability(Utility.trustCalculation(1, newGs.getReportTimestamp()));
-			GasStation currentGs = new GasStation("Gas station c", "Address 3", true, true, true, true, false, "", 31.5,
-					35, 5, 4, 3, 2, -1, 1, newGs.getReportTimestamp(), 1);
+			GasStation currentGs = new GasStation("Gas station c", "Address 3", true, true, true, true, false, true, "", 31.5,
+					35, 5., 4., 3., 2., null, 1., 1, newGs.getReportTimestamp(), 1);
 			User u = new User("user", "password", "user@mail.com", 1);
 			newGs.setGasStationId(1);
 			u.setUserId(1);
@@ -349,10 +350,10 @@ public class GasStationServiceTest {
 
 		@Test
 		public void invalidLatitude_GPSDataExceptionThrown() {
-			GasStation gs2_1 = new GasStation("Gas station 2_1", "Address 2_1, 2_1", true, false, false, false, true,
-					"", 180.1, 23.7, 1.2, -1, -1, -1, 0.99, 1, "07-05-2020 18:47:52", 0);
-			GasStation gs2_2 = new GasStation("Gas station 2_2", "Address 2_1, 2_1", true, false, false, false, true,
-					"", -180.1, 23.7, 1.2, -1, -1, -1, 0.99, 1, "07-05-2020 18:47:52", 0);
+			GasStation gs2_1 = new GasStation("Gas station 2_1", "Address 2_1, 2_1", true, false, false, false, true, true,
+					"", 180.1, 23.7, 1.2, null, null, null, null, 0.99, 1, "07-05-2020 18:47:52", 0);
+			GasStation gs2_2 = new GasStation("Gas station 2_2", "Address 2_1, 2_1", true, false, false, false, true, true,
+					"", -180.1, 23.7, 1.2, null, null, null, null, 0.99, 1, "07-05-2020 18:47:52", 0);
 
 			try {
 				gasStationService.saveGasStation(GasStationConverter.GasStationConvertToGasStationDto(gs2_1));
@@ -375,10 +376,10 @@ public class GasStationServiceTest {
 
 		@Test
 		public void invalidLongitude_GPSDataExceptionThrown() {
-			GasStation gs2_1 = new GasStation("Gas station 2_1", "Address 2_1, 2_1", true, false, false, false, true,
-					"", 12, 180.1, 1.2, -1, -1, -1, 0.99, 1, "07-05-2020 18:47:52", 0);
-			GasStation gs2_2 = new GasStation("Gas station 2_2", "Address 2_1, 2_1", true, false, false, false, true,
-					"", 33.1, -180.1, 1.2, -1, -1, -1, 0.99, 1, "07-05-2020 18:47:52", 0);
+			GasStation gs2_1 = new GasStation("Gas station 2_1", "Address 2_1, 2_1", true, false, false, false, true, true,
+					"", 12, 180.1, 1.2, null, null, null, 0.99, 1., 1, "07-05-2020 18:47:52", 0);
+			GasStation gs2_2 = new GasStation("Gas station 2_2", "Address 2_1, 2_1", true, false, false, false, true, true,
+					"", 33.1, -180.1, 1.2, null, null, null, 0.99, 1., 1, "07-05-2020 18:47:52", 0);
 
 			try {
 				gasStationService.saveGasStation(GasStationConverter.GasStationConvertToGasStationDto(gs2_1));
@@ -496,7 +497,7 @@ public class GasStationServiceTest {
 				Boolean result = gasStationService.deleteGasStation(999);
 				assertNotNull(result);
 				// assertFalse(result, "Deleting a non existing gas station returned true");
-				assertTrue(result, "Deleting a non existing gas station returned false"); // using white box approach
+				assertFalse(result, "Deleting a non existing gas station returned false"); // using white box approach
 			} catch (InvalidGasStationException e) {
 				fail("InvalidGasStationException unexpected");
 			}
@@ -1011,7 +1012,7 @@ public class GasStationServiceTest {
 			expectedList = new ArrayList<GasStationDto>();
 
 			try {
-				returnList = gasStationService.getGasStationsWithCoordinates(-91, 160, "Diesel", "CarA");
+				returnList = gasStationService.getGasStationsWithCoordinates(-91, 160, 1, "Diesel", "CarA");
 				fail("GPSDataException expected");
 			} catch (GPSDataException e) {
 			} catch (Exception e) {
@@ -1027,7 +1028,7 @@ public class GasStationServiceTest {
 			expectedList = new ArrayList<GasStationDto>();
 
 			try {
-				returnList = gasStationService.getGasStationsWithCoordinates(-23, 160, "", "CarA");
+				returnList = gasStationService.getGasStationsWithCoordinates(-23, 160, 1, "", "CarA");
 				fail("GPSDataException expected");
 			} catch (InvalidGasTypeException e) {
 			} catch (Exception e) {
@@ -1058,7 +1059,7 @@ public class GasStationServiceTest {
 					.thenReturn(gasStationFilteredByGasolineType);
 
 			try {
-				returnList = gasStationService.getGasStationsWithCoordinates(0, 0, "Diesel", "CarA");
+				returnList = gasStationService.getGasStationsWithCoordinates(0, 0, 1, "Diesel", "CarA");
 			} catch (Exception e) {
 				e.printStackTrace();
 				fail("No exception expected");
@@ -1087,7 +1088,7 @@ public class GasStationServiceTest {
 			when(gasStationRepository.findAll()).thenReturn(Arrays.asList(gasStations));
 
 			try {
-				returnList = gasStationService.getGasStationsWithCoordinates(0, 0, "null", "CarA");
+				returnList = gasStationService.getGasStationsWithCoordinates(0, 0, 1, "null", "CarA");
 			} catch (Exception e) {
 				e.printStackTrace();
 				fail("No exception expected");
@@ -1117,7 +1118,7 @@ public class GasStationServiceTest {
 			when(gasStationRepository.findAll()).thenReturn(Arrays.asList(gasStations));
 
 			try {
-				returnList = gasStationService.getGasStationsWithCoordinates(0, 0, "Select gasoline type", "null");
+				returnList = gasStationService.getGasStationsWithCoordinates(0, 0, 1, "Select gasoline type", "null");
 			} catch (Exception e) {
 				e.printStackTrace();
 				fail("No exception expected");
@@ -1151,7 +1152,7 @@ public class GasStationServiceTest {
 					.thenReturn(gasStationFilteredByGasolineType);
 
 			try {
-				returnList = gasStationService.getGasStationsWithCoordinates(0, 0, "Methane", "null");
+				returnList = gasStationService.getGasStationsWithCoordinates(0, 0, 1, "Methane", "null");
 			} catch (Exception e) {
 				e.printStackTrace();
 				fail("No exception expected");
@@ -1192,19 +1193,19 @@ public class GasStationServiceTest {
 			this.u2 = new User("Giacomo", "giacomo", "giacomo.poretti2@agg.it", 5);
 			this.u2.setUserId(5);
 			
-			this.g1 = new GasStation("Gas station 2_1", "Address 2_1, 2_1", true, true, true, true, true, "Enjoy", 41.5,
-					23.7, 1.2, 1.67, 2, 2, 2, 1, new Date().toString(), 0);
+			this.g1 = new GasStation("Gas station 2_1", "Address 2_1, 2_1", true, true, true, true, true, true, "Enjoy", 41.5,
+					23.7, 1.2, 1.67, 2., 2., 2., 2., 1, new Date().toString(), 0);
 			this.g1.setGasStationId(1);
 			this.g1.setReportUser(this.u1.getUserId());
 			this.g1.setUser(this.u1);
 			
-			this.g2 = new GasStation("Gas station 2_2", "Address 2_1, 2_1", true, true, true, true, true, "Enjoy", 41.5,
-					23.7, 1.2, 1.67, 2, 2, 2, 1, null, 0);
+			this.g2 = new GasStation("Gas station 2_2", "Address 2_1, 2_1", true, true, true, true, true, true, "Enjoy", 41.5,
+					23.7, 1.2, 1.67, 2., 2., 2., 2., 1, null, 0);
 			this.g2.setGasStationId(2);
 			this.g2.setUser(this.u1);
 			
-			this.g3 = new GasStation("Gas station 2_3", "Address 2_1, 2_1", true, true, true, true, true, "Enjoy", 41.5,
-					23.7, 1.2, 1.67, 2, 2, 2, 1, five_days_ago.toString(), 0);
+			this.g3 = new GasStation("Gas station 2_3", "Address 2_1, 2_1", true, true, true, true, true, true, "Enjoy", 41.5,
+					23.7, 1.2, 1.67, 2., 2., 2., 2., 1, five_days_ago.toString(), 0);
 			this.g3.setGasStationId(3);
 			this.g3.setReportUser(this.u1.getUserId());
 			this.g3.setUser(this.u1);
@@ -1266,7 +1267,7 @@ public class GasStationServiceTest {
 		@Test
 		public void noReportYet_ShouldCreateNewList() {
 			try {
-				gasStationService.setReport(this.g2.getGasStationId(), 1, 1, 1, 1, 1, this.u1.getUserId());
+				gasStationService.setReport(this.g2.getGasStationId(), 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, this.u1.getUserId());
 				GasStationDto g_dto = gasStationService.getGasStationById(g2.getGasStationId());
 				assertTrue(g_dto.getReportUser() == this.u1.getUserId());
 				assertNotNull(g_dto.getReportTimestamp());
@@ -1283,7 +1284,7 @@ public class GasStationServiceTest {
 		@Test
 		public void invalidUserId_ShouldThrowException() {
 			try {
-				gasStationService.setReport(this.g1.getGasStationId(), 1, 1, 1, 1, 1, new Integer(-84));
+				gasStationService.setReport(this.g1.getGasStationId(), 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, new Integer(-84));
 				fail();
 			} catch (InvalidGasStationException e) {
 				fail();
@@ -1297,7 +1298,7 @@ public class GasStationServiceTest {
 		@Test
 		public void invalidGasStationId_ShouldThrowException() {
 			try {
-				gasStationService.setReport(new Integer(-84), 1, 1, 1, 1, 1, this.u1.getUserId());
+				gasStationService.setReport(new Integer(-84), 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, this.u1.getUserId());
 				fail();
 			} catch (InvalidGasStationException e) {
 				// good!
@@ -1311,7 +1312,7 @@ public class GasStationServiceTest {
 		@Test
 		public void notExistingUser_ShouldThrowException() {
 			try {
-				gasStationService.setReport(this.g1.getGasStationId(), 1, 1, 1, 1, 1, new Integer(999));
+				gasStationService.setReport(this.g1.getGasStationId(), 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, new Integer(999));
 				fail();
 			} catch (InvalidGasStationException e) {
 				e.printStackTrace();
@@ -1327,7 +1328,7 @@ public class GasStationServiceTest {
 		@Test
 		public void notExistingGasStation_ShouldThrowException() {
 			try {
-				gasStationService.setReport(new Integer(999), 1, 1, 1, 1, 1, this.u1.getUserId());
+				gasStationService.setReport(new Integer(999), 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, this.u1.getUserId());
 				fail();
 			} catch (InvalidGasStationException e) {
 				// good!
@@ -1343,14 +1344,14 @@ public class GasStationServiceTest {
 		public void invalidGasTypePrice_ShouldThrowException() {
 			try {
 				try {
-					gasStationService.setReport(this.g1.getGasStationId(), -1, 1, 1, 1, 1, 1, this.u1.getUserId());
+					gasStationService.setReport(this.g1.getGasStationId(), -1.0, 1.0, 1.0, 1.0, 1.0, 1.0, this.u1.getUserId());
 					fail();
 				} catch (PriceException e) {
 					// good!
 				}
 				
 				try {
-					gasStationService.setReport(this.g1.getGasStationId(), 1., -10, 1., 1., 1., 1., this.u1.getUserId());
+					gasStationService.setReport(this.g1.getGasStationId(), 1., -10., 1., 1., 1., 1., this.u1.getUserId());
 					fail();
 				} catch (PriceException e) {
 					// good!
@@ -1364,7 +1365,7 @@ public class GasStationServiceTest {
 				}
 				
 				try {
-					gasStationService.setReport(this.g1.getGasStationId(), 1., 1., 1., -0.1, 1., 1, this.u1.getUserId());
+					gasStationService.setReport(this.g1.getGasStationId(), 1., 1., 1., -0.1, 1., 1., this.u1.getUserId());
 					fail();
 				} catch (PriceException e) {
 					// good!

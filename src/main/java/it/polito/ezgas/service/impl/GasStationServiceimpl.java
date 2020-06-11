@@ -62,6 +62,7 @@ public class GasStationServiceimpl implements GasStationService {
 				|| (gasStation.getSuperPlusPrice() != null && gasStation.getSuperPlusPrice() < 0)
 				|| (gasStation.getSuperPrice() != null && gasStation.getSuperPrice() < 0)
 				|| (gasStation.getGasPrice() != null && gasStation.getGasPrice() < 0)
+				|| (gasStation.getPremiumDieselPrice() != null && gasStation.getPremiumDieselPrice() < 0)
 				|| (gasStation.getDieselPrice() != null && gasStation.getDieselPrice() < 0)) {
 			throw new PriceException("Invalid (negative) price");
 		}

@@ -43,15 +43,15 @@ public class GasStationConverterTest {
 		gasStation.setLat(45.4955025);
 		gasStation.setLon(9.8530837);
 		gasStation.setDieselPrice(1.0);
-		gasStation.setMethanePrice(-1);
-		gasStation.setGasPrice(-1);
-		gasStation.setSuperPrice(-1);
-		gasStation.setSuperPlusPrice(-1);
+		gasStation.setMethanePrice(-1.0);
+		gasStation.setGasPrice(-1.0);
+		gasStation.setSuperPrice(-1.0);
+		gasStation.setSuperPlusPrice(-1.0);
 		gasStation.setReportUser(-1);
 		gasStation.setReportTimestamp("2020/05/21");
 		gasStation.setReportDependability(0);
 		gasStation.setUser(user);
-		gasStationDto = new GasStationDto(1, "Esso", "Via Filatoio Calcio Lombardy Italy", true, false, false, false, false, "Enjoy", 45.4955025, 9.8530837, 1.0, -1, -1, -1, -1, -1, "2020/05/21", 0);
+		gasStationDto = new GasStationDto(1, "Esso", "Via Filatoio Calcio Lombardy Italy", true, false, false, false, false, false, "Enjoy", 45.4955025, 9.8530837, 1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1, "2020/05/21", 0);
 		gasStationDto.setUserDto(userDto);
 
 	}
@@ -68,6 +68,7 @@ public class GasStationConverterTest {
 		assertTrue(gasStation.getHasSuper() == gasStationDto2.get().getHasSuper());
 		assertTrue(gasStation.getHasSuperPlus() == gasStationDto2.get().getHasSuperPlus());
 		assertTrue(gasStation.getHasMethane() == gasStationDto2.get().getHasMethane());
+		assertTrue(gasStation.getHasPremiumDiesel() == gasStationDto2.get().getHasPremiumDiesel());
 		assertTrue(gasStation.getCarSharing().equals(gasStationDto2.get().getCarSharing()));
 		assertTrue(gasStation.getLat() == gasStationDto2.get().getLat());
 		assertTrue(gasStation.getLon() == gasStationDto2.get().getLon());
@@ -94,6 +95,7 @@ public class GasStationConverterTest {
 		assertTrue(gasStationDto.getHasSuper() == gasStation2.getHasSuper());
 		assertTrue(gasStationDto.getHasSuperPlus() == gasStation2.getHasSuperPlus());
 		assertTrue(gasStationDto.getHasMethane() == gasStation2.getHasMethane());
+		assertTrue(gasStationDto.getHasPremiumDiesel() == gasStation2.getHasPremiumDiesel());
 		assertTrue(gasStationDto.getCarSharing().equals(gasStation2.getCarSharing()));
 		assertTrue(gasStationDto.getLat() == gasStation2.getLat());
 		assertTrue(gasStationDto.getLon() == gasStation2.getLon());
