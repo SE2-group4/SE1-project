@@ -14,8 +14,8 @@ public class GasStationTest {
 
 	@BeforeEach
 	void setUp() throws Exception {
-		this.gasStation = new GasStation("Red Rocket", "Andale Main Street, 42", true, true, false, false, true,
-				"appreciate", 42.42, 21.21, 1.5, 1.6, -1, -1, 1.3, 1, "2020-05-12 14:22:31", 2.0);
+		this.gasStation = new GasStation("Red Rocket", "Andale Main Street, 42", true, true, false, false, true, true,
+				"appreciate", 42.42, 21.21, 1.5, 1.6, null, null, 1.3, 2., 1, "2020-05-12 14:22:31", 2.0);
 		this.gasStation.setGasStationId(0);
 		this.user = new User("Three ", "Dog", "threedog@fall.out", 3);
 		this.user.setAdmin(false);
@@ -27,8 +27,8 @@ public class GasStationTest {
 	void constructor__returnGasStation() {
 		GasStation gasStation = new GasStation();
 		assertNotNull(gasStation);
-		gasStation = new GasStation("Red Rocket", "Andale Main Street, 42", true, true, false, false, true,
-				"appreciate", 42.42, 21.21, 1.5, 1.6, -1, -1, 1.3, 1, "2020-05-12 14:22:31", 2.0);
+		gasStation = new GasStation("Red Rocket", "Andale Main Street, 42", true, true, false, false, true, true,
+				"appreciate", 42.42, 21.21, 1.5, 1.6, null, null, 1.3, 2., 1, "2020-05-12 14:22:31", 2.0);
 		assertEquals("Red Rocket", gasStation.getGasStationName());
 		assertEquals("Andale Main Street, 42", gasStation.getGasStationAddress());
 		assertEquals(true, gasStation.getHasDiesel());
@@ -158,6 +158,7 @@ public class GasStationTest {
 		assertEquals(newValue, this.gasStation.getHasSuperPlus());
 	}
 
+	
 	@Test
 	void getHasGas__returnHasGas() {
 		assertTrue(this.gasStation.getHasGas() == false);
@@ -180,6 +181,18 @@ public class GasStationTest {
 		boolean newValue = false;
 		this.gasStation.setHasMethane(newValue);
 		assertEquals(newValue, this.gasStation.getHasMethane());
+	}
+	
+	@Test
+	void getHasPremiumDiesel__returnHasPremiumDiesel() {
+		assertTrue(this.gasStation.getHasPremiumDiesel() == false);
+	}
+
+	@Test
+	void setHasPremiumDiesel__modifyHasPremiumDiesel() {
+		boolean newValue = true;
+		this.gasStation.setHasPremiumDiesel(newValue);
+		assertEquals(newValue, this.gasStation.getHasPremiumDiesel());
 	}
 
 	@Test
@@ -266,6 +279,18 @@ public class GasStationTest {
 		assertEquals(newValue, this.gasStation.getMethanePrice(), this.delta);
 	}
 
+	@Test
+	void getPremiumDieselPrice__returnPremiumDieselPrice() {
+		assertEquals(1.3, this.gasStation.getPremiumDieselPrice(), this.delta);
+	}
+
+	@Test
+	void setPremiumDieselPrice__modifyPremiumDieselPrice() {
+		double newValue = 1.2;
+		this.gasStation.setPremiumDieselPrice(newValue);
+		assertEquals(newValue, this.gasStation.getPremiumDieselPrice(), this.delta);
+	}
+	
 	@Test
 	void getUser__returnUser() {
 		assertEquals(this.user, this.gasStation.getUser());

@@ -1343,35 +1343,41 @@ public class GasStationServiceTest {
 		public void invalidGasTypePrice_ShouldThrowException() {
 			try {
 				try {
-					gasStationService.setReport(this.g1.getGasStationId(), -1, 1, 1, 1, 1, this.u1.getUserId());
+					gasStationService.setReport(this.g1.getGasStationId(), -1, 1, 1, 1, 1, 1, this.u1.getUserId());
 					fail();
 				} catch (PriceException e) {
 					// good!
 				}
 				
 				try {
-					gasStationService.setReport(this.g1.getGasStationId(), 1, -10, 1, 1, 1, this.u1.getUserId());
+					gasStationService.setReport(this.g1.getGasStationId(), 1., -10, 1., 1., 1., 1., this.u1.getUserId());
 					fail();
 				} catch (PriceException e) {
 					// good!
 				}
 				
 				try {
-					gasStationService.setReport(this.g1.getGasStationId(), 1, 1, -10000, 1, 1, this.u1.getUserId());
+					gasStationService.setReport(this.g1.getGasStationId(), 1., 1., -10000., 1., 1., 1., this.u1.getUserId());
 					fail();
 				} catch (PriceException e) {
 					// good!
 				}
 				
 				try {
-					gasStationService.setReport(this.g1.getGasStationId(), 1, 1, 1, -0.1, 1, this.u1.getUserId());
+					gasStationService.setReport(this.g1.getGasStationId(), 1., 1., 1., -0.1, 1., 1, this.u1.getUserId());
 					fail();
 				} catch (PriceException e) {
 					// good!
 				}
 				
 				try {
-					gasStationService.setReport(this.g1.getGasStationId(), 1, 1, 1, 1, -0.0001, this.u1.getUserId());
+					gasStationService.setReport(this.g1.getGasStationId(), 1., 1., 1., 1., -0.0001, 1., this.u1.getUserId());
+					fail();
+				} catch (PriceException e) {
+					// good!
+				}
+				try {
+					gasStationService.setReport(this.g1.getGasStationId(), 1., 1., 1., 1., 1., -10., this.u1.getUserId());
 					fail();
 				} catch (PriceException e) {
 					// good!
@@ -1387,7 +1393,7 @@ public class GasStationServiceTest {
 		@Test
 		public void correctParamsAndGreaterTrustLevel_ShouldSetNewReport() {
 			try {
-				gasStationService.setReport(this.g1.getGasStationId(), 2, 2, 2, 2, 2, this.u2.getUserId());
+				gasStationService.setReport(this.g1.getGasStationId(), 2., 2., 2., 2., 2., 2., this.u2.getUserId());
 				GasStationDto gs = gasStationService.getGasStationById(g1.getGasStationId());
 				assertTrue(gs.getReportUser() == u2.getUserId());
 				
@@ -1404,7 +1410,7 @@ public class GasStationServiceTest {
 		public void correctParamsAndLowerTrustLevel_ShouldNotSetNewReport() {
 			u2.setReputation(1);
 			try {
-				gasStationService.setReport(this.g1.getGasStationId(), 2, 2, 2, 2, 2, this.u2.getUserId());
+				gasStationService.setReport(this.g1.getGasStationId(), 2., 2., 2., 2., 2., 2., this.u2.getUserId());
 				GasStationDto gs = gasStationService.getGasStationById(g1.getGasStationId());
 				assertTrue(gs.getReportUser() == u1.getUserId());
 				
@@ -1421,7 +1427,7 @@ public class GasStationServiceTest {
 		public void correctParamsAndLowerTrustLevelAndMoreThanFourDays_ShouldSetNewReport() {
 			u2.setReputation(1);
 			try {
-				gasStationService.setReport(this.g3.getGasStationId(), 2, 2, 2, 2, 2, this.u2.getUserId());
+				gasStationService.setReport(this.g3.getGasStationId(), 2., 2., 2., 2., 2., 2., this.u2.getUserId());
 				GasStationDto gs = gasStationService.getGasStationById(g3.getGasStationId());
 				assertTrue(gs.getReportUser() == u2.getUserId());
 				
@@ -1437,7 +1443,7 @@ public class GasStationServiceTest {
 		@Test
 		public void correctParams_ShouldSetNewReport() {
 			try {
-				gasStationService.setReport(this.g1.getGasStationId(), 2, 2, 2, 2, 2, this.u1.getUserId());
+				gasStationService.setReport(this.g1.getGasStationId(), 2., 2., 2., 2., 2., 2., this.u1.getUserId());
 				GasStationDto gs = gasStationService.getGasStationById(g1.getGasStationId());
 				assertTrue(compareGasStationDto(gs, GasStationConverter.GasStationConvertToGasStationDto(g1)), "Gas station has not been modified");
 				

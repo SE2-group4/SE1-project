@@ -33,8 +33,8 @@ public class GasStationControllerTests {
 		gsDto = new GasStationDto();
 		gsDto.setGasStationId(1);
 		gsDto.setCarSharing("Enjoy");
-		gsDto.setDieselPrice(0);
-		gsDto.setGasPrice(-1);
+		gsDto.setDieselPrice(0.);
+		gsDto.setGasPrice(-1.);
 		gsDto.setGasStationAddress( "Via Rocciamelone Caselle Torinese Piemont Italy");
 		gsDto.setGasStationName("Station1");
 		gsDto.setHasDiesel(true);
@@ -44,12 +44,12 @@ public class GasStationControllerTests {
 		gsDto.setHasSuperPlus(false);
 		gsDto.setLat(45.1635676);
 		gsDto.setLon(7.6647799);
-		gsDto.setMethanePrice(-1);
+		gsDto.setMethanePrice(-1.);
 		gsDto.setReportDependability(0);
 		gsDto.setReportTimestamp(null);
 		gsDto.setReportUser(-1);
-		gsDto.setSuperPlusPrice(-1);
-		gsDto.setSuperPrice(0);
+		gsDto.setSuperPlusPrice(-1.);
+		gsDto.setSuperPrice(0.);
 		gsDto.setUserDto(null);
 	}
 
