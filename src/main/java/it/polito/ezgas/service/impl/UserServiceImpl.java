@@ -85,11 +85,10 @@ public class UserServiceImpl implements UserService {
 		if (userId < 0)
 			throw new InvalidUserException("Invalid userId (less than 0)");
 		List<User> users;
-
-		this.userRepository.delete(userId);
 		users = this.userRepository.findByUserId(userId);
-		if (users.size() > 0)
+		if (users.size() < 1)
 			return false;
+		this.userRepository.delete(userId);		
 		return true;
 	}
 
@@ -112,7 +111,8 @@ public class UserServiceImpl implements UserService {
 	public Integer increaseUserReputation(Integer userId) throws InvalidUserException {
 		List<User> userList;
 		User user;
-
+		if(userId < 0)
+			throw new InvalidUserException("Negative userId");
 		userList = this.userRepository.findByUserId(userId);
 		if (userList.size() == 0)
 			throw new InvalidUserException("No user with userId " + userId + " registered");
@@ -132,7 +132,9 @@ public class UserServiceImpl implements UserService {
 	public Integer decreaseUserReputation(Integer userId) throws InvalidUserException {
 		List<User> userList;
 		User user;
-
+		if(userId < 0)
+			throw new InvalidUserException("Negative userId");
+		
 		userList = this.userRepository.findByUserId(userId);
 		if (userList.size() == 0)
 			throw new InvalidUserException("No user with userId " + userId + " registered");

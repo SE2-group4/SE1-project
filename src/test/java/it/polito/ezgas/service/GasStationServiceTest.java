@@ -54,7 +54,7 @@ public class GasStationServiceTest {
 	static UserRepository userRepository;
 	static int N = 10;
 	static int carA = 3, carB = 5;
-	static int diesel = 1, sup = 2, supPlus = 3, gas = 4, methane = 5;
+	static int diesel = 1, sup = 2, supPlus = 3, gas = 4, methane = 5, premium = 6;
 
 	List<GasStation> gasStationList;
 	List<GasStationDto> gasStationDtoList;
@@ -107,10 +107,10 @@ public class GasStationServiceTest {
 
 		for (int i = 1; i < N + 1; i++) {
 			gasStations[i - 1] = new GasStation("gs" + i, "address " + i, i % diesel == 0, i % sup == 0,
-					i % supPlus == 0, i % gas == 0, i % methane == 0, "", i * 1e-3, i * 1e-3,
-					i % 1 == 0 ? r.nextDouble() + 1 : -1, i % 2 == 0 ? r.nextDouble() + 1 : -1,
-					i % 3 == 0 ? r.nextDouble() + 1 : -1, i % 4 == 0 ? r.nextDouble() + 1 : -1,
-					i % 5 == 0 ? r.nextDouble() + 1 : -1, 0, null, 0);
+					i % supPlus == 0, i % gas == 0, i % methane == 0, i% premium == 0, "", i * 1e-3, i * 1e-3,
+					i % diesel == 0 ? r.nextDouble() + 1 : null, i % sup == 0 ? r.nextDouble() + 1 : null,
+					i % supPlus == 0 ? r.nextDouble() + 1 : null, i % gas == 0 ? r.nextDouble() + 1 : null,
+					i % methane == 0 ? r.nextDouble() + 1 : null, i % premium == 0 ? r.nextDouble() + 1 : null, 0, null, 0);
 			if (i % carA == 0)
 				gasStations[i - 1].setCarSharing("CarA");
 			if (i % carB == 0)
