@@ -252,7 +252,7 @@ public class GasStationControllerTests {
 
 	@Test
 	public void testSetGasStationReport() throws ClientProtocolException, IOException {
-		HttpPost request = new HttpPost("http://localhost:8080/gasstation/setGasStationReport/2/-1/-1/3/3/3/1");
+		HttpPost request = new HttpPost("http://localhost:8080/gasstation/setGasStationReport/2/null/null/3/3/3/null/1");
 		request.setHeader("Content-Type", "application/json");
 
 	    HttpResponse response = HttpClientBuilder.create().build().execute(request);

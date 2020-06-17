@@ -724,6 +724,7 @@ Similar attributes, such as prices and boolean, have been grouped and treated th
 - getSuperPlusPrice
 - getGasPrice
 - getMethanePrice
+- getPremiumDieselPrice
 
 **Criteria:**
 	
@@ -764,6 +765,7 @@ Similar attributes, such as prices and boolean, have been grouped and treated th
 - setSuperPlusPrice
 - setGasPrice
 - setMethanePrice
+- setPremiumDieselPrice
 
 **Criteria:**
 	
@@ -1106,6 +1108,7 @@ Similar attributes, such as prices and boolean, have been grouped and treated th
 - getHasSuperPlus
 - getHasGas
 - getHasMethane
+- getHasPremiumDieselPrice
 
 **Criteria:**
 
@@ -1144,6 +1147,7 @@ Similar attributes, such as prices and boolean, have been grouped and treated th
 - setHasSuperPlus
 - setHasGas
 - setHasMethane
+- setHasPremiumDieselPrice
 
 **Criteria:**
 

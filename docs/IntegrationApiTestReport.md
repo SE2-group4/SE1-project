@@ -263,6 +263,7 @@ Sequence:
 | GasStationServiceTest.java    | validLatValidLonNullCarA_returnGasStationListSortedByDistance  |
 | GasStationServiceTest.java    | validLatValidLonNullNull_returnGasStationListSortedByDistance  |
 | GasStationServiceTest.java    | validLatValidLonMethaneNull_returnGasStationListSortedByDistance  |
+| GasStationServiceTest.java    | validLatValidLonDieselCarARangeLessThan0_returnGasStationListSortedByDistance |
 | GasStationServiceTest.java    | invalidUserId_ShouldThrowException  |
 | GasStationServiceTest.java    | invalidGasStationId_ShouldThrowException  |
 | GasStationServiceTest.java    | notExistingUser_ShouldThrowException  |

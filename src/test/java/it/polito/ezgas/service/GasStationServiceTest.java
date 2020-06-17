@@ -473,8 +473,8 @@ public class GasStationServiceTest {
 					Object[] args = invocation.getArguments();
 					Integer param = (Integer) args[0];
 
-					if (param == g1.getGasStationId())
-						return Optional.empty(); // as it has been removed
+					if (param.compareTo(g1.getGasStationId()) == 0)
+						return Optional.of(g1); 
 					else if (param >= 0)
 						return Optional.empty();
 					else
@@ -492,13 +492,13 @@ public class GasStationServiceTest {
 			} catch (InvalidGasStationException e) {
 				fail("InvalidGasStationException unexpected");
 			}
-
+			/*
 			try {
 				GasStationDto gasStationDto = gasStationService.getGasStationById(this.g1.getGasStationId());
 				assertNull(gasStationDto, "Gas station deleted has been retrieved, should be null");
 			} catch (InvalidGasStationException e) {
 				fail("InvalidGasStationException unexpected when trying to retrieve gas station deleted (should return null)");
-			}
+			}*/
 		}
 
 		@Test

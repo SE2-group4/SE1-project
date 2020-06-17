@@ -239,6 +239,7 @@ public class UserServiceTests {
 		User u2 = new User();
 		List<User> uListEmpty = new ArrayList<>();
 		List<User> uList = new ArrayList<>();
+		List<User> checkList = new ArrayList<>();
 		int size_uList;
 		
 		@BeforeEach
@@ -256,15 +257,14 @@ public class UserServiceTests {
 			uList.add(u2);
 			
 			size_uList = uList.size();
-
+			checkList.add(u1);
 			initializeTest(); // re-create all mocks
-			when(userRepository.findByUserId(u1.getUserId())).thenReturn(new ArrayList<User>());
+			when(userRepository.findByUserId(u1.getUserId())).thenReturn(checkList);
 			
 		}
 		
 		@Test
 		public void testDelete() {
-			when(userRepository.findByUserId(u1.getUserId())).thenReturn(new ArrayList<User>());
 			
 			boolean del = false;
 			try {
