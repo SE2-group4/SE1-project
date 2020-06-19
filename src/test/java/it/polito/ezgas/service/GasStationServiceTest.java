@@ -243,10 +243,15 @@ public class GasStationServiceTest {
 					true, true, "", 31.5, 35, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1, null, 0.0);
 			GasStation gs2 = new GasStation("Gas station c", "Address 3", false, false, false, false, false, false, "",
 					31.5, 35, null, null, null, null, null, null, -1, null, 0.0);
+			GasStation gs3 = new GasStation("Gas station c", "Address 3", true, true, true, true, true, true, "null",
+					31.5, 35, null, null, null, null, null, null, -1, null, 0.0);
 			GasStationDto gs2DtoExpected = new GasStationDto(2, "Gas station c", "Address 3", false, false, false,
 					false, false, false, "", 31.5, 35, null, null, null, null, null, null, -1, null, 0.0);
+			GasStationDto gs3DtoExpected = new GasStationDto(3, "Gas station c", "Address 3", true, true, true, true,
+					true, true, null, 31.5, 35, null, null, null, null, null, null, -1, null, 0.0);
 			gs1.setGasStationId(1);
 			gs2.setGasStationId(2);
+			gs3.setGasStationId(3);			
 			GasStationDto result = new GasStationDto();
 
 			try {
@@ -255,6 +260,9 @@ public class GasStationServiceTest {
 						"Gas station retrieved is not the same that has been inserted");
 				result = gasStationService.saveGasStation(GasStationConverter.GasStationConvertToGasStationDto(gs2));
 				assertTrue(compareGasStationDto(result, gs2DtoExpected),
+						"Gas station retrieved is not the same that has been inserted");
+				result = gasStationService.saveGasStation(GasStationConverter.GasStationConvertToGasStationDto(gs3));
+				assertTrue(compareGasStationDto(result, gs3DtoExpected),
 						"Gas station retrieved is not the same that has been inserted");
 
 			} catch (PriceException | GPSDataException e) {

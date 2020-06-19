@@ -107,7 +107,7 @@ public class GasStationDto {
 			 Integer reportUser, String reportTimestamp, double reportDependability) {
 		this(gasStationId, gasStationName, gasStationAddress, hasDiesel, hasSuper, hasSuperPlus, hasGas,
 				hasMethane, false, carSharing, lat, lon, (double) dieselPrice, (double) superPrice, (double) superPlusPrice,
-				(double) gasPrice, (double) methanePrice, -1.0, reportUser, reportTimestamp, reportDependability);
+				(double) gasPrice, (double) methanePrice, null, reportUser, reportTimestamp, reportDependability);
 	}
 
 	public double getReportDependability() {

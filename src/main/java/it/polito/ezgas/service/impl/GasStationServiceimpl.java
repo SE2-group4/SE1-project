@@ -70,40 +70,22 @@ public class GasStationServiceimpl implements GasStationService {
 		if (!Utility.checkCoordinates(gasStation.getLat(), gasStation.getLon()))
 			throw new GPSDataException("Coordinates error");
 
-		if (gasStation.getHasMethane()) {
-			if (gasStation.getMethanePrice() == null)
-				gasStation.setMethanePrice(0.);
-		} else
+		if (!gasStation.getHasMethane()) 
 			gasStation.setMethanePrice(null);
 
-		if (gasStation.getHasSuperPlus()) {
-			if (gasStation.getSuperPlusPrice() == null)
-				gasStation.setSuperPlusPrice(0.);
-		} else
+		if (!gasStation.getHasSuperPlus()) 
 			gasStation.setSuperPlusPrice(null);
 
-		if (gasStation.getHasSuper()) {
-			if (gasStation.getSuperPrice() == null)
-				gasStation.setSuperPrice(0.);
-		} else
+		if (!gasStation.getHasSuper()) 
 			gasStation.setSuperPrice(null);
 
-		if (gasStation.getHasGas()) {
-			if (gasStation.getGasPrice() == null)
-				gasStation.setGasPrice(0.);
-		} else
+		if (!gasStation.getHasGas()) 
 			gasStation.setGasPrice(null);
 
-		if (gasStation.getHasDiesel()) {
-			if (gasStation.getDieselPrice() == null)
-				gasStation.setDieselPrice(0.);
-		} else
+		if (!gasStation.getHasDiesel()) 
 			gasStation.setDieselPrice(null);
 
-		if (gasStation.getHasPremiumDiesel()) {
-			if (gasStation.getPremiumDieselPrice() == null)
-				gasStation.setPremiumDieselPrice(0.);
-		} else
+		if (!gasStation.getHasPremiumDiesel()) 
 			gasStation.setPremiumDieselPrice(null);
 
 		if (gasStation.getCarSharing().equals("null")) {
