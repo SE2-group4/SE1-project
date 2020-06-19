@@ -70,6 +70,8 @@ package "it.polito.ezgas.dto" {
     class LoginDto
 
     class UserDto
+
+    class PriceReportDto
 }
 
 package "it.polito.ezgas.entity" {
@@ -79,9 +81,15 @@ package "it.polito.ezgas.entity" {
 }
 
 GasStationController -> GasStationService
+GasStationController -> PriceReportDto
+GasStationController -> GasStationDto
 UserController -> UserService
+UserController -> UserDto
+UserController -> LoginDto
+UserController -> IdPw
 GasStationService -> GasStationRepository
 GasStationService -> Utility
+GasStationService -> GasStationDto
 UserService -> UserRepository
 GasStationService -> GasStationConverter
 UserService -> UserConverter
@@ -273,6 +281,8 @@ Sequence:
 | GasStationServiceTest.java    | validCarSharing_ShouldReturnGasStationList  |
 | GasStationServiceTest.java    | wrongCarSharing_ShouldReturnEmptyGasStationList  |
 | UserServiceTest.java          | getUser_UserId_ShouldReturnUser  |
+| UserServiceTest.java          | getUser_UserId_ShouldReturnNull  |
+| UserServiceTest.java          | saveUserTwice_UpdateUser  |
 | UserServiceTest.java          | getUser_NotExistingUserId_ShouldThrowException  |
 | UserServiceTest.java          | saveNewUser_ShouldHaveReputationEq0  |
 | UserServiceTest.java          | saveTwoUser_ShouldNotHaveSameEmail  |
