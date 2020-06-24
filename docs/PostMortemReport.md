@@ -19,7 +19,6 @@ Collaboration between us was really good, we always notified each other of chang
 ## Worst things
 The things that didn't work out for us were:
 - Spring Boot framework wasn't an easy concept to get without any introduction on it since the dependency between classes weren't clear. 
-- Lack of communication with the professors regarding the assignments. Doing thing blind is not fun.
 - It was difficult to understand how some parts of the interface and the code behind it worked. Sometimes we had to do some digging in the front end classes to find how to do some operations to test our code.
 - Having the explanation of the delivery been done while the delivery was already in progress wasn't easy since we firstly had less time to implement changes, and secondly because sometimes we already had made some changes and we had to undo them to comply with the assignment.
 - Making the teams almost one month after the beginning of the lessons caused a ripple effect in the deliveries dates causing them to finish in the middle of the exam session creating not so many problems
