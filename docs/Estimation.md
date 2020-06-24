@@ -2,9 +2,9 @@
 
 Authors: Group 12
 
-Date: 22/04/2020
+Date: 24/06/2020
 
-Version: 1.0
+Version: 2.0
 
 # Contents
 
@@ -28,11 +28,11 @@ We have not considered all those design details in these estimations, but classe
 |             | Estimate                        |
 | ----------- | ------------------------------- |
 | NC =  Estimated number of classes to be developed   | 10 |
-| A = Estimated average size per class, in LOC        | 200 |
-| S = Estimated size of project, in LOC (= NC * A) | 200 |
-| E = Estimated effort, in person hours (here use productivity 10 LOC per person hour)  | 2000 / 10 = 200 |
-| C = Estimated cost, in euro (here use 1 person hour cost = 30 euro) | 200 * 30 = 6000 |
-| Estimated calendar time, in calendar weeks (Assume team of 4 people, 8 hours per day, 5 days per week ) | 1.25 (about 1 week and 2 days) |
+| A = Estimated average size per class, in LOC        | 90 |
+| S = Estimated size of project, in LOC (= NC * A) | 900 |
+| E = Estimated effort, in person hours (here use productivity 6 LOC per person hour)  | 900 / 6 = 150 |
+| C = Estimated cost, in euro (here use 1 person hour cost = 30 euro) | 150 * 30 = 4500 |
+| Estimated calendar time, in calendar weeks (Assume team of 4 people, 8 hours per day, 5 days per week ) | 3.75 (about 4 days) |
 
 
 # Estimate by activity decomposition
@@ -40,11 +40,11 @@ We have not considered all those design details in these estimations, but classe
 |         Activity name    | Estimated effort (person hours)   |
 | ----------- | ------------------------------- |
 | Requirements document | 80 |
-| GUI prototype | 50 |
+| GUI prototype | 5 |
 | Estimation document | 10 |
-| Design document | 80 |
-| Coding | 120 |
-| Testing | 120 |
+| Design document | 68 |
+| Coding | 70 |
+| Testing | 210 |
 
 ## Gantt diagram
 
@@ -59,13 +59,12 @@ sunday are closed
 2020/04/13 is closed
 
 [Requirements document] lasts 3 days
-[GUI prototype] lasts 2 days
+[GUI prototype] lasts 1 days
 [Estimation document] lasts 1 days
-[Design document] lasts 4 days
-[Coding] lasts 5 days
-[Testing] lasts 5 days
+[Design document] lasts 2 days
+[Coding] lasts 2 days
+[Testing] lasts 7 days
 [Time sheet] lasts 1 days
-
 
 [GUI prototype] starts at [Requirements document]'s end
 [Estimation document] starts at [Requirements document]'s end
