@@ -23,7 +23,7 @@ This part of the document reports about testing at the GUI level. Tests are end 
 | 4           | FR3.1                             | createNewGasStation.py, resetFormCreateGasStation.py            |
 | 5           | FR3.1                             | modifyGasStation.py            |
 | 6           | FR3.2                             | deleteGasStation.py            |
-| 7           | FR5.1                             | insertPriceReportLoggedHomeTest.py, addReportAdminPanel.py           |
+| 7           | FR5.1                             | insertPriceReportLoggedHomeTest.py, addReportAdminPanel.py, AinsertPriceReportFailReputationlessTimestampLess.py, BinsertPriceReportOkReputationLessTimestampHigh.py       |
 | 8           | FR4                               | searchGasStationLoggedTest.py, searchGasStationAdminPanel.py, resetFormSearchGasStationAdminPanel.py, sortGasStationLoggedUserTest.py, resetFormSearchGasStationLoggedUserTest.py            |
 | 10          | FR5.3                             | increaseReputationLoggedHomeTest.py, decreaseReputationLoggedHomeTest.py, increaseReputationPanelTest.py, decreaseReputationPanelTest.py            |
 
