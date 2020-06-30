@@ -160,10 +160,10 @@ rectangle EZGas{
 
 | Actors Involved        | Authenticated_user |
 | ------------- |:-------------:|
-|  Precondition     | Active account, log in operation, distance of user from gas station < 200 m |
-|  Post condition     | Price inserted |
-|  Nominal Scenario     | User logs into the app with his/her account. Inserts fuel price for the selected fuel type.|
-|  Variants     | If the fuel is not already present in the list of fuels present at the gas station he/she can insert a new fuel and its connected price.|
+|  Precondition     | User U has an account, has performed log in operation, distance of user U from gas station G < 200 m |
+|  Post condition     | Price P inserted |
+|  Nominal Scenario     | User U logs into the app with his/her account. Inserts fuel price F for the selected fuel type.|
+|  Variants     | If the fuel type F is not already present in the list of fuels present at the gas station G he/she can insert a new fuel and its connected price.|
 
 ## Scenario 1
 
