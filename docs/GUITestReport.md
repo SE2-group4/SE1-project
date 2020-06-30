@@ -2,9 +2,9 @@
 
 Authors: Group 12
 
-Date: 31/05/2020
+Date: 28/06/2020
 
-Version: 1.0
+Version: 3.0
 
 # GUI testing
 
