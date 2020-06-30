@@ -58,7 +58,7 @@ actor "Google Maps" as c
 actor "User" as d
 rectangle System{
 	a --> (EZGas)
-	(EZGas) -- c
+  (EZGas) -- c
 	(EZGas) <-- d
 }
 
@@ -135,12 +135,12 @@ rectangle EZGas{
   U -> (FR2 Insert search params)
 
   AU --> (FR4 Vote a fuel price)
-  AU --> (FR6.1 Insert new gas station)
+  AU --> (FR6.1 Request of insertion of a new gas station)
   A --> (FR6.2 Accept new gas station request)
   AU --> (FR1 Enter new price)
 
   (FR2 Show map and gas stations) <-- WA
-  (FR6.1 Insert new gas station) <-- (FR6.2 Accept new gas station request)
+
   (FR2 Insert search params) --> (FR2 FR3 Search gas stations)
   (FR2 FR3 Search gas stations) --> (FR2 Show map and gas stations)
   WA --> (FR1 Enter new price)
@@ -285,17 +285,17 @@ class EZGas
 class User
 
 class "Authenticated User"{
-  + userID
+  + ID
   + username
   + e-mail
   + password
 }
 
 class Administrator{
-  + AdministratorID
-  + username
-  + e-mail
-  + password
+  +ID
+  +username
+  +email
+  +password
 }
 
 class "Gas station insert request"{

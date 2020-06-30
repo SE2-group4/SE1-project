@@ -18,22 +18,9 @@ Version: 1.0
 
 # Black Box Unit Tests
 
-<!--
-    <Define here criteria, predicates and the combination of predicates for each function of each class.
-    Define test cases to cover all equivalence classes and boundary conditions.
-    In the table, report the description of the black box test case and (traceability) the correspondence with the JUnit test case writing the 
-    class and method name that contains the test case>
-    <JUnit test classes must be in src/test/java/it/polito/ezgas   You find here, and you can use,  class EZGasApplicationTests.java that is executed before 
-    the set up of all Spring components
-    >
-    -->
-
-<!-- START doc structure change -->
-
 ### **Class *Utility* - method *checkCoordinates***
 **Criteria for method *checkCoordinates*:**
 	
-<!-- input space -->
 - lat (double)
 - lon (double)
 
@@ -222,13 +209,11 @@ Using this approach, with getter tests both getter method and class constructor 
 
 In some cases (eg. userName string format, email string format...) no specific description have been found in requirements, so the test description test is "omission in requirements". For those cases, no JUnit test assert is coded.
 
-<!-- END doc structure change -->
 
 ### **Class *User* - method *getUserId***
 
 **Criteria for method *getUserId*:**
-	
-<!-- input space -->
+
  - userId (Integer), as returned from the method
 
 **Predicates for method *getUserId*:**
@@ -265,7 +250,7 @@ In some cases (eg. userName string format, email string format...) no specific d
 
 **Criteria for method *setUserId*:**
 	
-<!-- input space -->
+
  - userId (Integer)
 
 **Predicates for method *setUserId*:**
@@ -505,8 +490,7 @@ In some cases (eg. userName string format, email string format...) no specific d
 ### **Class *User* - method *getUserReputation***
 
 **Criteria for method *getUserReputation*:**
-	
-<!-- input space -->
+
  - reputation (Integer), as returned from the method
 
 **Predicates for method *getUserReputation*:**
@@ -545,8 +529,7 @@ In some cases (eg. userName string format, email string format...) no specific d
 ### **Class *User* - method *setUserReputation***
 
 **Criteria for method *setUserReputation*:**
-	
-<!-- input space -->
+
  - reputation (Integer)
 
 **Predicates for method *setUserReputation*:**
@@ -648,7 +631,6 @@ Similar attributes, such as prices and boolean, have been grouped and treated th
 
 **Criteria:**
 	
-<!-- input space -->
  - return value (integer), as returned from the method
 
 **Predicates:**
@@ -686,7 +668,6 @@ Similar attributes, such as prices and boolean, have been grouped and treated th
 
 **Criteria:**
 
-<!-- input space -->
  - input (integer)
 
 **Predicates:**
@@ -728,7 +709,6 @@ Similar attributes, such as prices and boolean, have been grouped and treated th
 
 **Criteria:**
 	
-<!-- input space -->
  - price (double), as returned from the method
 
 **Predicates:**
@@ -769,7 +749,6 @@ Similar attributes, such as prices and boolean, have been grouped and treated th
 
 **Criteria:**
 	
-<!-- input space -->
  - price (double)
 
 **Predicates:**
@@ -802,7 +781,6 @@ Similar attributes, such as prices and boolean, have been grouped and treated th
 
 **Criteria:**
 	
-<!-- input space -->
  - latitude (double), as returned from the method
 
 **Predicates:**
@@ -840,7 +818,6 @@ Similar attributes, such as prices and boolean, have been grouped and treated th
 
 **Criteria:**
 	
-<!-- input space -->
  - latitude (double)
 
 **Predicates:**
@@ -878,7 +855,6 @@ Similar attributes, such as prices and boolean, have been grouped and treated th
 
 **Criteria:**
 	
-<!-- input space -->
  - longitude (double), as returned from the method
 
 **Predicates:**
@@ -915,8 +891,7 @@ Similar attributes, such as prices and boolean, have been grouped and treated th
 ### **Class *GasStation* - setLon**
 
 **Criteria:**
-	
-<!-- input space -->
+
  - longitude (double)
 
 **Predicates:**
@@ -1234,68 +1209,12 @@ Similar attributes, such as prices and boolean, have been grouped and treated th
 | user  | valid     | setUser() -> modify user |setUser__modifyUser() |
 | null  | valid     | setUser() -> modify user |setUser__modifyUser() |
 
-<!--
-### **Class *class_name* - method *name***
-
-
-
-**Criteria for method *name*:**
-	
-
- - 
- - 
-
-
-
-
-
-**Predicates for method *name*:**
-
-| Criteria | Predicate |
-| -------- | --------- |
-|          |           |
-|          |           |
-|          |           |
-|          |           |
-
-
-
-
-
-**Boundaries**:
-
-| Criteria | Boundary values |
-| -------- | --------------- |
-|          |                 |
-|          |                 |
-
-
-
-**Combination of predicates**:
-
-
-| Criteria 1 | Criteria 2 | ... | Valid / Invalid | Description of the test case | JUnit test case |
-|-------|-------|-------|-------|-------|-------|
-|||||||
-|||||||
-|||||||
-|||||||
-|||||||
--->
-
-
 
 
 # White Box Unit Tests
 
 ### Test cases definition
     
-<!--
-    <JUnit test classes must be in src/test/java/it/polito/ezgas>
-    <Report here all the created JUnit test cases, and the units/classes under test >
-    <For traceability write the class and method name that contains the test case>
-    -->
-
 The following JUnit test classes (these are nested classes to group test cases referred to a single topic) have been implemented using a mixed white and black approach.
 Into each test class there are many test methods to provide the decision coverage.
 A detailed description of tested parameters and conditions can be found in the [Black Box Unit Tests](#black-box-unit-tests) section.
@@ -1308,27 +1227,13 @@ A detailed description of tested parameters and conditions can be found in the [
 
 ### Code coverage report
 
-<!--
-    <Add here the screenshot report of the statement and branch coverage obtained using
-    the Eclemma tool. >
-
-    -->
 ![coverage](./resources/coverage_eclemma_third_delivery.PNG)
 
 
 ### Loop coverage analysis
 
 No loops in the currently tested code.
-<!--
 
-    <Identify significant loops in the units and reports the test cases
-    developed to cover zero, one or multiple iterations >
-
-|Unit name | Loop rows | Number of iterations | JUnit test case |
-|---|---|---|---|
-|||||
-|||||
-|||||| -->
 
 
 

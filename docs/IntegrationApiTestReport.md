@@ -548,9 +548,14 @@ This scenario is a grouping of multiple tests covering the same area: the return
 
 ###
 
-| Non Functional Requirement | Test name |
+| Non Functional Requirement | Test description |
 | -------------------------- | --------- |
-|                            |           |
+|  NFR1 (Usability)            | Cannot be tested    |
+|  NFR2 (Performance)          | Cannot be tested    |
+|  NFR3 (Portability)          | Manually tested on Chrome and Safary on Linux, MacOS, Windows |
+|  NFR4 (Privacy)              | GUI doesn't allow to see the user's data, so we can consider it as tested |
+|  NFR5 (Localisation)          | Cannot be tested    |
+|  NFR6 (Localisation)          | Cannot be tested    |
 
 # Coverage of integration tests
 ![coverage](./resources/coverage_integration_tests.PNG)

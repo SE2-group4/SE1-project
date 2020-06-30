@@ -480,24 +480,24 @@ Only classes and interfaces from the following packages have been considered in 
 
 Others are support classes (or interfaces) and do not perform operations to directly implement functional requirements.
 
-|       | User | GasStation | UserService | GasStationService | UserController | GasStationController | UserRepository | GasStationRepository | PriceListRepository | Utility |
+|       | User | GasStation | UserService | GasStationService | UserController | GasStationController | UserRepository | GasStationRepository | Utility |
 | :-    | :-:  | :-:        | :-:      | :-:       | :-:         | :-:               | :-:            | :-:                  | :-:            | :-:                  | :-: | :-: |
-| FR1.1 | x    |            | x           |                   | x              |                      | x              |                      |     | |
-| FR1.2 | x    |            | x           |                   | x              |                      | x              |                      |     | |
-| FR1.3 | x    |            | x           |                   | x              |                      | x              |                      |     | |
-| FR1.4 | x    |            | x           |                   | x              |                      | x              |                      |     | |
-| FR2   | x    |            | x           |                   | x              |                      |                |                      |     | |
-| FR3.1 | x    |            | x           |                   | x              | x                    |                | x                    | x   | x|
-| FR3.2 | x    |            | x           |                   | x              | x                    |                | x                    |     | |
-| FR3.3 | x    | x          | x           | x                 | x              | x                    |                | x                    |     | x|
-| FR4.1 | x    | x          | x           | x                 | x              | x                    |                | x                    |     | x |
-| FR4.2 | x    | x          | x           | x                 | x              | x                    |                | x                    |     | x |
-| FR4.3 | x    | x          | x           | x                 | x              | x                    |                | x                    | x   | x |
-| FR4.4 | x    | x          | x           | x                 | x              | x                    |                | x                    | x   | x |
-| FR4.5 | x    | x          | x           | x                 | x              | x                    |                | x                    | x   | x |
-| FR5.1 | x    | x          | x           | x                 | x              | x                    |                |                      | x   | x|
-| FR5.2 | x    | x          | x           | x                 | x              | x                    |                |                      | x   | x |
-| FR5.3 | x    | x          | x           | x                 | x              | x                    |                |                      | x   | x |
+| FR1.1 | x    |            | x           |                   | x              |                      | x              |                      |     |
+| FR1.2 | x    |            | x           |                   | x              |                      | x              |                      |     |
+| FR1.3 | x    |            | x           |                   | x              |                      | x              |                      |     |
+| FR1.4 | x    |            | x           |                   | x              |                      | x              |                      |     |
+| FR2   | x    |            | x           |                   | x              |                      |                |                      |     |
+| FR3.1 | x    |   x         | x           |   x                | x              | x                    |                | x                    | x|
+| FR3.2 | x    |    x        | x           |     x              | x              | x                    |                | x                    |     |
+| FR3.3 | x    | x          | x           | x                 | x              | x                    |                | x                    |     x|
+| FR4.1 | x    | x          | x           | x                 | x              | x                    |                | x                    |     x |
+| FR4.2 | x    | x          | x           | x                 | x              | x                    |                | x                    |     x |
+| FR4.3 | x    | x          | x           | x                 | x              | x                    |                | x                    | x |
+| FR4.4 | x    | x          | x           | x                 | x              | x                    |                | x                    | x |
+| FR4.5 | x    | x          | x           | x                 | x              | x                    |                | x                    | x |
+| FR5.1 | x    | x          | x           | x                 | x              | x                    |                |                      |  x|
+| FR5.2 | x    | x          | x           | x                 | x              | x                    |                |                      | x |
+| FR5.3 | x    | x          | x           | x                 | x              | x                    |                |                      | x |
 
 # Verification sequence diagrams
 
