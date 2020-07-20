@@ -151,6 +151,15 @@ public class GasStation implements Serializable {
 		this.reportDependability = reportDependability;
 	}
     
+	public GasStation(String gasStationName, String gasStationAddress,
+			 boolean hasDiesel, boolean hasSuper, boolean hasSuperPlus, boolean hasGas, boolean hasMethane,
+			 String carSharing, double lat, double lon,
+			 double dieselPrice, double superPrice, double superPlusPrice, double gasPrice, double methanePrice,
+			 Integer reportUser, String reportTimestamp, double reportDependability) {
+		this(gasStationName, gasStationAddress, hasDiesel, hasSuper, hasSuperPlus, hasGas,
+				hasMethane, false, carSharing, lat, lon, (double) dieselPrice, (double) superPrice, (double) superPlusPrice,
+				(double) gasPrice, (double) methanePrice, -1.0, reportUser, reportTimestamp, reportDependability);
+	}
     
 	public double getReportDependability() {
 		return reportDependability;

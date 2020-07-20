@@ -6,9 +6,9 @@ import org.junit.runner.RunWith;
 
 @RunWith(JUnitPlatform.class)
 @SelectClasses({
-	UserControllerTests.class,
-	GasStationControllerTests.class,
 	HomeControllerTests.class,
+	GasStationControllerTests.class,
+	UserControllerTests.class,
 })
 
 public class TestController {

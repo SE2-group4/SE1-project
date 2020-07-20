@@ -2,9 +2,9 @@
 
 Authors: Group 12
 
-Date: 21/05/2020
+Date: 19/06/2020
 
-Version: 2.0
+Version: 3.0
 
 # Contents
 
@@ -70,6 +70,8 @@ package "it.polito.ezgas.dto" {
     class LoginDto
 
     class UserDto
+
+    class PriceReportDto
 }
 
 package "it.polito.ezgas.entity" {
@@ -79,9 +81,15 @@ package "it.polito.ezgas.entity" {
 }
 
 GasStationController -> GasStationService
+GasStationController -> PriceReportDto
+GasStationController -> GasStationDto
 UserController -> UserService
+UserController -> UserDto
+UserController -> LoginDto
+UserController -> IdPw
 GasStationService -> GasStationRepository
 GasStationService -> Utility
+GasStationService -> GasStationDto
 UserService -> UserRepository
 GasStationService -> GasStationConverter
 UserService -> UserConverter
@@ -151,6 +159,10 @@ Sequence:
 | GasStationTest.java | setReportUSer__modifyReportUser |
 | GasStationTest.java | getReportTimestamp__returnReportTimestamp |
 | GasStationTest.java | setReportTimestamp__modifyReportTimestamp |
+| GasStationTest.java | correctParams_ShouldSetNewReport |
+| GasStationTest.java | correctParamsAndLowerTrustLevelAndMoreThanFourDays_ShouldSetNewReport |
+| GasStationTest.java | correctParamsAndLowerTrustLevel_ShouldNotSetNewReport |
+| GasStationTest.java | correctParamsAndGreaterTrustLevel_ShouldSetNewReport |
 | GasStationTest.java | getHasDiesel__returnHasDiesel |
 | GasStationTest.java | setHasDiesel__modifyHasDiesel |
 | GasStationTest.java | getHasSuper__returnHasSuper |
@@ -259,6 +271,7 @@ Sequence:
 | GasStationServiceTest.java    | validLatValidLonNullCarA_returnGasStationListSortedByDistance  |
 | GasStationServiceTest.java    | validLatValidLonNullNull_returnGasStationListSortedByDistance  |
 | GasStationServiceTest.java    | validLatValidLonMethaneNull_returnGasStationListSortedByDistance  |
+| GasStationServiceTest.java    | validLatValidLonDieselCarARangeLessThan0_returnGasStationListSortedByDistance |
 | GasStationServiceTest.java    | invalidUserId_ShouldThrowException  |
 | GasStationServiceTest.java    | invalidGasStationId_ShouldThrowException  |
 | GasStationServiceTest.java    | notExistingUser_ShouldThrowException  |
@@ -268,6 +281,8 @@ Sequence:
 | GasStationServiceTest.java    | validCarSharing_ShouldReturnGasStationList  |
 | GasStationServiceTest.java    | wrongCarSharing_ShouldReturnEmptyGasStationList  |
 | UserServiceTest.java          | getUser_UserId_ShouldReturnUser  |
+| UserServiceTest.java          | getUser_UserId_ShouldReturnNull  |
+| UserServiceTest.java          | saveUserTwice_UpdateUser  |
 | UserServiceTest.java          | getUser_NotExistingUserId_ShouldThrowException  |
 | UserServiceTest.java          | saveNewUser_ShouldHaveReputationEq0  |
 | UserServiceTest.java          | saveTwoUser_ShouldNotHaveSameEmail  |
@@ -329,7 +344,7 @@ Sequence:
 | -------- |:-------------------:|:---------:|:--------:|
 |  Precondition     | User to search is not in the database |
 |  Post condition   | |
-| Step#             | Description  | Test created for code coverage | 92.3% |
+| Step#             | Description  | Test created for code coverage | 100% |
 |  1     | Admin logs in |
 |  2     | Admin tries to search for a user which is not in the database |
 |  3     | An InvalidUserException is lauched |
@@ -340,7 +355,7 @@ Sequence:
 | -------- |:-------------------:|:---------:|:--------:|
 |  Precondition     | User to search is not in the database |
 |  Post condition   | |
-| Step#             | Description  | Test created from Requirements | 92.3% |
+| Step#             | Description  | Test created from Requirements | 100% |
 |  1     | Admin logs in |
 |  2     | Admin tries to search for a user which is not in the database and inserts a nevative id (not valid) |
 |  3     | An InvalidUserException is lauched |
@@ -352,8 +367,8 @@ Sequence:
 |  Precondition     | Specific GasStation is present in the database  |
 |  Post condition   | No changes are done|
 | Step#             | Description  | Test created from Requirements | 100% |
-|  1     | Admin logs in |
-|  2     | Admin tries to modify a price for a gas station inserting a negative price (not valid) |
+|  1     | User logs in |
+|  2     | User tries to modify a price for a gas station inserting a negative price (not valid) |
 |  3     | A PriceException is raised |
 
 ## Scenario UC4.2
@@ -374,8 +389,8 @@ Sequence:
 |  Precondition     | Gas Station is not in the database |
 |  Post condition   | |
 | Step#             | Description  | Test created from Requirements | 100% |
-|  1     | Admin logs in |
-|  2     | Admin tries to search for a gas station having a negative id |
+|  1     | User logs in |
+|  2     | User tries to search for a gas station having a negative id |
 |  3     | An InvalidGasStationException is raised |
 
 ## Scenario UC4.4
@@ -396,8 +411,8 @@ Sequence:
 |  Precondition     | Gas Station is not in the database |
 |  Post condition   | |
 | Step#             | Description  | Test created from Requirements | 100% |
-|  1     | Admin logs in |
-|  2     | Admin tries to search for a gas station with an ID which is not in the database |
+|  1     | User logs in |
+|  2     | User tries to search for a gas station with an ID which is not in the database |
 |  3     | An InvalidGasStationException is raised |
 
 ## Scenario UC7.1
@@ -406,10 +421,42 @@ Sequence:
 | -------- |:-------------------:|:---------:|:--------:|
 |  Precondition     | Gas Station is in the database |
 |  Post condition   | |
-| Step#             | Description  | Test created from Requirements | 100% |
-|  1     | Admin logs in |
-|  2     | Admin searches for a gas station, and tries to insert a negative new price |
+| Step#             | Description  | Test created from Requirements | 97.4% |
+|  1     | User logs in |
+|  2     | User searches for a gas station, and tries to insert a negative new price |
 |  3     | An PriceException is raised |
+
+## Scenario UC7.2
+
+| Scenario | Report PriceExeption | Technique | Coverage |
+| -------- |:-------------------:|:---------:|:--------:|
+|  Precondition     | Gas Station is in the database, no report done yet |
+|  Post condition   | new report is set to the gas station|
+| Step#             | Description  | Test created from Requirements | 97.4% |
+|  1     | User logs in |
+|  2     | User searches for a gas station and tries to insert new prices |
+|  3     | New report is set to the gas station |
+
+## Scenario UC7.3
+
+| Scenario | Report PriceExeption | Technique | Coverage |
+| -------- |:-------------------:|:---------:|:--------:|
+|  Precondition     | Gas Station is in the database, last report has been done by a user U1 less or equal than 4 days ago |
+|  Post condition   | new report is not set |
+| Step#             | Description  | Test created from Requirements | 97.4% |
+|  1     | User U2 logs in |
+|  2     | U2 searches for a gas station and tries to insert new prices |
+|  3     | The application checks if U1 has an higher reputation than U2  |
+
+## Scenario UC7.4
+
+| Scenario | Report PriceExeption | Technique | Coverage |
+| -------- |:-------------------:|:---------:|:--------:|
+|  Precondition     | Gas Station is in the database, last report is more than 4 days ago |
+|  Post condition   | new report is set to the gas station|
+| Step#             | Description  | Test created from Requirements | 97.4% |
+|  1     | User logs in |
+|  2     | User searches for a gas station and tries to insert new prices |
 
 ## Scenario UC8.1
 
@@ -501,9 +548,14 @@ This scenario is a grouping of multiple tests covering the same area: the return
 
 ###
 
-| Non Functional Requirement | Test name |
+| Non Functional Requirement | Test description |
 | -------------------------- | --------- |
-|                            |           |
+|  NFR1 (Usability)            | Cannot be tested    |
+|  NFR2 (Performance)          | Cannot be tested    |
+|  NFR3 (Portability)          | Manually tested on Chrome and Safary on Linux, MacOS, Windows |
+|  NFR4 (Privacy)              | GUI doesn't allow to see the user's data, so we can consider it as tested |
+|  NFR5 (Localisation)          | Cannot be tested    |
+|  NFR6 (Localisation)          | Cannot be tested    |
 
 # Coverage of integration tests
 ![coverage](./resources/coverage_integration_tests.PNG)

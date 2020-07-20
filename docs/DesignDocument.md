@@ -225,7 +225,8 @@ package "it.polito.ezgas.service" {
        + Boolean deleteGasStation(gasStationId): Boolean
        + getGasStationsByGasolineType(gasolinetype): List<GasStationDto>
        + getGasStationsByProximity(lat, lon): List<GasStationDto>
-       + getGasStationsWithCoordinates(lat, lon, gasolinetype, carsharing): List<GasStationDto>
+       + getGasStationsByProximity(lat, lon, radius): List<GasStationDto>
+       + getGasStationsWithCoordinates(lat, lon, radius, gasolinetype, carsharing): List<GasStationDto>
        + getGasStationsWithoutCoordinates(gasolinetype, carsharing): List<GasStationDto>
        + setReport(gasStationId, dieselPrice, superPrice, superPlusPrice, gasPrice, methanePrice, userId): void
        + getGasStationByCarSharing(carSharing): List<GasStationDto>
@@ -248,11 +249,11 @@ package "it.polito.ezgas.controller" {
         + getGasStationById(gasStationId): GasStationDto
         + getAllGasStations(): List<GasStationDto>
         + saveGasStation(gasStationDto): void
-        + deleteUser(gasStationId): void
+        + deleteGasStation(gasStationId): void
         + getGasStationsByGasolineType(gasolineType): List<GasStationDto>
-        + getGasStationsByProximity(myLat, myLon): List<GasStationDto>
-        + getGasStationsWithCoordinates(myLat, myLon, gasolineType, carSharing): List<GasStationDto>
-        + setGasStationReport(gasStationId, dieselPrice, superPrice, superPlusPrice, gasPrice, methanePrice, userId): void
+        + getGasStationsByProximity(myLat, myLon, myRadius): List<GasStationDto>
+        + getGasStationsWithCoordinates(myLat, myLon, radius, gasolineType, carSharing): List<GasStationDto>
+        + setGasStationReport(priceReportDto): void
     }
 
     class UserController{
@@ -296,6 +297,7 @@ package "it.polito.ezgas.dto" {
         - hasSuperPlus
         - hasGas
         - hasMethane
+        - hasPremiumDiesel
         - carSharing
         - lat
         - lon
@@ -304,6 +306,7 @@ package "it.polito.ezgas.dto" {
         - superPlusPrice
         - gasPrice
         - methanePrice
+        - premiumDieselPrice
         - reportUser
         - userDto
         - reportTimestamp
@@ -319,6 +322,7 @@ package "it.polito.ezgas.dto" {
         + Getter()
         + Setter()
     }
+
     class LoginDto{
         userId
         userName
@@ -340,6 +344,19 @@ package "it.polito.ezgas.dto" {
         + Getter()
         + Setter()
     }
+
+    class PriceReportDto{
+        - gasStationId
+        - dieselPrice
+        - superPrice
+        - superPlusPrice
+        - gasPrice
+        - methanePrice
+        - premiumDieselPrice
+        - userId
+        + Getter()
+        + Setter()
+    }
 }
 
 package "it.polito.ezgas.entity" {
@@ -353,6 +370,7 @@ package "it.polito.ezgas.entity" {
         - hasSuperPlus
         - hasGas
         - hasMethane
+        - hasPremiumDiesel
         - carSharing
         - lat
         - lon
@@ -361,6 +379,7 @@ package "it.polito.ezgas.entity" {
         - superPlusPrice
         - gasPrice
         - methanePrice
+        - premiumDieselPrice
         - reportUser
         - reportTimestamp
         - reportDependability
@@ -407,6 +426,7 @@ UserController --> UserDto
 ''' GasStationController dependencies '''
 GasStationController --> GasStationService
 GasStationController --> GasStationDto
+GasStationController --> PriceReportDto
 
 ''' UserService dependencies '''
 UserService --> UserRepository
@@ -460,24 +480,24 @@ Only classes and interfaces from the following packages have been considered in 
 
 Others are support classes (or interfaces) and do not perform operations to directly implement functional requirements.
 
-|       | User | GasStation | UserService | GasStationService | UserController | GasStationController | UserRepository | GasStationRepository | PriceListRepository | Utility |
+|       | User | GasStation | UserService | GasStationService | UserController | GasStationController | UserRepository | GasStationRepository | Utility |
 | :-    | :-:  | :-:        | :-:      | :-:       | :-:         | :-:               | :-:            | :-:                  | :-:            | :-:                  | :-: | :-: |
-| FR1.1 | x    |            | x           |                   | x              |                      | x              |                      |     | |
-| FR1.2 | x    |            | x           |                   | x              |                      | x              |                      |     | |
-| FR1.3 | x    |            | x           |                   | x              |                      | x              |                      |     | |
-| FR1.4 | x    |            | x           |                   | x              |                      | x              |                      |     | |
-| FR2   | x    |            | x           |                   | x              |                      |                |                      |     | |
-| FR3.1 | x    |            | x           |                   | x              | x                    |                | x                    | x   | x|
-| FR3.2 | x    |            | x           |                   | x              | x                    |                | x                    |     | |
-| FR3.3 | x    | x          | x           | x                 | x              | x                    |                | x                    |     | x|
-| FR4.1 | x    | x          | x           | x                 | x              | x                    |                | x                    |     | x |
-| FR4.2 | x    | x          | x           | x                 | x              | x                    |                | x                    |     | x |
-| FR4.3 | x    | x          | x           | x                 | x              | x                    |                | x                    | x   | x |
-| FR4.4 | x    | x          | x           | x                 | x              | x                    |                | x                    | x   | x |
-| FR4.5 | x    | x          | x           | x                 | x              | x                    |                | x                    | x   | x |
-| FR5.1 | x    | x          | x           | x                 | x              | x                    |                |                      | x   | x|
-| FR5.2 | x    | x          | x           | x                 | x              | x                    |                |                      | x   | x |
-| FR5.3 | x    | x          | x           | x                 | x              | x                    |                |                      | x   | x |
+| FR1.1 | x    |            | x           |                   | x              |                      | x              |                      |     |
+| FR1.2 | x    |            | x           |                   | x              |                      | x              |                      |     |
+| FR1.3 | x    |            | x           |                   | x              |                      | x              |                      |     |
+| FR1.4 | x    |            | x           |                   | x              |                      | x              |                      |     |
+| FR2   | x    |            | x           |                   | x              |                      |                |                      |     |
+| FR3.1 | x    |   x         | x           |   x                | x              | x                    |                | x                    | x|
+| FR3.2 | x    |    x        | x           |     x              | x              | x                    |                | x                    |     |
+| FR3.3 | x    | x          | x           | x                 | x              | x                    |                | x                    |     x|
+| FR4.1 | x    | x          | x           | x                 | x              | x                    |                | x                    |     x |
+| FR4.2 | x    | x          | x           | x                 | x              | x                    |                | x                    |     x |
+| FR4.3 | x    | x          | x           | x                 | x              | x                    |                | x                    | x |
+| FR4.4 | x    | x          | x           | x                 | x              | x                    |                | x                    | x |
+| FR4.5 | x    | x          | x           | x                 | x              | x                    |                | x                    | x |
+| FR5.1 | x    | x          | x           | x                 | x              | x                    |                |                      |  x|
+| FR5.2 | x    | x          | x           | x                 | x              | x                    |                |                      | x |
+| FR5.3 | x    | x          | x           | x                 | x              | x                    |                |                      | x |
 
 # Verification sequence diagrams
 

@@ -112,6 +112,7 @@ public class UserServiceTests {
 			
 			initializeTest(); // re-create all mocks
 			when(userRepository.findByUserId(4)).thenReturn(uList);
+			when(userRepository.findByUserId(5)).thenReturn(new ArrayList<User>());
 		}
 		
 		@Test
@@ -123,6 +124,17 @@ public class UserServiceTests {
 				fail();
 			}
 			assertTrue(compareUserDto(UserConverter.userConvertToUserDto(this.uList.get(0)), ud1));
+		}
+		
+		@Test
+		public void getUser_UserId_ShouldReturnNull() {
+			UserDto ud1 = null;
+			try {
+				ud1 = service.getUserById(5);
+			} catch (Exception e) {
+				fail();
+			}
+			assertNull(ud1);
 		}
 		
 		@Test
@@ -171,6 +183,21 @@ public class UserServiceTests {
 			UserDto insertedUser1 = service.saveUser(this.ud1);
 			assertNotNull(insertedUser1);
 			assertEquals(0, insertedUser1.getReputation(), "Init reputation must be 0!");
+		}
+		
+		@Test
+		public void saveUserTwice_UpdateUser(){
+			when(userRepository.findAll()).thenReturn(this.uList);
+			when(userRepository.save(Mockito.any(User.class))).thenReturn(this.u1);
+			
+			UserDto insertedUser1 = service.saveUser(this.ud1);
+			assertNotNull(insertedUser1);
+			
+			UserDto insertedUser2 = service.saveUser(this.ud1);
+			assertNotNull(insertedUser2);
+			
+			int nUsers = service.getAllUsers().stream().filter(u -> u.getEmail().equals(this.u1.getEmail())).collect(Collectors.toList()).size();
+			assertEquals(1, nUsers, "Email must be unique!");
 		}
 		
 		@Test
@@ -239,6 +266,7 @@ public class UserServiceTests {
 		User u2 = new User();
 		List<User> uListEmpty = new ArrayList<>();
 		List<User> uList = new ArrayList<>();
+		List<User> checkList = new ArrayList<>();
 		int size_uList;
 		
 		@BeforeEach
@@ -256,15 +284,14 @@ public class UserServiceTests {
 			uList.add(u2);
 			
 			size_uList = uList.size();
-
+			checkList.add(u1);
 			initializeTest(); // re-create all mocks
-			when(userRepository.findByUserId(u1.getUserId())).thenReturn(new ArrayList<User>());
+			when(userRepository.findByUserId(u1.getUserId())).thenReturn(checkList);
 			
 		}
 		
 		@Test
 		public void testDelete() {
-			when(userRepository.findByUserId(u1.getUserId())).thenReturn(new ArrayList<User>());
 			
 			boolean del = false;
 			try {

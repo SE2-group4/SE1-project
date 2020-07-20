@@ -7,7 +7,7 @@ import java.util.Locale;
 public class Utility {
 	
 	public static boolean checkCoordinates(double lat, double lon) {
-		if (lat < (double) -90 || lon < (double) -180 || lat > (double) 90 || lon > (double) 180)
+		if (lat < (double) -90 || lon < (double) -180 || lat >= (double) 90 || lon >= (double) 180)
 			return false;
 		return true;
 	}
@@ -36,13 +36,14 @@ public class Utility {
 		if(d < -5 || d > 5)
 			return 0;
 
-		SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy", Locale.ENGLISH);
+		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy", Locale.ENGLISH);
 		Date data = null;
 		try {
 			data = sdf.parse(timestamp);
 		} catch(Exception e) {
 			return 0;
 		}
+		
 		Long timestamp_long = data.getTime();		
 		Date today = new Date();
 		Long today_long = today.getTime();

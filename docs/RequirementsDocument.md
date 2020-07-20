@@ -58,7 +58,7 @@ actor "Google Maps" as c
 actor "User" as d
 rectangle System{
 	a --> (EZGas)
-	(EZGas) -- c
+  (EZGas) -- c
 	(EZGas) <-- d
 }
 
@@ -71,7 +71,7 @@ rectangle System{
 | ------------- |:-------------:| -----:|
 | Administrator	| GUI			| Screen, keyboard, smartphone |
 | User			| GUI			|Screen, keyboard, smartphone|
-| Google Maps		|Google Maps API |Internet Connection|
+| Google Maps		| Google API |Internet Connection|
 
 # Stories and personas
 
@@ -96,7 +96,7 @@ Jackson is the owner of a gas station. He is struggling in the last period since
 |  FR2.1 | Search for cheapest gas station in a certain area|
 |  FR2.2 | Search for closest gas station in a certain area|
 |  **FR3**   | Track user with position|
-|  **FR4** 	 | Let user votes the fuel price|
+|  **FR4** 	 | Let user vote the fuel price|
 |  **FR5**	 | Manage Accounts|
 |  FR5.1 | Create Account|
 |  FR5.2 | Log in|
@@ -135,12 +135,12 @@ rectangle EZGas{
   U -> (FR2 Insert search params)
 
   AU --> (FR4 Vote a fuel price)
-  AU --> (FR6.1 Insert new gas station)
+  AU --> (FR6.1 Request of insertion of a new gas station)
   A --> (FR6.2 Accept new gas station request)
   AU --> (FR1 Enter new price)
 
   (FR2 Show map and gas stations) <-- WA
-  (FR6.1 Insert new gas station) <-- (FR6.2 Accept new gas station request)
+
   (FR2 Insert search params) --> (FR2 FR3 Search gas stations)
   (FR2 FR3 Search gas stations) --> (FR2 Show map and gas stations)
   WA --> (FR1 Enter new price)
@@ -160,31 +160,31 @@ rectangle EZGas{
 
 | Actors Involved        | Authenticated_user |
 | ------------- |:-------------:|
-|  Precondition     | Active account, log in operation, distance of user from gas station < 200 m |
-|  Post condition     | Price inserted |
-|  Nominal Scenario     | User logs into the app with his/her account. Inserts fuel price for the selected fuel type.|
-|  Variants     | If the fuel is not already present in the list of fuels present at the gas station he/she can insert a new fuel and its connected price.|
+|  Precondition     | User U has an account, has performed log in operation, distance of user U from gas station G < 200 m |
+|  Post condition     | Price P inserted |
+|  Nominal Scenario     | User U logs into the app with his/her account. Inserts fuel price F for the selected fuel type.|
+|  Variants     | If the fuel type F is not already present in the list of fuels present at the gas station G he/she can insert a new fuel and its connected price.|
 
 ## Scenario 1
 
 | Scenario ID: SC1        | Corresponds to UC1  |
 | ------------- |:-------------|
-| Description | Record prices of fuel|
-| Precondition | User must have an active account and is logged in, User must have GPS activated|
-| Postcondition | Prices are inserted |
+| Description | Record price of fuel|
+| Precondition | User U must have an active account and is logged in, User U must have GPS activated|
+| Postcondition | Price P are inserted |
 | Step#        |  Step description   |
-|  1	 | User selects a gas station|
-|  2   | The application through web API verifies the position of the user which must be in 200 m from the gas station|
-|  3	 |	User selects the fuel type |
-|  4	 |	User inserts the new prices of fuel into a gas station|
+|  1	 | User U selects a Gas station G|
+|  2   | The application through web API verifies the position of the User U which must be in 200 m from the Gas station G|
+|  3	 |	User U selects the fuel type |
+|  4	 |	User U inserts the new price P of fuel into a Gas station G |
 
 ### Use case 2, UC2 - FR2 Search for gas stations with certain properties
 
 | Actors Involved        | User, Google Maps API|
 | ------------- |:-------------:|
-|  Precondition     | User selected a search type (distance, price, type of fuel) |
+|  Precondition     | User U selected a search type (distance, price, type of fuel) |
 |  Post condition     |  Gas stations shown on the map |
-|  Nominal Scenario     | Looks for gas stations based on the search type inserted. On the Map will be shown all of the gas stations within a certain range, decided by the user through a slider|
+|  Nominal Scenario     | Looks for gas stations based on the search type inserted. On the Map all of the gas stations within a certain range (decided by the user through a slider) will be shown |
 |  Variants     | |
 
 ## Scenario 2.1
@@ -192,11 +192,11 @@ rectangle EZGas{
 | Scenario ID: SC2        | Corresponds to UC2  |
 | ------------- |:-------------|
 | Description | Search the cheapest gas station in a certain radius|
-|Precondition | User must have GPS activated|
+|Precondition | User U must have GPS activated|
 |Postcondition | Gas stations that fit the requirement are shown on the map |
 | Step#        | Step description  |
-|  1     | User must fill out the parameters required: fuel type, distance. He can choose to show the gas station in price order or distance order |
-|  2     | The application gets the user's position from the Map API and performs the search |
+|  1     | User U must fill out the parameters required: fuel type, distance. He can choose to show the gas stations in price order or distance order |
+|  2     | The application gets the user's position from the Google API and performs the search |
 |  3     | The application calculates which are the gas stations with the lower prices for the fuel type inserted and shows them on the map|
 
 ## Scenario 2.2
@@ -204,41 +204,41 @@ rectangle EZGas{
 | Scenario ID: SC2        | Corresponds to UC2  |
 | ------------- |:-------------|
 | Description | Search the closest gas station in a certain radius|
-|Precondition | User must have GPS activated|
+|Precondition | User U must have GPS activated|
 |Postcondition | Gas stations that fit the requirement are shown on the map |
 | Step#        | Step description  |
-|  1     | User must fill out the parameters required: fuel type, distance. He can choose to show the gas station in price order or distance order |
-|  2     | The application gets the user's position from the Map API and performs the search |
+|  1     | User U must fill out the parameters required: fuel type, distance. He can choose to show the gas station in price order or distance order |
+|  2     | The application gets the user's position from the Google API and performs the search |
 |  3     |The application calculates which are the gas stations that are closest to the user position and shows them on the map|
 
 ### Use case 3, UC3 - FR4 Vote the price of a gas station
 
 | Actors Involved        | Authenticated_user |
 | ------------- |:-------------:|
-|  Precondition     | Active account, Log in operation, Distance of user from gas station < 200 m, price selected |
+|  Precondition     | User U has an active account, Log in operation, Distance of User U from Gas station G < 200 m, Price P of fuel type F selected |
 |  Post condition     | Vote active for 24h |
-|  Nominal Scenario     | User votes only the correct fuel price. Each user can vote only once in 24 h the fuel price. |
-|  Variants     | A user can change his/her vote during the 24 hours, but cannot add another vote|
+|  Nominal Scenario     | User U votes only the correct fuel price. Each user can vote the fuel price only once in 24h. |
+|  Variants     | A user can change his/her vote during the 24h, but cannot add another vote |
 
 ## Scenario 3
 
 | Scenario ID: SC3        | Corresponds to UC3  |
 | ------------- |:-------------|
 | Description | Vote the price of a fuel|
-| Precondition | User must have an active account, must be logged in, must have GPS activated|
-| Postcondition | A fuel price has an extra vote |
+| Precondition | User U must have an active account, must be logged in, must have GPS activated |
+| Postcondition | A fuel price P of fuel type F has an extra vote |
 | Step#        |  Step description   |
-|  1     | The application through web API verifies the position of the user which must be in 200 m from the gas station|
-|  2     | User can upvote the correct fuel price among those displayed in the list connected to that gas station and fuel type|
+|  1     | The application through web API verifies the position of the User U which must be in 200 m from the Gas station G |
+|  2     | User U can upvote the correct fuel price among those displayed in the list connected to that Gas station G and fuel type F |
 
 
 ### Use case 4, UC4 - FR5.1 Create Account
 
 | Actors Involved        | User |
 | ------------- |:-------------:|
-|  Precondition     | User has not yet an active account. Defines what the credentials (e-mail, username and password) will be|
-|  Post condition     | Being able to perform operation (searching and insertion) on the application|
-|  Nominal Scenario     | The person creates a new account by registering his/hers credentials on the platform and, after, logs in|
+|  Precondition     | User U has not yet an active account. Defines what the credentials (e-mail, username and password) will be |
+|  Post condition     | User U is able to perform operation (searching and insertion) on the application |
+|  Nominal Scenario     | User U creates a new account by registering his/hers credentials on the platform and, after, can log in |
 |  Variants     | |
 
 ## Scenario 4
@@ -246,34 +246,34 @@ rectangle EZGas{
 | Scenario ID: SC4        | Corresponds to UC4  |
 | ------------- |:-------------|
 | Description | Creation of an account|
-|Precondition | There shouldn't be an account already logged in the application |
-|Postcondition | User has created an account |
+|Precondition | User U shouldn't have an account in the database of the application |
+|Postcondition | User U has an account |
 | Step#        | Step description  |
-|  1     | User enters the app|
-|  2     | User fills out a form with his/her credential (username, email, password)|
-|  3     | User can log in |
+|  1     | User U enters the app |
+|  2     | User U fills out a form with his/her credential (username, email, password)|
+|  3     | User U can log in |
 
 
 ### Use case 5, UC5 - FR6 Insertion of a new gas station
 
 | Actors Involved        | User, Administrator |
 | ------------- |:-------------:|
-|  Precondition     | User has an active account, must be logged in|
-|  Post condition     | Gas station is inserted and visible on the map|
-|  Nominal Scenario     | User reports the existance of a new gas station in a determined position. The administrator must verify if the gas station really exist and if it does accept the request and insert the brand of that gas station|
-|  Variants     | If the gas station is not in the position sent by the user the administrator can refuse the request and the gas station is not inserted |
+|  Precondition     | User U has an active account, must be logged in, must have active GPS |
+|  Post condition     | Gas station G is inserted and visible on the map |
+|  Nominal Scenario     | User U reports the existance of a new Gas station G in a determined position. The Administrator A must verify if the gas station G really exist and if it does accept the request and insert the brand of that gas station G|
+|  Variants     | If the gas station G is not in the position sent by the user U, the administrator A can refuse the request and the gas station G is not inserted |
 
 ## Scenario 5
 
 | Scenario ID: SC5        | Corresponds to UC5  |
 | ------------- |:-------------|
 | Description | Insertion of a new gas station|
-|Precondition | User must have an active account, must be logged in, must have active GPS|
-|Postcondition | Gas station is inserted on the map |
+|Precondition | User U must have an active account, must be logged in, must have active GPS |
+|Postcondition | Gas station G is inserted on the map |
 | Step#        | Step description  |
-|  1     | The authenticated user inserts the address of the new gas station |
-|  2     | The administrator checks whether the gas station is really present in the location |
-|  3     | The administrator accepts the request and inserts the brand of the gas station|
+|  1     | The authenticated user AU inserts the address of the new gas station G |
+|  2     | The administrator A checks whether the gas station G is really present in the location |
+|  3     | The administrator A accepts the request and inserts the brand of the gas station G |
 
 
 # Glossary
@@ -285,17 +285,17 @@ class EZGas
 class User
 
 class "Authenticated User"{
-  + userID
+  + ID
   + username
   + e-mail
   + password
 }
 
 class Administrator{
-  + AdministratorID
-  + username
-  + e-mail
-  + password
+  +ID
+  +username
+  +email
+  +password
 }
 
 class "Gas station insert request"{

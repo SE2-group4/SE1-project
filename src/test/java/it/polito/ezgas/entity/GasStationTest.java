@@ -3,6 +3,7 @@ package it.polito.ezgas.entity;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,8 +15,8 @@ public class GasStationTest {
 
 	@BeforeEach
 	void setUp() throws Exception {
-		this.gasStation = new GasStation("Red Rocket", "Andale Main Street, 42", true, true, false, false, true,
-				"appreciate", 42.42, 21.21, 1.5, 1.6, -1, -1, 1.3, 1, "2020-05-12 14:22:31", 2.0);
+		this.gasStation = new GasStation("Red Rocket", "Andale Main Street, 42", true, true, false, false, true, true,
+				"appreciate", 42.42, 21.21, 1.5, 1.6, null, null, 1.3, 2., 1, "2020-05-12 14:22:31", 2.0);
 		this.gasStation.setGasStationId(0);
 		this.user = new User("Three ", "Dog", "threedog@fall.out", 3);
 		this.user.setAdmin(false);
@@ -27,8 +28,8 @@ public class GasStationTest {
 	void constructor__returnGasStation() {
 		GasStation gasStation = new GasStation();
 		assertNotNull(gasStation);
-		gasStation = new GasStation("Red Rocket", "Andale Main Street, 42", true, true, false, false, true,
-				"appreciate", 42.42, 21.21, 1.5, 1.6, -1, -1, 1.3, 1, "2020-05-12 14:22:31", 2.0);
+		gasStation = new GasStation("Red Rocket", "Andale Main Street, 42", true, true, false, false, true, true,
+				"appreciate", 42.42, 21.21, 1.5, 1.6, null, null, 1.3, 1.3, 1, "2020-05-12 14:22:31", 2.0);
 		assertEquals("Red Rocket", gasStation.getGasStationName());
 		assertEquals("Andale Main Street, 42", gasStation.getGasStationAddress());
 		assertEquals(true, gasStation.getHasDiesel());
@@ -41,8 +42,8 @@ public class GasStationTest {
 		assertEquals(21.21, gasStation.getLon(), 0.01);
 		assertEquals(1.5, gasStation.getDieselPrice(), 0.01);
 		assertEquals(1.6, gasStation.getSuperPrice(), 0.01);
-		assertEquals(-1, gasStation.getSuperPlusPrice(), 0.01);
-		assertEquals(-1, gasStation.getGasPrice(), 0.01);
+		assertNull(gasStation.getSuperPlusPrice());
+		assertNull(gasStation.getGasPrice());
 		assertEquals(1.3, gasStation.getMethanePrice(), 0.01);
 		assertEquals(1 , gasStation.getReportUser().intValue());
 		assertEquals("2020-05-12 14:22:31", gasStation.getReportTimestamp());
@@ -158,6 +159,7 @@ public class GasStationTest {
 		assertEquals(newValue, this.gasStation.getHasSuperPlus());
 	}
 
+	
 	@Test
 	void getHasGas__returnHasGas() {
 		assertTrue(this.gasStation.getHasGas() == false);
@@ -180,6 +182,18 @@ public class GasStationTest {
 		boolean newValue = false;
 		this.gasStation.setHasMethane(newValue);
 		assertEquals(newValue, this.gasStation.getHasMethane());
+	}
+	
+	@Test
+	void getHasPremiumDiesel__returnHasPremiumDiesel() {
+		assertTrue(this.gasStation.getHasPremiumDiesel());
+	}
+
+	@Test
+	void setHasPremiumDiesel__modifyHasPremiumDiesel() {
+		boolean newValue = true;
+		this.gasStation.setHasPremiumDiesel(newValue);
+		assertEquals(newValue, this.gasStation.getHasPremiumDiesel());
 	}
 
 	@Test
@@ -232,7 +246,7 @@ public class GasStationTest {
 
 	@Test
 	void getSuperPlusPrice__returnSuperPlusPrice() {
-		assertEquals(-1, this.gasStation.getSuperPlusPrice(), this.delta);
+		assertNull(this.gasStation.getSuperPlusPrice());
 	}
 
 	@Test
@@ -244,7 +258,7 @@ public class GasStationTest {
 
 	@Test
 	void getGasPrice__returnGasPrice() {
-		assertEquals(-1, this.gasStation.getGasPrice(), this.delta);
+		assertNull(this.gasStation.getGasPrice());
 	}
 
 	@Test
@@ -266,6 +280,18 @@ public class GasStationTest {
 		assertEquals(newValue, this.gasStation.getMethanePrice(), this.delta);
 	}
 
+	@Test
+	void getPremiumDieselPrice__returnPremiumDieselPrice() {
+		assertEquals(2.0, this.gasStation.getPremiumDieselPrice(), this.delta);
+	}
+
+	@Test
+	void setPremiumDieselPrice__modifyPremiumDieselPrice() {
+		double newValue = 1.2;
+		this.gasStation.setPremiumDieselPrice(newValue);
+		assertEquals(newValue, this.gasStation.getPremiumDieselPrice(), this.delta);
+	}
+	
 	@Test
 	void getUser__returnUser() {
 		assertEquals(this.user, this.gasStation.getUser());

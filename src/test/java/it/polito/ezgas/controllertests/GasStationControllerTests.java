@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import it.polito.ezgas.dto.GasStationDto;
+import it.polito.ezgas.dto.PriceReportDto;
 import it.polito.ezgas.dto.UserDto;
 
 public class GasStationControllerTests {
@@ -33,23 +34,25 @@ public class GasStationControllerTests {
 		gsDto = new GasStationDto();
 		gsDto.setGasStationId(1);
 		gsDto.setCarSharing("Enjoy");
-		gsDto.setDieselPrice(0);
-		gsDto.setGasPrice(-1);
+		gsDto.setDieselPrice(0.);
+		gsDto.setGasPrice(null);
+		gsDto.setPremiumDieselPrice(null);
 		gsDto.setGasStationAddress( "Via Rocciamelone Caselle Torinese Piemont Italy");
 		gsDto.setGasStationName("Station1");
 		gsDto.setHasDiesel(true);
 		gsDto.setHasGas(false);
 		gsDto.setHasMethane(false);
+		gsDto.setHasPremiumDiesel(false);
 		gsDto.setHasSuper(true);
 		gsDto.setHasSuperPlus(false);
 		gsDto.setLat(45.1635676);
 		gsDto.setLon(7.6647799);
-		gsDto.setMethanePrice(-1);
+		gsDto.setMethanePrice(null);
 		gsDto.setReportDependability(0);
 		gsDto.setReportTimestamp(null);
 		gsDto.setReportUser(-1);
-		gsDto.setSuperPlusPrice(-1);
-		gsDto.setSuperPrice(0);
+		gsDto.setSuperPlusPrice(null);
+		gsDto.setSuperPrice(0.);
 		gsDto.setUserDto(null);
 	}
 
@@ -145,6 +148,7 @@ public class GasStationControllerTests {
         assertEquals(gs.getHasSuperPlus(), gsDto.getHasSuperPlus());
         assertEquals(gs.getCarSharing(), gsDto.getCarSharing());
         assertEquals(gs.getDieselPrice(), gsDto.getDieselPrice());
+        assertEquals(gs.getPremiumDieselPrice(), gsDto.getPremiumDieselPrice());
         assertEquals(gs.getGasPrice(), gsDto.getGasPrice());
         assertEquals(gs.getMethanePrice(), gsDto.getMethanePrice());
         assertEquals(gs.getSuperPrice(), gsDto.getSuperPrice());
@@ -155,7 +159,7 @@ public class GasStationControllerTests {
 
 	@Test
 	public void testGetGasStationByProximity() throws ClientProtocolException, IOException {
-		HttpUriRequest request = new HttpGet("http://localhost:8080/gasstation/searchGasStationByProximity/45.1635676/7.6647799/");
+		HttpUriRequest request = new HttpGet("http://localhost:8080/gasstation/searchGasStationByProximity/45.1635676/7.6647799/1");
 
 		HttpResponse response = HttpClientBuilder.create().build().execute(request);
 
@@ -188,7 +192,7 @@ public class GasStationControllerTests {
 
 	@Test
 	public void testGetGasStationWithCoordinates() throws ClientProtocolException, IOException {
-		HttpUriRequest request = new HttpGet("http://localhost:8080/gasstation/getGasStationsWithCoordinates/45.1635676/7.6647799/Diesel/Enjoy");
+		HttpUriRequest request = new HttpGet("http://localhost:8080/gasstation/getGasStationsWithCoordinates/45.1635676/7.6647799/1/Diesel/Enjoy");
 
 		HttpResponse response = HttpClientBuilder.create().build().execute(request);
 
@@ -252,8 +256,18 @@ public class GasStationControllerTests {
 
 	@Test
 	public void testSetGasStationReport() throws ClientProtocolException, IOException {
-		HttpPost request = new HttpPost("http://localhost:8080/gasstation/setGasStationReport/2/-1/-1/3/3/3/1");
+		PriceReportDto priceDto = new PriceReportDto(1, 2., null, null, 3., 3., 3., null);
+		
+		ObjectMapper mapper = new ObjectMapper();
+
+	    //Converting the Object to JSONString
+	    String jsonString = mapper.writeValueAsString(priceDto);
+	    StringEntity json = new StringEntity(jsonString);
+	    
+	    
+		HttpPost request = new HttpPost("http://localhost:8080/gasstation/setGasStationReport/");
 		request.setHeader("Content-Type", "application/json");
+	    request.setEntity(json);
 
 	    HttpResponse response = HttpClientBuilder.create().build().execute(request);
 
